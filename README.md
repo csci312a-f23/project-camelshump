@@ -31,3 +31,5 @@ Tools for mocking fetch can be installed with
 ```
 
 Note we need to pin the `node-fetch` version due to breaking changes when used with Jest in newer versions.
+
+![workflow status](https://github.com/csci312a-f23/project-camelshump/actions/workflows/node.js.yml/badge.svg)

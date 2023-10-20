@@ -1,11 +1,18 @@
 {
-  "name": "project-skeleton",
+  "name": "project-camelshump",
   "version": "0.1.0",
   "private": true,
   "contributors": [
-    "Team Member 1 <member1@middlebury.edu>",
-    "Team Member 2 <member2@middlebury.edu>"
+    "Jake Lyons <jwlyons@middlebury.edu>",
+    "Ethan Lavallee <elavallee@middlebury.edu>",
+    "Aidan McMillan <amcmilla@middlebury.edu>",
+    "Zoe Greenwald <zgreenwald@middlebury.edu>",
+    "Jeff Blake <jtblake@middlebury.edu>",
+    "Julia Nerenberg <jnerenberg@middlebury.edu>",
+    "Kusuma Kumar <kusumak@middlebury.edu>"
   ],
+  "description": "A text-based RPG deployed in the browser that utilizes AI to generate quests and descriptions for the player to read.",
+  "repository": "https://github.com/csci312a-f23/project-camelshump/tree/main",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
