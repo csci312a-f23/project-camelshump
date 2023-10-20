@@ -1,6 +1,8 @@
 # Project Skeleton
 
-TODO: Implement CI badges, provide a link to the deployed version of your application, and provide a brief description of the application functionality.
+camelshump is text-based role-playing/adventure game that will be deployed on the web using React. The game will utilize generative AI to create storylines and descriptions of game events. Players will be able to save progress in the game and return to where they left off without loss of progress. It will hopefully be fun to play (no guarantees).
+
+The game can be accessed at: https://camelshump.csci312.dev
 
 ## Creation
 
