@@ -1,18 +1,29 @@
-export default function MapJSON({ length }) {
-  const mapArray = [];
-  const enemyProb = 1;
-  const itemProb = 2;
+export default function MapJSON({ sectionLength, numSections }) {
+  // Feels a bit wasteful re: efficiency to have to fill each init array in order to use the map/forEach format
+  function generateSection() {
+    const initArray = new Array(sectionLength);
+    initArray.fill(null);
+    const enemyProb = 1;
+    const itemProb = 2;
 
-  for (let i = 0; i < length; i += 1) {
-    const row = [];
-    for (let j = 0; j < length; j += 1) {
-      const r = Math.random() * 100;
-      if (r < enemyProb) row[j] = "E";
-      else if (r < enemyProb + itemProb) row[j] = "I";
-      else row[j] = "-";
-    }
-    mapArray[i] = row;
+    const mapArray = initArray.map(() => {
+      const rowInit = new Array(sectionLength);
+      rowInit.fill("");
+      const row = rowInit.map(() => {
+        const r = Math.random() * 100;
+        if (r < enemyProb) return "E";
+        if (r < enemyProb + itemProb) return "I";
+        return "-";
+      });
+      return row;
+    });
+
+    return mapArray;
   }
 
-  return JSON.stringify(mapArray);
+  const sectionsInit = new Array(numSections);
+  sectionsInit.fill(null);
+  const sections = sectionsInit.map(() => generateSection());
+
+  return JSON.stringify(sections);
 }
