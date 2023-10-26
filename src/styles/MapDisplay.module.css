@@ -1,0 +1,15 @@
+/* update var(--xyz) values in globals.css */
+.mapDisplay {
+  display: grid;
+  border: 1px solid #000;
+}
+
+.row {
+  padding: var(--gap);
+  display: flex;
+}
+
+.cell ul {
+  padding: var(--gap);
+  display: inline;
+}
