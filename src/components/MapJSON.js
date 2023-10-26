@@ -14,15 +14,5 @@ export default function MapJSON({ length }) {
     mapArray[i] = row;
   }
 
-  let i = 0;
-  const mapResult = mapArray.map((row) => {
-    let result = "";
-    row.forEach((item) => {
-      result += `${item} `;
-    });
-    i += 1;
-    return <li key={i}>{result}</li>;
-  });
-
-  return JSON.stringify(mapResult);
+  return JSON.stringify(mapArray);
 }
