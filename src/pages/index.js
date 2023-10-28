@@ -1,6 +1,7 @@
 /*
  * index.js
  */
+// import MapJSON from "../components/MapJSON";
 
 import MapDisplay from "@/components/MapDisplay";
 
