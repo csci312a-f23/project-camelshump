@@ -10,6 +10,7 @@ import styles from "../styles/MapDisplay.module.css";
 
 export default function MapDisplay({ currentMap }) {
   const mapGrid = currentMap.map((row, rowIndex) => (
+    // call Traversal.js pass (rowIndex,colIndex)
     // eslint-disable-next-line react/no-array-index-key
     <div className={styles.row} key={rowIndex}>
       {row.map((char, colIndex) => (
