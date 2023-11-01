@@ -5,7 +5,7 @@
 
 import { useRouter } from "next/router";
 
-export default function Menu() {
+export default function CamelsHump() {
   const router = useRouter();
   const handleClick = (condition) => {
     switch (condition) {
