@@ -3,14 +3,34 @@
  */
 // import MapJSON from "../components/MapJSON";
 
-import MapDisplay from "@/components/MapDisplay";
+import { useRouter } from "next/router";
 
-export default function Home() {
-  const mapMock = [Array.from("abc"), Array.from("def"), Array.from("ghi")];
+export default function Menu() {
+  const router = useRouter();
+  const handleClick = (condition) => {
+    switch (condition) {
+      case "new":
+        router.push("/play");
+        break;
+
+      case "break":
+        router.push("/play"); // obviously change routes as things develop
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <main>
-      <MapDisplay currentMap={mapMock} />
+      <div>Main Menu</div>
+      <button type="button" onClick={() => handleClick("new")}>
+        New Game
+      </button>
+      <button type="button" onClick={() => handleClick("load")}>
+        Load Game
+      </button>
     </main>
   );
 }
