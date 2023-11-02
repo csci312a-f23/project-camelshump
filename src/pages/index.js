@@ -5,39 +5,34 @@
  */
 // import MapJSON from "../components/MapJSON";
 
-import React, { useEffect, useState } from "react";
-import MapDisplay from "../components/MapDisplay";
-import { Traversal } from "../components/Traversal";
+import { useRouter } from "next/router";
 
-export default function Home() {
-  const initialMap = [Array.from("abc"), Array.from("def"), Array.from("ghi")];
+export default function CamelsHump() {
+  const router = useRouter();
+  const handleClick = (condition) => {
+    switch (condition) {
+      case "new":
+        router.push("/play");
+        break;
 
-  const [currentMap, setCurrentMap] = useState(initialMap);
-  const [position, setPosition] = useState([
-    Math.floor(currentMap.length / 2),
-    Math.floor(currentMap[0].length / 2),
-  ]);
-  // eslint-disable-next-line no-console
-  console.log(position);
+      case "load":
+        router.push("/play"); // obviously change routes as things develop
+        break;
 
-  useEffect(() => {
-    function handleKeyPress(event) {
-      setPosition(Traversal(currentMap, event.key, position));
-      // eslint-disable-next-line no-console
-      console.log(position);
-      setCurrentMap(currentMap);
+      default:
+        break;
     }
-
-    document.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [currentMap, position]);
+  };
 
   return (
     <main>
-      <MapDisplay currentMap={currentMap} />
+      <div>Main Menu</div>
+      <button type="button" onClick={() => handleClick("new")}>
+        New Game
+      </button>
+      <button type="button" onClick={() => handleClick("load")}>
+        Load Game
+      </button>
     </main>
   );
 }
