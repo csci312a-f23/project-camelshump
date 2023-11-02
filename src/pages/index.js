@@ -13,7 +13,7 @@ export default function CamelsHump() {
         router.push("/play");
         break;
 
-      case "break":
+      case "load":
         router.push("/play"); // obviously change routes as things develop
         break;
 
