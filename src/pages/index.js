@@ -1,5 +1,7 @@
 /*
  * index.js
+ *
+ *  call Traversal everytime a key is clicked
  */
 // import MapJSON from "../components/MapJSON";
 
