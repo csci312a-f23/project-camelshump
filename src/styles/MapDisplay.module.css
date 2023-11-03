@@ -12,4 +12,6 @@
 .cell ul {
   padding: var(--gap);
   display: inline;
+  letter-spacing: 5px;
+  font-family: "Courier New", monospace;
 }

@@ -6,25 +6,38 @@
  * currently assumes that it receives 2D array, not json
  */
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import styles from "../styles/MapDisplay.module.css";
 
-export default function MapDisplay({ currentMap }) {
-  const mapGrid = currentMap.map((row, rowIndex) => (
-    // call Traversal.js pass (rowIndex,colIndex)
-    // eslint-disable-next-line react/no-array-index-key
-    <div className={styles.row} key={rowIndex}>
-      {row.map((char, colIndex) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div className={styles.cell} key={colIndex}>
-          <ul>{char}</ul>
-        </div>
-      ))}
-    </div>
-  ));
+export default function MapDisplay({ currentMap, position }) {
+  const [displayMap, setDisplayMap] = useState([]);
 
-  return <div className={styles.mapDisplay}>{mapGrid}</div>;
+  // useEffect changes position of X character based on the received position from key presses
+  useEffect(() => {
+    setDisplayMap(
+      currentMap.map((row, rowIndex) => (
+        // call Traversal.js pass (rowIndex,colIndex)
+        // eslint-disable-next-line react/no-array-index-key
+        <div className={styles.row} key={rowIndex}>
+          {row.map((char, colIndex) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div className={styles.cell} key={colIndex}>
+              {rowIndex === position[0] && colIndex === position[1] ? (
+                <ul>X</ul>
+              ) : (
+                <ul>{char}</ul>
+              )}
+            </div>
+          ))}
+        </div>
+      )),
+    );
+  }, [position]);
+
+  return <div className={styles.mapDisplay}>{displayMap}</div>;
 }
 
 MapDisplay.propTypes = {
   currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.char)).isRequired,
+  position: PropTypes.arrayOf(PropTypes.int).isRequired,
 };
