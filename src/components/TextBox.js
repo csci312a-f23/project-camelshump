@@ -6,6 +6,9 @@ import styles from "../styles/TextBox.module.css";
 
 const hf = new HfInference("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");
 
+// NOTE ABOUT ENEMY DESCRIPTIONs
+// Pass hard-coded questions when we go over enemies or items on map
+
 export default function TextBox() {
   const [generatedText, setGeneratedText] = useState("");
 
@@ -44,10 +47,10 @@ export default function TextBox() {
 
   return (
     <div>
+      <TextPrompt getText={getText} />
       <div className={styles.textBox}>
         <p>{generatedText}</p>
       </div>
-      <TextPrompt getText={getText} />
     </div>
   );
 }
