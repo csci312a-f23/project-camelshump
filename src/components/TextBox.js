@@ -2,6 +2,7 @@
 import { HfInference } from '@huggingface/inference'
 import {useState} from "react";
 import TextPrompt from "./TextPrompt";
+import styles from "../styles/TextBox.module.css";
 
 
 
@@ -45,7 +46,7 @@ export default function TextBox(){
 
 
     return (
-    <div>
+    <div className={styles.TextBox}>
         <p>{generatedText}</p>
         <TextPrompt getText={getText}/>
     </div>
