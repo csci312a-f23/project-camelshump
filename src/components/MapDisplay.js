@@ -32,12 +32,14 @@ export default function MapDisplay({ currentMap, position }) {
         </div>
       )),
     );
-  }, [position]);
+  }, [position, currentMap]);
 
   return <div className={styles.mapDisplay}>{displayMap}</div>;
 }
 
 MapDisplay.propTypes = {
-  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.char)).isRequired,
-  position: PropTypes.arrayOf(PropTypes.int).isRequired,
+  currentMap: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  ).isRequired,
+  position: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
