@@ -15,7 +15,7 @@ export default function MapDisplay({ currentMap, position }) {
   // useEffect changes position of X character based on the received position from key presses
   useEffect(() => {
     setDisplayMap(
-      currentMap.map((row, rowIndex) => (
+      currentMap[position[2]].map((row, rowIndex) => (
         // call Traversal.js pass (rowIndex,colIndex)
         // eslint-disable-next-line react/no-array-index-key
         <div className={styles.row} key={rowIndex}>
@@ -44,6 +44,8 @@ export default function MapDisplay({ currentMap, position }) {
 }
 
 MapDisplay.propTypes = {
-  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.char)).isRequired,
-  position: PropTypes.arrayOf(PropTypes.int).isRequired,
+  currentMap: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  ).isRequired,
+  position: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

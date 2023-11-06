@@ -12,16 +12,17 @@ import TextBox from "../components/TextBox";
 export default function GameViewer() {
   const router = useRouter();
   const sectionLength = 16;
-  const numSections = 16;
+  const numSections = 9;
   // Create a new map with 16 sections and each map is 16x16 characters
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
 
   // Set map state to the initial map
   // eslint-disable-next-line no-unused-vars
-  const [currentMap, setCurrentMap] = useState(initialMap[0]);
+  const [currentMap, setCurrentMap] = useState(initialMap);
   const [position, setPosition] = useState([
-    Math.floor(currentMap.length / 2),
     Math.floor(currentMap[0].length / 2),
+    Math.floor(currentMap[0].length / 2),
+    5,
   ]);
 
   useEffect(() => {

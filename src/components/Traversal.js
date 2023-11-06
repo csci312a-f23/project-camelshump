@@ -10,42 +10,72 @@
 import PropTypes from "prop-types";
 
 // based on the direction, update the user position indicated by x, y
-export function keyMovements(direction, x, y, currentMap) {
-  switch (direction) {
-    case "ArrowUp":
-      return x - 1 >= 0 ? [x - 1, y] : [x, y];
-    case "ArrowDown":
-      return x + 1 < currentMap.length ? [x + 1, y] : [x, y];
-    case "ArrowLeft":
-      return y - 1 >= 0 ? [x, y - 1] : [x, y];
-    case "ArrowRight":
-      return y + 1 < currentMap[0].length ? [x, y + 1] : [x, y];
-    default:
-      return [x, y]; // Return the same position if no valid direction
-  }
-}
-
-// know which button/key was clicked and decide which direction to movie in based on that
-function getDirection(key) {
+export function keyMovements(key, currentPos, currentMap) {
+  const sectionsPerRow = Math.sqrt(currentMap.length);
+  const sectionLength = currentMap[0].length - 1;
+  // eslint-disable-next-line no-console
+  console.log("In keyMovements");
   switch (key) {
     case "ArrowUp":
-      return "ArrowUp";
+      // Check that character isn't on top edge of current section
+      if (currentPos[1] - 1 >= 0) {
+        return [currentPos[0], currentPos[1] - 1, currentPos[2]];
+      }
+      // Check character is not in top row of sections
+      if (currentPos[2] >= sectionsPerRow) {
+        // Move to above row of sections
+        return [currentPos[0], sectionLength, currentPos[2] - sectionsPerRow];
+      }
+      // Stop character from leaving map
+      return currentPos;
+
     case "ArrowDown":
-      return "ArrowDown";
+      // Check that character isn't on bottom edge of current section
+      if (currentPos[1] < sectionLength) {
+        return [currentPos[0], currentPos[1] + 1, currentPos[2]];
+      }
+      // Check that character is not in bottom row of sections
+      if (currentMap.length - 1 - currentPos[2] >= sectionsPerRow) {
+        // Move to below row of sections
+        return [currentPos[0], 0, currentPos[2] + sectionsPerRow];
+      }
+      // Stop character from leaving map
+      return currentPos;
+
     case "ArrowLeft":
-      return "ArrowLeft";
+      // Check that character isn't on left edge of current section
+      if (currentPos[0] - 1 >= 0) {
+        return [currentPos[0] - 1, currentPos[1], currentPos[2]];
+      }
+      // Check that character is not in leftmost column of sections
+      if (currentPos[2] % sectionsPerRow !== 0) {
+        // Move to next row of sections on the left
+        return [sectionLength, currentPos[1], currentPos[2] - 1];
+      }
+      // Stop character from leaving map
+      return currentPos;
+
     case "ArrowRight":
-      return "ArrowRight";
+      // Check that character isn't on right edge of current section
+      if (currentPos[0] < sectionLength) {
+        return [currentPos[0] + 1, currentPos[1], currentPos[2]];
+      }
+      // Check that character is not in rightmost column of sections
+      if (currentPos[2] % sectionsPerRow !== sectionsPerRow - 1) {
+        return [0, currentPos[1], currentPos[2] + 1];
+      }
+      // Stop character from leaving map
+      return currentPos;
+
     default:
-      return null;
+      return currentPos; // Return the same position if no valid direction
   }
 }
 
-export function Traversal(currentMap, key, position) {
-  const direction = getDirection(key);
-  const [x, y] = keyMovements(direction, position[0], position[1], currentMap);
+export function Traversal(currentMap, key, currentPos) {
+  const nextPos = keyMovements(key, currentPos, currentMap);
 
-  return [x, y];
+  return nextPos;
 }
 
 Traversal.propTypes = {
