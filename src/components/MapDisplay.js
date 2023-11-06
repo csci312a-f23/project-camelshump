@@ -21,7 +21,7 @@ export default function MapDisplay({ currentMap, position }) {
         <div className={styles.row} key={rowIndex}>
           {row.map((char, colIndex) => (
             // eslint-disable-next-line react/no-array-index-key
-            <div className={styles.cell} key={colIndex}>
+            <div className={styles.cell} data-testid="map" key={colIndex}>
               {rowIndex === position[0] && colIndex === position[1] ? (
                 <ul>X</ul>
               ) : (
