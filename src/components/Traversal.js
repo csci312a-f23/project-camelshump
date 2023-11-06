@@ -16,7 +16,7 @@ export function keyMovements(key, currentPos, currentMap) {
   // eslint-disable-next-line no-console
   console.log("In keyMovements");
   switch (key) {
-    case "ArrowUp":
+    case "ArrowLeft":
       // Check that character isn't on top edge of current section
       if (currentPos[1] - 1 >= 0) {
         return [currentPos[0], currentPos[1] - 1, currentPos[2]];
@@ -29,7 +29,7 @@ export function keyMovements(key, currentPos, currentMap) {
       // Stop character from leaving map
       return currentPos;
 
-    case "ArrowDown":
+    case "ArrowRight":
       // Check that character isn't on bottom edge of current section
       if (currentPos[1] < sectionLength) {
         return [currentPos[0], currentPos[1] + 1, currentPos[2]];
@@ -42,7 +42,7 @@ export function keyMovements(key, currentPos, currentMap) {
       // Stop character from leaving map
       return currentPos;
 
-    case "ArrowLeft":
+    case "ArrowUp":
       // Check that character isn't on left edge of current section
       if (currentPos[0] - 1 >= 0) {
         return [currentPos[0] - 1, currentPos[1], currentPos[2]];
@@ -55,7 +55,7 @@ export function keyMovements(key, currentPos, currentMap) {
       // Stop character from leaving map
       return currentPos;
 
-    case "ArrowRight":
+    case "ArrowDown":
       // Check that character isn't on right edge of current section
       if (currentPos[0] < sectionLength) {
         return [currentPos[0] + 1, currentPos[1], currentPos[2]];
