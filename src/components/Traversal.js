@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 
 // based on the direction, update the user position indicated by x, y
 export function keyMovements(key, currentPos, currentMap) {
-  const sectonsPerRow = Math.sqrt(currentMap.length);
+  const sectionsPerRow = Math.sqrt(currentMap.length);
   const sectionLength = currentMap[0].length - 1;
   // eslint-disable-next-line no-console
   console.log("In keyMovements");
@@ -22,9 +22,9 @@ export function keyMovements(key, currentPos, currentMap) {
         return [currentPos[0], currentPos[1] - 1, currentPos[2]];
       }
       // Check character is not in top row of sections
-      if (currentPos[2] >= sectonsPerRow) {
+      if (currentPos[2] >= sectionsPerRow) {
         // Move to above row of sections
-        return [currentPos[0], sectionLength, currentPos[2] - sectonsPerRow];
+        return [currentPos[0], sectionLength, currentPos[2] - sectionsPerRow];
       }
       // Stop character from leaving map
       return currentPos;
@@ -35,9 +35,9 @@ export function keyMovements(key, currentPos, currentMap) {
         return [currentPos[0], currentPos[1] + 1, currentPos[2]];
       }
       // Check that character is not in bottom row of sections
-      if (currentMap.length - 1 - currentPos[2] >= sectonsPerRow) {
+      if (currentMap.length - 1 - currentPos[2] >= sectionsPerRow) {
         // Move to below row of sections
-        return [currentPos[0], 0, currentPos[2] + sectonsPerRow];
+        return [currentPos[0], 0, currentPos[2] + sectionsPerRow];
       }
       // Stop character from leaving map
       return currentPos;
@@ -48,7 +48,7 @@ export function keyMovements(key, currentPos, currentMap) {
         return [currentPos[0] - 1, currentPos[1], currentPos[2]];
       }
       // Check that character is not in leftmost column of sections
-      if (currentPos[2] % sectonsPerRow !== 0) {
+      if (currentPos[2] % sectionsPerRow !== 0) {
         // Move to next row of sections on the left
         return [sectionLength, currentPos[1], currentPos[2] - 1];
       }
@@ -61,7 +61,7 @@ export function keyMovements(key, currentPos, currentMap) {
         return [currentPos[0] + 1, currentPos[1], currentPos[2]];
       }
       // Check that character is not in rightmost column of sections
-      if (currentPos[2] % sectonsPerRow !== sectonsPerRow - 1) {
+      if (currentPos[2] % sectionsPerRow !== sectionsPerRow - 1) {
         return [0, currentPos[1], currentPos[2] + 1];
       }
       // Stop character from leaving map
