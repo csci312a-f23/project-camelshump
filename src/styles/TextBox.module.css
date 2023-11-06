@@ -1,0 +1,6 @@
+/* styles for text box */
+.textBox p {
+  display: "inline-flex";
+  height: 150px;
+  max-width: 750px;
+}

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
+import TextBox from "../components/TextBox";
 
 export default function GameViewer() {
   const router = useRouter();
@@ -38,7 +39,10 @@ export default function GameViewer() {
 
   return (
     <main>
-      <MapDisplay currentMap={currentMap} position={position} />
+      <div className="rowA">
+        <MapDisplay currentMap={currentMap} position={position} />
+        <TextBox />
+      </div>
       <button type="button" onClick={() => router.back()}>
         Quit
       </button>
