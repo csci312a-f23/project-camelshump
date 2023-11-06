@@ -11,8 +11,6 @@ import PropTypes from "prop-types";
 
 // based on the direction, update the user position indicated by x, y
 export function keyMovements(direction, x, y, currentMap) {
-  // eslint-disable-next-line no-console
-  console.log("In keyMovements");
   switch (direction) {
     case "ArrowUp":
       return x - 1 >= 0 ? [x - 1, y] : [x, y];
@@ -31,20 +29,12 @@ export function keyMovements(direction, x, y, currentMap) {
 function getDirection(key) {
   switch (key) {
     case "ArrowUp":
-      // eslint-disable-next-line no-console
-      console.log("Arrow Up");
       return "ArrowUp";
     case "ArrowDown":
-      // eslint-disable-next-line no-console
-      console.log("Arrow Down");
       return "ArrowDown";
     case "ArrowLeft":
-      // eslint-disable-next-line no-console
-      console.log("Arrow Left");
       return "ArrowLeft";
     case "ArrowRight":
-      // eslint-disable-next-line no-console
-      console.log("Arrow Right");
       return "ArrowRight";
     default:
       return null;

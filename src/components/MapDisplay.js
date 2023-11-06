@@ -22,17 +22,23 @@ export default function MapDisplay({ currentMap, position }) {
           {row.map((char, colIndex) => (
             // eslint-disable-next-line react/no-array-index-key
             <div className={styles.cell} data-testid="map" key={colIndex}>
-              {rowIndex === position[0] && colIndex === position[1] ? (
-                <ul>X</ul>
-              ) : (
-                <ul>{char}</ul>
-              )}
+              <ul
+                className={
+                  char === "E" || char === "I" ? styles.usefulChar : ""
+                }
+              >
+                {rowIndex === position[0] && colIndex === position[1] ? (
+                  <ul className={styles.highlightedX}>X</ul>
+                ) : (
+                  char
+                )}
+              </ul>
             </div>
           ))}
         </div>
       )),
     );
-  }, [position]);
+  }, [currentMap, position]);
 
   return <div className={styles.mapDisplay}>{displayMap}</div>;
 }
