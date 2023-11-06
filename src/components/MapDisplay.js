@@ -15,14 +15,14 @@ export default function MapDisplay({ currentMap, position }) {
   // useEffect changes position of X character based on the received position from key presses
   useEffect(() => {
     setDisplayMap(
-      currentMap.map((row, rowIndex) => (
+      currentMap[position[2]].map((row, rowIndex) => (
         // call Traversal.js pass (rowIndex,colIndex)
         // eslint-disable-next-line react/no-array-index-key
         <div className={styles.row} key={rowIndex}>
           {row.map((char, colIndex) => (
             // eslint-disable-next-line react/no-array-index-key
             <div className={styles.cell} data-testid="map" key={colIndex}>
-              {rowIndex === position[0] && colIndex === position[1] ? (
+              {colIndex === position[0] && rowIndex === position[1] ? (
                 <ul>X</ul>
               ) : (
                 <ul>{char}</ul>
