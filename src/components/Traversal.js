@@ -31,22 +31,18 @@ export function keyMovements(direction, x, y, currentMap) {
 function getDirection(key) {
   switch (key) {
     case "ArrowUp":
-    case "w":
       // eslint-disable-next-line no-console
       console.log("Arrow Up");
       return "ArrowUp";
     case "ArrowDown":
-    case "s":
       // eslint-disable-next-line no-console
       console.log("Arrow Down");
       return "ArrowDown";
     case "ArrowLeft":
-    case "a":
       // eslint-disable-next-line no-console
       console.log("Arrow Left");
       return "ArrowLeft";
     case "ArrowRight":
-    case "d":
       // eslint-disable-next-line no-console
       console.log("Arrow Right");
       return "ArrowRight";
