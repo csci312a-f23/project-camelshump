@@ -4,6 +4,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
+import Inventory from "@/components/Inventory";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
@@ -38,10 +39,15 @@ export default function GameViewer() {
   }, [currentMap, position]);
 
   return (
-    <main>
-      <div className="rowA">
+    <main className="gridContainer">
+      <div className="mapContainer">
         <MapDisplay currentMap={currentMap} position={position} />
+      </div>
+      <div className="textContainer">
         <TextBox />
+      </div>
+      <div className="inventoryContainer">
+        <Inventory />
       </div>
       <button type="button" onClick={() => router.back()}>
         Quit
