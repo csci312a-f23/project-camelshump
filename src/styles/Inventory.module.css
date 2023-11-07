@@ -1,0 +1,14 @@
+/* styles for the Inventory container */
+.InventoryContainer {
+  font-size: 24px; /* Large font size */
+  font-weight: bold; /* Bold text */
+  padding-left: 8px;
+}
+
+/* styles for the inventory item */
+.InventoryItem {
+  color: darkgreen; /* Dark green color */
+  font-weight: bold; /* Bold text */
+  padding-left: 15px; /* Space before the item */
+  /* background: url('path-to-your-icon.png') right center no-repeat; Icon as background */
+}
