@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styles from "../styles/MapDisplay.module.css";
 
-export default function MapDisplay({ currentMap, position }) {
+export default function MapDisplay({ currentMap, position, updateItem }) {
   const [displayMap, setDisplayMap] = useState([]);
 
   // useEffect changes position of X character based on the received position from key presses
@@ -28,7 +28,15 @@ export default function MapDisplay({ currentMap, position }) {
                 }
               >
                 {rowIndex === position[0] && colIndex === position[1] ? (
-                  <ul className={styles.highlightedX}>X</ul>
+                  <ul className={styles.highlightedX}>
+                    {" "}
+                    X
+                    {char === "E" || char === "I"
+                      ? (() => {
+                          updateItem(char);
+                        })()
+                      : null}
+                  </ul>
                 ) : (
                   char
                 )}
@@ -38,14 +46,14 @@ export default function MapDisplay({ currentMap, position }) {
         </div>
       )),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMap, position]);
 
   return <div className={styles.mapDisplay}>{displayMap}</div>;
 }
 
 MapDisplay.propTypes = {
-  currentMap: PropTypes.arrayOf(
-    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-  ).isRequired,
-  position: PropTypes.arrayOf(PropTypes.number).isRequired,
+  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  position: PropTypes.arrayOf(PropTypes.int).isRequired,
+  updateItem: PropTypes.func.isRequired,
 };

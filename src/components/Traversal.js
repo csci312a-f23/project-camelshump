@@ -13,8 +13,6 @@ import PropTypes from "prop-types";
 export function keyMovements(key, currentPos, currentMap) {
   const sectionsPerRow = Math.sqrt(currentMap.length);
   const sectionLength = currentMap[0].length - 1;
-  // eslint-disable-next-line no-console
-  console.log("In keyMovements");
   switch (key) {
     case "ArrowLeft":
       // Check that character isn't on top edge of current section
