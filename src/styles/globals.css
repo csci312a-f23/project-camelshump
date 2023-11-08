@@ -47,6 +47,30 @@ body {
   max-width: 750px;
 }
 
+.warriorContainer {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  border: 1px solid #000;
+  height: 450px;
+  max-width: 150px;
+}
+
+.mageContainer {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  border: 1px solid #000;
+  height: 450px;
+  max-width: 150px;
+}
+
+.rogueContainer {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  border: 1px solid #000;
+  height: 450px;
+  max-width: 150px;
+}
+
 .rowA {
   display: flex;
   flex-direction: row;
