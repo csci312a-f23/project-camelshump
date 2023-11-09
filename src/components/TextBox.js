@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { HfInference } from "@huggingface/inference";
 import { useState } from "react";
+import PropTypes from "prop-types";
 import TextPrompt from "./TextPrompt";
 import styles from "../styles/TextBox.module.css";
 
@@ -9,7 +10,7 @@ const hf = new HfInference("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");
 // NOTE ABOUT ENEMY DESCRIPTIONs
 // Pass hard-coded questions when we go over enemies or items on map
 
-export default function TextBox() {
+export default function TextBox({ invisiblePrompt, setInvisiblePrompt }) {
   const [generatedText, setGeneratedText] = useState("");
 
   const genKwargs = {
@@ -47,10 +48,21 @@ export default function TextBox() {
 
   return (
     <div>
-      <TextPrompt getText={getText} />
+      <TextPrompt
+        getText={getText}
+        invisiblePrompt={invisiblePrompt}
+        setInvisiblePrompt={setInvisiblePrompt}
+      />
       <div className={styles.textBox}>
         <p>{generatedText}</p>
       </div>
     </div>
   );
 }
+
+TextBox.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  invisiblePrompt: PropTypes.string,
+  // eslint-disable-next-line react/require-default-props
+  setInvisiblePrompt: PropTypes.func,
+};
