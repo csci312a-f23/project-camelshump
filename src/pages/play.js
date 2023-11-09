@@ -47,16 +47,15 @@ export default function GameViewer() {
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
       setInvisiblePrompt(`describe a ${placeholderEnemies[0]}`);
       togglePopup(); // Show the enemy pop-up
-    } else {
+    } else if (itemPressed === "I") {
       setInvisiblePrompt(`describe a ${placeholderItems[0]}`);
+      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
     }
   };
 
   const handleItemUpdate = () => {
     // Reset the item to an empty array
     setItem("");
-    // eslint-disable-next-line no-console
-    console.log("Enemy pop up false");
   };
 
   useEffect(() => {
