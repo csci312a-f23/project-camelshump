@@ -83,7 +83,7 @@ export default function GameViewer() {
       <div className="inventoryContainer">
         <Inventory item={item} onItemUpdate={handleItemUpdate} />
       </div>
-      <button type="button" onClick={() => router.back()}>
+      <button type="button" onClick={() => router.push("/")}>
         Quit
       </button>
     </main>

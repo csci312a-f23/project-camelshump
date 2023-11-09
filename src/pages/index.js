@@ -12,7 +12,7 @@ export default function CamelsHump() {
   const handleClick = (condition) => {
     switch (condition) {
       case "new":
-        router.push("/play");
+        router.push("/classSelect");
         break;
 
       case "load":
