@@ -11,7 +11,7 @@ import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 
 const placeholderItems = ["Sword", "Staff"];
-const placeholderEnemies = ["Spider", "Dragon"];
+const placeholderEnemies = ["Spider monster", "Dragon"];
 
 export default function GameViewer() {
   const router = useRouter();
