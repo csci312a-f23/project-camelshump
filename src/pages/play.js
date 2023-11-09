@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
-import FightEnemy from "./FightEnemy";
+import FightEnemy from "../components/FightEnemy";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
