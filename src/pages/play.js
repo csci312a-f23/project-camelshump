@@ -10,6 +10,9 @@ import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 
+const placeholderItems = ["Sword", "Staff"];
+const placeholderEnemies = ["Spider", "Dragon"];
+
 export default function GameViewer() {
   const router = useRouter();
   const sectionLength = 16;
@@ -22,6 +25,7 @@ export default function GameViewer() {
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState("");
   const [enemyPopup, setEnemyPopup] = useState(false);
+  const [invisiblePrompt, setInvisiblePrompt] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -40,13 +44,18 @@ export default function GameViewer() {
   const updateItem = (itemPressed) => {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
+      // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
+      setInvisiblePrompt(`describe a ${placeholderEnemies[0]}`);
       togglePopup(); // Show the enemy pop-up
+    } else {
+      setInvisiblePrompt(`describe a ${placeholderItems[0]}`);
     }
   };
 
   const handleItemUpdate = () => {
     // Reset the item to an empty array
     setItem("");
+    // eslint-disable-next-line no-console
     console.log("Enemy pop up false");
   };
 
@@ -78,7 +87,10 @@ export default function GameViewer() {
         {enemyPopup && <FightEnemy closePopup={closePopup} />}
       </div>
       <div className="textContainer">
-        <TextBox />
+        <TextBox
+          invisiblePrompt={invisiblePrompt}
+          setInvisiblePrompt={setInvisiblePrompt}
+        />
       </div>
       <div className="inventoryContainer">
         <Inventory item={item} onItemUpdate={handleItemUpdate} />
