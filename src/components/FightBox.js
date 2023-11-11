@@ -3,16 +3,25 @@
  */
 import PropTypes from "prop-types";
 
-export default function FightBox({ closeFightBox }) {
+export default function FightBox({ closeFightBox, fightAction }) {
   const handleClose = () => {
     closeFightBox();
   };
 
   return (
     <div>
-      <button type="button"> Punch </button>
-      <button type="button"> Swing Sword </button>
-      <button type="button"> Dance </button>
+      <button type="button" onClick={() => fightAction("punch")}>
+        {" "}
+        Punch{" "}
+      </button>
+      <button type="button" onClick={() => fightAction("sword")}>
+        {" "}
+        Swing Sword{" "}
+      </button>
+      <button type="button" onClick={() => fightAction("dance")}>
+        {" "}
+        Dance{" "}
+      </button>
       <button type="button" onClick={() => handleClose()}>
         {" "}
         Close{" "}
@@ -23,4 +32,5 @@ export default function FightBox({ closeFightBox }) {
 
 FightBox.propTypes = {
   closeFightBox: PropTypes.func.isRequired,
+  fightAction: PropTypes.func.isRequired,
 };

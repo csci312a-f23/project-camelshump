@@ -4,7 +4,7 @@ import styles from "../styles/FightEnemy.module.css";
 
 import FightBox from "./FightBox";
 
-export default function FightEnemy({ closePopup }) {
+export default function FightEnemy({ closePopup, fightAction }) {
   const [fightOptions, setFightOptions] = useState(false);
 
   const handleClose = () => {
@@ -34,7 +34,10 @@ export default function FightEnemy({ closePopup }) {
           Run{" "}
         </button>
         {fightOptions && (
-          <FightBox closeFightBox={() => setFightOptions(false)} />
+          <FightBox
+            closeFightBox={() => setFightOptions(false)}
+            fightAction={fightAction}
+          />
         )}
       </div>
     </div>
@@ -43,4 +46,5 @@ export default function FightEnemy({ closePopup }) {
 
 FightEnemy.propTypes = {
   closePopup: PropTypes.func.isRequired,
+  fightAction: PropTypes.func.isRequired,
 };
