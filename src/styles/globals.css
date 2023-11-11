@@ -47,28 +47,33 @@ body {
   max-width: 750px;
 }
 
-.warriorContainer {
+.class {
+  border: 1px solid #000;
+  height: 450px;
+  max-width: 150px;
+  text-wrap: wrap;
+}
+
+.class:hover {
+  border: 3px solid #000;
+}
+
+.class:hover div {
+  font-weight: bold;
+}
+
+#warrior {
   grid-column-start: 2;
   grid-column-end: 3;
-  border: 1px solid #000;
-  height: 450px;
-  max-width: 150px;
 }
-
-.mageContainer {
+#mage {
   grid-column-start: 3;
   grid-column-end: 4;
-  border: 1px solid #000;
-  height: 450px;
-  max-width: 150px;
 }
 
-.rogueContainer {
+#rogue {
   grid-column-start: 4;
   grid-column-end: 5;
-  border: 1px solid #000;
-  height: 450px;
-  max-width: 150px;
 }
 
 .rowA {
