@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
-import FightEnemy from "./FightEnemy";
+import FightEnemy from "../components/FightEnemy";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
@@ -26,6 +26,7 @@ export default function GameViewer() {
   const [item, setItem] = useState("");
   const [enemyPopup, setEnemyPopup] = useState(false);
   const [invisiblePrompt, setInvisiblePrompt] = useState("");
+  const [enemyKilled, setEnemyKilled] = useState(false);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -41,22 +42,48 @@ export default function GameViewer() {
     setEnemyPopup(false);
   };
 
+  const fightAction = (action) => {
+    switch (action) {
+      case "punch":
+        setEnemyKilled(true);
+        break;
+      case "sword":
+        setEnemyKilled(true);
+        break;
+      case "dance":
+        setEnemyKilled(false);
+        break;
+      default:
+        setEnemyKilled(false);
+    }
+  };
+
+  useEffect(() => {
+    if (enemyKilled) {
+      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
+      setCurrentMap(currentMap);
+      setEnemyKilled(false);
+      closePopup(); // close popup if enemy killed...
+      // MIGHT WANT TO WRITE SOMETHING TO THE TEXT BOX HERE
+    }
+  }, [enemyKilled]);
+
   const updateItem = (itemPressed) => {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
       setInvisiblePrompt(`describe a ${placeholderEnemies[0]}`);
       togglePopup(); // Show the enemy pop-up
-    } else {
+    } else if (itemPressed === "I") {
       setInvisiblePrompt(`describe a ${placeholderItems[0]}`);
+      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
+      setCurrentMap(currentMap);
     }
   };
 
   const handleItemUpdate = () => {
     // Reset the item to an empty array
     setItem("");
-    // eslint-disable-next-line no-console
-    console.log("Enemy pop up false");
   };
 
   useEffect(() => {
@@ -84,7 +111,9 @@ export default function GameViewer() {
         className="enemyPopup"
         style={{ width: "50%", float: "left", position: "relative" }}
       >
-        {enemyPopup && <FightEnemy closePopup={closePopup} />}
+        {enemyPopup && (
+          <FightEnemy closePopup={closePopup} fightAction={fightAction} />
+        )}
       </div>
       <div className="textContainer">
         <TextBox
