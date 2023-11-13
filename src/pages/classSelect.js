@@ -12,13 +12,17 @@ export default function ClassSelector() {
 
   return (
     <main className="gridContainer">
-      <div className="warriorContainer" onClick={() => handleClick("warrior")}>
+      <div
+        className="warrior"
+        id="class"
+        onClick={() => handleClick("warrior")}
+      >
         <div>Warrior</div>
       </div>
-      <div className="mageContainer" onClick={() => handleClick("mage")}>
+      <div className="mage" id="class" onClick={() => handleClick("mage")}>
         <div>Mage</div>
       </div>
-      <div className="rogueContainer" onClick={() => handleClick("rogue")}>
+      <div className="rogue" id="class" onClick={() => handleClick("rogue")}>
         <div>Rogue</div>
       </div>
     </main>
