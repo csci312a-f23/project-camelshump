@@ -3,7 +3,7 @@ import MapDisplay from "./MapDisplay";
 
 const currentMapMock = [
   [Array.from("abc"), Array.from("def"), Array.from("ghi")],
-]; // change this to smth sensicle later
+]; // change this to smth sensical later
 const positionMock = [0, 0, 0];
 
 describe("MapDisplay: handles initialization", () => {
