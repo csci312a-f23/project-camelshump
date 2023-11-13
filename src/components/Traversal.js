@@ -77,6 +77,7 @@ export function Traversal(currentMap, key, currentPos) {
 }
 
 Traversal.propTypes = {
+  key: PropTypes.string,
   currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.char)).isRequired,
   position: PropTypes.arrayOf(PropTypes.Number).isRequired,
 };
