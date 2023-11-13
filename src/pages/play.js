@@ -50,7 +50,7 @@ export default function GameViewer() {
       <div className="inventoryContainer">
         <Inventory />
       </div>
-      <button type="button" onClick={() => router.back()}>
+      <button type="button" onClick={() => router.push("/")}>
         Quit
       </button>
     </main>
