@@ -10,7 +10,7 @@
 import PropTypes from "prop-types";
 
 // based on the direction, update the user position indicated by x, y
-export function keyMovements(key, currentPos, currentMap) {
+export default function keyMovements(key, currentPos, currentMap) {
   const sectionsPerRow = Math.sqrt(currentMap.length);
   const sectionLength = currentMap[0].length - 1;
   switch (key) {
@@ -77,6 +77,7 @@ export function Traversal(currentMap, key, currentPos) {
 }
 
 Traversal.propTypes = {
-  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.char)).isRequired,
-  position: PropTypes.arrayOf(PropTypes.Number).isRequired,
+  key: PropTypes.string,
+  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  position: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

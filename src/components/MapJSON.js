@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function MapJSON({ sectionLength, numSections }) {
   // Feels a bit wasteful re: efficiency to have to fill each init array in order to use the map/forEach format
   function generateSection() {
@@ -27,3 +29,8 @@ export default function MapJSON({ sectionLength, numSections }) {
 
   return JSON.stringify(sections);
 }
+
+MapJSON.propTypes = {
+  sectionLength: PropTypes.number,
+  numSections: PropTypes.number,
+};

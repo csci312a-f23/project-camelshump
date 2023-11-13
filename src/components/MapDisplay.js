@@ -53,7 +53,9 @@ export default function MapDisplay({ currentMap, position, updateItem }) {
 }
 
 MapDisplay.propTypes = {
-  currentMap: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
-  position: PropTypes.arrayOf(PropTypes.int).isRequired,
+  currentMap: PropTypes.arrayOf(
+    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  ).isRequired,
+  position: PropTypes.arrayOf(PropTypes.number).isRequired,
   updateItem: PropTypes.func.isRequired,
 };
