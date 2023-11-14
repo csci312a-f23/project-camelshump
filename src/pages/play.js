@@ -1,6 +1,7 @@
 /*
  * play.js
  */
+import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
@@ -12,8 +13,9 @@ import TextBox from "../components/TextBox";
 
 const placeholderItems = ["Sword", "Staff"];
 const placeholderEnemies = ["Spider monster", "Dragon"];
+const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
-export default function GameViewer() {
+export default function GameViewer({ className }) {
   const router = useRouter();
   const sectionLength = 16;
   const numSections = 9;
@@ -23,7 +25,7 @@ export default function GameViewer() {
   // Set map state to the initial map
   // eslint-disable-next-line no-unused-vars
   const [currentMap, setCurrentMap] = useState(initialMap);
-  const [item, setItem] = useState("");
+  const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
   const [invisiblePrompt, setInvisiblePrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
@@ -130,3 +132,7 @@ export default function GameViewer() {
     </main>
   );
 }
+
+GameViewer.propTypes = {
+  className: PropTypes.string.isRequired,
+};
