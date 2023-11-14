@@ -1,12 +1,14 @@
 /*
  * menu.js
  */
+import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 
-export default function ClassSelector() {
+export default function ClassSelector({ setClassName }) {
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClick = (selection) => {
+    setClassName(selection);
     router.push("/play");
   };
 
@@ -28,3 +30,7 @@ export default function ClassSelector() {
     </main>
   );
 }
+
+ClassSelector.propTypes = {
+  setClassName: PropTypes.func.isRequired,
+};
