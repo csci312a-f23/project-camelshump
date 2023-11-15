@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
+import Dictionary from "@/components/Dictionary";
 import FightEnemy from "../components/FightEnemy";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
+import styles from "../styles/Dictionary.module.css";
 
 const placeholderItems = ["Sword", "Staff"];
 const placeholderEnemies = ["Spider monster", "Dragon"];
@@ -29,6 +31,7 @@ export default function GameViewer({ className }) {
   const [enemyPopup, setEnemyPopup] = useState(false);
   const [invisiblePrompt, setInvisiblePrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
+  const [showDictionary, setShowDictionary] = useState(false);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -60,6 +63,10 @@ export default function GameViewer({ className }) {
     }
   };
 
+  const handleShowDictionary = () => {
+    setShowDictionary((prevShowDictionary) => !prevShowDictionary);
+  };
+
   useEffect(() => {
     if (enemyKilled) {
       currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
@@ -74,13 +81,15 @@ export default function GameViewer({ className }) {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
+      // is there a way to change this? it passes the same prompts for every enemy and every item
       setInvisiblePrompt(`describe a ${placeholderEnemies[0]}`);
       togglePopup(); // Show the enemy pop-up
-    } else if (itemPressed === "I") {
+    } else if (itemPressed !== "-") {
       setInvisiblePrompt(`describe a ${placeholderItems[0]}`);
-      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
       setCurrentMap(currentMap);
     }
+    // after you collect items/ fight enemy update its value on map to be -
+    currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
   };
 
   const handleItemUpdate = () => {
@@ -124,7 +133,18 @@ export default function GameViewer({ className }) {
         />
       </div>
       <div className="inventoryContainer">
+        <p style={{ fontWeight: "bold", paddingLeft: "10px" }}>Inventory</p>
         <Inventory item={item} onItemUpdate={handleItemUpdate} />
+      </div>
+      <div className="dictionaryButton">
+        <button
+          type="button"
+          onClick={handleShowDictionary}
+          className={styles.dictionaryButton}
+        >
+          {showDictionary ? "Hide Dictionary" : "Show Dictionary"}
+        </button>
+        {showDictionary && <Dictionary onClose={handleShowDictionary} />}
       </div>
       <button type="button" onClick={() => router.push("/")}>
         Quit

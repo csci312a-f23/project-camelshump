@@ -39,14 +39,15 @@ export default function Inventory({ item, onItemUpdate }) {
 
   return (
     <div className={styles.InventoryContainer}>
-      Inventory
-      {inventoryList.map((inventoryItem, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <p key={index}>
-          <span className={styles.InventoryItem}>{inventoryItem.name}</span>
-          {`: ${inventoryItem.quantity}`}
-        </p>
-      ))}
+      <ul className={styles.InventoryList}>
+        {inventoryList.map((inventoryItem, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <li key={index}>
+            <span className={styles.InventoryItem}>{inventoryItem.name}</span>
+            {`: ${inventoryItem.quantity}`}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
