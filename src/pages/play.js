@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
+import Dictionary from "@/components/Dictionary";
 import FightEnemy from "../components/FightEnemy";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
+import styles from "../styles/Dictionary.module.css";
 
 const placeholderItems = ["Sword", "Staff"];
 const placeholderEnemies = ["Spider monster", "Dragon"];
@@ -29,6 +31,7 @@ export default function GameViewer({ className }) {
   const [enemyPopup, setEnemyPopup] = useState(false);
   const [invisiblePrompt, setInvisiblePrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
+  const [showDictionary, setShowDictionary] = useState(false);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -58,6 +61,10 @@ export default function GameViewer({ className }) {
       default:
         setEnemyKilled(false);
     }
+  };
+
+  const handleShowDictionary = () => {
+    setShowDictionary((prevShowDictionary) => !prevShowDictionary);
   };
 
   useEffect(() => {
@@ -128,6 +135,16 @@ export default function GameViewer({ className }) {
       <div className="inventoryContainer">
         <p style={{ fontWeight: "bold", paddingLeft: "10px" }}>Inventory</p>
         <Inventory item={item} onItemUpdate={handleItemUpdate} />
+      </div>
+      <div className="dictionaryButton">
+        <button
+          type="button"
+          onClick={handleShowDictionary}
+          className={styles.dictionaryButton}
+        >
+          {showDictionary ? "Hide Dictionary" : "Show Dictionary"}
+        </button>
+        {showDictionary && <Dictionary onClose={handleShowDictionary} />}
       </div>
       <button type="button" onClick={() => router.push("/")}>
         Quit
