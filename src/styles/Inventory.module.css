@@ -1,14 +1,22 @@
-/* styles for the Inventory container */
+/* Inventory.module.css */
+
 .InventoryContainer {
-  font-size: 24px; /* Large font size */
-  font-weight: bold; /* Bold text */
-  padding-left: 8px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  max-width: 300px;
+  text-align: center;
 }
 
-/* styles for the inventory item */
 .InventoryItem {
-  color: darkgreen; /* Dark green color */
-  font-weight: bold; /* Bold text */
-  padding-left: 15px; /* Space before the item */
-  /* background: url('path-to-your-icon.png') right center no-repeat; Icon as background */
+  margin-right: 5px;
+  font-weight: bold;
+}
+
+.InventoryList {
+  columns: 2;
+  column-gap: 10px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }

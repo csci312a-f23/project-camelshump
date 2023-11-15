@@ -6,7 +6,9 @@ export default function MapJSON({ sectionLength, numSections }) {
     const initArray = new Array(sectionLength);
     initArray.fill(null);
     const enemyProb = 1;
-    const itemProb = 2;
+    const itemProb = 5;
+    // add more items to collect and fill inventory
+    const items = ["A", "B", "G", "H", "S"];
 
     const mapArray = initArray.map(() => {
       const rowInit = new Array(sectionLength);
@@ -14,7 +16,11 @@ export default function MapJSON({ sectionLength, numSections }) {
       const row = rowInit.map(() => {
         const r = Math.random() * 100;
         if (r < enemyProb) return "E";
-        if (r < enemyProb + itemProb) return "I";
+        // i want items to fill map at random
+        if (r < enemyProb + itemProb) {
+          const itemRandomizer = Math.floor(Math.random() * items.length);
+          return items[itemRandomizer];
+        }
         return "-";
       });
       return row;

@@ -22,16 +22,12 @@ export default function MapDisplay({ currentMap, position, updateItem }) {
           {row.map((char, colIndex) => (
             // eslint-disable-next-line react/no-array-index-key
             <div className={styles.cell} data-testid="map" key={colIndex}>
-              <ul
-                className={
-                  char === "E" || char === "I" ? styles.usefulChar : ""
-                }
-              >
+              <ul className={char !== "-" ? styles.usefulChar : ""}>
                 {rowIndex === position[0] && colIndex === position[1] ? (
                   <ul className={styles.highlightedX}>
                     {" "}
                     X
-                    {char === "E" || char === "I"
+                    {char !== "-"
                       ? (() => {
                           updateItem(char);
                         })()
