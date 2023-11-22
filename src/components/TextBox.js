@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
 import { HfInference } from "@huggingface/inference";
-import { useState } from "react";
 import PropTypes from "prop-types";
 import TextPrompt from "./TextPrompt";
 import styles from "../styles/TextBox.module.css";
@@ -10,9 +9,13 @@ const hf = new HfInference("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");
 // NOTE ABOUT ENEMY DESCRIPTIONs
 // Pass hard-coded questions when we go over enemies or items on map
 
-export default function TextBox({ invisiblePrompt, setInvisiblePrompt }) {
-  const [generatedText, setGeneratedText] = useState("");
-
+export default function TextBox({
+  generatedText,
+  setGeneratedText,
+  additionalText,
+  invisiblePrompt,
+  setInvisiblePrompt,
+}) {
   const genKwargs = {
     max_new_tokens: 128,
     top_k: 30,
@@ -42,8 +45,8 @@ export default function TextBox({ invisiblePrompt, setInvisiblePrompt }) {
       }
       textStream += r.token.text;
     }
-    setGeneratedText(textStream);
-    // console.log(generatedText);
+    const text = `${additionalText}\n${textStream}`;
+    setGeneratedText(text);
   }
 
   return (
@@ -61,6 +64,12 @@ export default function TextBox({ invisiblePrompt, setInvisiblePrompt }) {
 }
 
 TextBox.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  generatedText: PropTypes.string,
+  // eslint-disable-next-line react/require-default-props
+  setGeneratedText: PropTypes.func,
+  // eslint-disable-next-line react/require-default-props
+  additionalText: PropTypes.string,
   // eslint-disable-next-line react/require-default-props
   invisiblePrompt: PropTypes.string,
   // eslint-disable-next-line react/require-default-props

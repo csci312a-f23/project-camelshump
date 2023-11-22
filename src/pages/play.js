@@ -13,8 +13,8 @@ import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
 
-const placeholderItems = ["Sword", "Staff"];
-const placeholderEnemies = ["Spider monster", "Dragon"];
+const ITEMS = ["Sword", "Staff"];
+const ENEMIES = ["Spider monster", "Dragon"];
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
 export default function GameViewer({ className }) {
@@ -32,6 +32,8 @@ export default function GameViewer({ className }) {
   const [invisiblePrompt, setInvisiblePrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
+  const [generatedText, setGeneratedText] = useState("");
+  const [additionalText, setAdditionalText] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -73,19 +75,27 @@ export default function GameViewer({ className }) {
       setCurrentMap(currentMap);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
-      // MIGHT WANT TO WRITE SOMETHING TO THE TEXT BOX HERE
+      // Will change to include a description of the enemy/the fight
+      setGeneratedText("YOU WON!");
     }
   }, [enemyKilled]);
 
   const updateItem = (itemPressed) => {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
+      const enemy = ENEMIES[Math.floor(Math.random() * ENEMIES.length)];
+      setAdditionalText(`You encountered a ${enemy}:`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
-      // is there a way to change this? it passes the same prompts for every enemy and every item
-      setInvisiblePrompt(`describe a ${placeholderEnemies[0]}`);
+      setInvisiblePrompt(
+        `I am a fantasy ${className}. Describe an encounter between myself and a ${enemy}`,
+      );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
-      setInvisiblePrompt(`describe a ${placeholderItems[0]}`);
+      const pickup = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+      setAdditionalText(`You picked up a ${pickup}:`);
+      setInvisiblePrompt(
+        `I am a fantasy character. Describe an encounter between myself and a ${pickup}`,
+      );
       setCurrentMap(currentMap);
     }
     // after you collect items/ fight enemy update its value on map to be -
@@ -128,6 +138,9 @@ export default function GameViewer({ className }) {
       </div>
       <div className="textContainer">
         <TextBox
+          generatedText={generatedText}
+          setGeneratedText={setGeneratedText}
+          additionalText={additionalText}
           invisiblePrompt={invisiblePrompt}
           setInvisiblePrompt={setInvisiblePrompt}
         />
