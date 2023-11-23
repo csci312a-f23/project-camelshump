@@ -19,11 +19,7 @@ const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
 /*
 
-TODO: Read the docs here and implement reducer
-https://react.dev/reference/react/useReducer
-
 TODO: bugs
-	- Weird insertion of colons on text box
 	- wrong prompt showing for certain items
 	- initial prompt should not be visible when responding to the text prompt box
 
