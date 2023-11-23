@@ -3,12 +3,12 @@
 .gridContainer {
   display: grid;
   gap: 15px;
+  grid-template-rows: 15% 20% 5% 20% 5% 20% 15%;
 }
 
 #class {
   border: 1px solid #000;
   height: 450px;
-  max-width: 150px;
 }
 
 #class:hover {
@@ -21,11 +21,15 @@
 }
 
 .mage {
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 4;
+  grid-column-end: 5;
 }
 
 .rogue {
-  grid-column-start: 4;
-  grid-column-end: 5;
+  grid-column-start: 6;
+  grid-column-end: 7;
+}
+
+.art {
+  line-height: 0.5;
 }

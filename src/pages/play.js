@@ -25,8 +25,7 @@ https://react.dev/reference/react/useReducer
 TODO: bugs
 	- Weird insertion of colons on text box
 	- wrong prompt showing for certain items
-	- Enemy disappearing from map even if you dont fight
-	- writing in text box to prompt is broken. Comment out text entry box for now
+	- initial prompt should not be visible when responding to the text prompt box
 
 */
 
@@ -34,11 +33,10 @@ export default function GameViewer({ className }) {
   const router = useRouter();
   const sectionLength = 16;
   const numSections = 9;
-  // Create a new map with 16 sections and each map is 16x16 characters
+  // Create a new map with 9 sections and each map is 16x16 characters
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
 
   // Set map state to the initial map
-  // eslint-disable-next-line no-unused-vars
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
@@ -114,6 +112,7 @@ export default function GameViewer({ className }) {
     // after you collect items/ fight enemy update its value on map to be -
     if (itemPressed !== "E") {
       currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
+      setCurrentMap(currentMap);
     }
   };
 

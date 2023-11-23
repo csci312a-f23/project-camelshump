@@ -2,6 +2,12 @@
 
 camelshump is text-based role-playing/adventure game that will be deployed on the web using React. The game will utilize generative AI to create storylines and descriptions of game events. Players will be able to save progress in the game and return to where they left off without loss of progress. It will hopefully be fun to play (no guarantees). (like actually)
 
+ASCII Art throughout the project was sourced from www.asciiart.eu.
+Wizard: Harry Mason
+Warrior: Uncredited
+Rogue: Uncredited
+Mountains (menu): Uncredited
+
 The game can be accessed at: https://camelshump.csci312.dev
 
 ## Creation
