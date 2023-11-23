@@ -23,7 +23,6 @@ TODO: Read the docs here and implement reducer
 https://react.dev/reference/react/useReducer
 
 TODO: bugs
-	- Main menu looks like shit
 	- Weird insertion of colons on text box
 	- wrong prompt showing for certain items
 	- Enemy disappearing from map even if you dont fight

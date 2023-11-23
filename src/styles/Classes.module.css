@@ -1,0 +1,31 @@
+/* Classes.module.css */
+
+.gridContainer {
+  display: grid;
+  gap: 15px;
+}
+
+#class {
+  border: 1px solid #000;
+  height: 450px;
+  max-width: 150px;
+}
+
+#class:hover {
+  border: 3px solid #000;
+}
+
+.warrior {
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.mage {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+.rogue {
+  grid-column-start: 4;
+  grid-column-end: 5;
+}

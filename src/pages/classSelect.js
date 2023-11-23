@@ -3,6 +3,7 @@
  */
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
+import styles from "../styles/Classes.module.css";
 
 export default function ClassSelector({ setClassName }) {
   const router = useRouter();
@@ -13,18 +14,26 @@ export default function ClassSelector({ setClassName }) {
   };
 
   return (
-    <main className="gridContainer">
+    <main className={styles.gridContainer}>
       <div
-        className="warrior"
-        id="class"
+        className={styles.warrior}
+        id={styles.class}
         onClick={() => handleClick("warrior")}
       >
         <div>Warrior</div>
       </div>
-      <div className="mage" id="class" onClick={() => handleClick("mage")}>
+      <div
+        className={styles.sage}
+        id={styles.class}
+        onClick={() => handleClick("mage")}
+      >
         <div>Mage</div>
       </div>
-      <div className="rogue" id="class" onClick={() => handleClick("rogue")}>
+      <div
+        className={styles.rogue}
+        id={styles.class}
+        onClick={() => handleClick("rogue")}
+      >
         <div>Rogue</div>
       </div>
     </main>
