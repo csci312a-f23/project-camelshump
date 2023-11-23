@@ -53,6 +53,8 @@ export default function GameViewer({ className }) {
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
+  // Might be an extraneous piece of state
+  // const [additionalText, setAdditionalText] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),

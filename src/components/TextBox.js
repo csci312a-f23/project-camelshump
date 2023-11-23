@@ -45,6 +45,7 @@ export default function TextBox({
       textStream += r.token.text;
       setGeneratedText(textStream);
     }
+    // I don't think we need an additional text element as we can update the text box through generatedText
     // const text = `${additionalText}\n${textStream}`;
     // setGeneratedText(text);
   }
