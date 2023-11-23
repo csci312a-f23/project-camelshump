@@ -47,6 +47,13 @@ body {
   max-width: 750px;
 }
 
+.quitButton {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+
 #class {
   border: 1px solid #000;
   height: 450px;

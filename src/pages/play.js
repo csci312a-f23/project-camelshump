@@ -17,6 +17,20 @@ const ITEMS = ["Sword", "Staff"];
 const ENEMIES = ["Spider monster", "Dragon"];
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
+/*
+
+TODO: Read the docs here and implement reducer
+https://react.dev/reference/react/useReducer
+
+TODO: bugs
+	- Main menu looks like shit
+	- Weird insertion of colons on text box
+	- wrong prompt showing for certain items
+	- Enemy disappearing from map even if you dont fight
+	- writing in text box to prompt is broken. Comment out text entry box for now
+
+*/
+
 export default function GameViewer({ className }) {
   const router = useRouter();
   const sectionLength = 16;
@@ -159,7 +173,11 @@ export default function GameViewer({ className }) {
         </button>
         {showDictionary && <Dictionary onClose={handleShowDictionary} />}
       </div>
-      <button type="button" onClick={() => router.push("/")}>
+      <button
+        className="quitButton"
+        type="button"
+        onClick={() => router.push("/")}
+      >
         Quit
       </button>
     </main>

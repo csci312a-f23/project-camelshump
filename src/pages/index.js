@@ -6,6 +6,7 @@
 // import MapJSON from "../components/MapJSON";
 
 import { useRouter } from "next/router";
+import styles from "../styles/Menu.module.css";
 
 export default function CamelsHump() {
   const router = useRouter();
@@ -24,13 +25,39 @@ export default function CamelsHump() {
     }
   };
 
+  const menuArt = `
+		      _ \n
+                     /#\\ \n
+                    /###\\     /\\ \n
+                   /  ###\\   /##\\  /\\ \n
+                  /      #\\ /####\\/##\\ \n
+                 /  /      /   # /  ##\\             _       /\\ \n
+               // //  /\\  /    _/  /  #\\ _         /#\\    _/##\\    /\\ \n
+              // /   /  \\     /   /    #\\ \\      _/###\\_ /   ##\\__/ _\\ \n
+             /  \\   / .. \\   / /   _   { \\ \\   _/       / //    /    \\ \n
+     /\\     /    /\\  ...  \\_/   / / \\   } \\ | /  /\\  \\ /  _    /  /    \\ /\\ \n
+  _ /  \\  /// / .\\  ..%:.  /... /\\ . \\ {:  \\   /. \\     / \\  /   ___   /  \\ \n 
+ /.\\ .\\.\\// \\/... \\.::::..... _/..\\ ..\\:|:. .  / .. \\  /.. \\    /...\\ /  \\ \\ \n 
+/...\\.../..:.\\. ..:::::::..:..... . ...\\{:... / %... \\/..%. \\  /./:..\\__   \\ \n
+ .:..\\:..:::....:::;;;;;;::::::::.:::::.\\}.....::%.:. \\ .:::. \\/.%:::.:..\\ \n
+::::...:::;;:::::;;;;;;;;;;;;;;:::::;;::{:::::::;;;:..  .:;:... ::;;::::.. \n
+`;
+
   return (
-    <main>
-      <div>Main Menu</div>
-      <button type="button" onClick={() => handleClick("new")}>
+    <main className={styles.gridContainer}>
+      <pre className={styles.art}>{menuArt}</pre>
+      <button
+        type="button"
+        className={styles.button1}
+        onClick={() => handleClick("new")}
+      >
         New Game
       </button>
-      <button type="button" onClick={() => handleClick("load")}>
+      <button
+        type="button"
+        className={styles.button2}
+        onClick={() => handleClick("load")}
+      >
         Load Game
       </button>
     </main>
