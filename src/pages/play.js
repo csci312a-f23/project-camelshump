@@ -14,8 +14,21 @@ import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
 
 const ITEMS = ["Sword", "Staff"];
-const ENEMIES = ["Spider monster", "Dragon"];
+const ENEMIES = [
+  "Spider monster",
+  "Dragon",
+  "Thief",
+  "Bandit",
+  "Dark Wizard",
+  "An Evil Ampersand",
+];
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
+
+let enemy;
+
+export function getRandom(max) {
+  return Math.floor(Math.random() * max);
+}
 
 /*
 
@@ -36,11 +49,10 @@ export default function GameViewer({ className }) {
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
-  const [invisiblePrompt, setInvisiblePrompt] = useState("");
+  const [textPrompt, setTextPrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
-  const [additionalText, setAdditionalText] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -53,18 +65,52 @@ export default function GameViewer({ className }) {
   };
 
   const closePopup = () => {
+    // TODO:
+    // Fix text prompt to produce a better text generation
+    setGeneratedText(`You run away from the ${enemy}`);
+    setTimeout(
+      () =>
+        setTextPrompt(
+          `I'm a fantasy character, I just saw a ${enemy}, describe how I run away from it`,
+        ),
+      2000,
+    );
     setEnemyPopup(false);
   };
 
   const fightAction = (action) => {
     switch (action) {
       case "punch":
+        setGeneratedText(`You punched the ${enemy}`);
+        setTimeout(
+          () =>
+            setTextPrompt(
+              `I'm a fantasy character, describe what happens when I punch a ${enemy}.`,
+            ),
+          2000,
+        );
         setEnemyKilled(true);
         break;
       case "sword":
+        setGeneratedText(`You swing your sword at the ${enemy}`);
+        setTimeout(
+          () =>
+            setTextPrompt(
+              `I'm a fantasy character, describe what happens when I swing my sword at a ${enemy}.`,
+            ),
+          2000,
+        );
         setEnemyKilled(true);
         break;
       case "dance":
+        setGeneratedText(`You dance with the ${enemy}`);
+        setTimeout(
+          () =>
+            setTextPrompt(
+              `I'm a fantasy character, describe what happens when I dance with a ${enemy}.`,
+            ),
+          2000,
+        );
         setEnemyKilled(false);
         break;
       default:
@@ -83,25 +129,33 @@ export default function GameViewer({ className }) {
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
       // Will change to include a description of the enemy/the fight
-      setGeneratedText("YOU WON!");
+      // setGeneratedText("YOU WON!");
     }
   }, [enemyKilled]);
 
   const updateItem = (itemPressed) => {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
-      const enemy = ENEMIES[Math.floor(Math.random() * ENEMIES.length)];
-      setAdditionalText(`You encountered a ${enemy}:`);
+      enemy = ENEMIES[getRandom(ENEMIES.length)];
+      setGeneratedText(`You encountered a ${enemy}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
-      setInvisiblePrompt(
-        `I am a fantasy ${className}. Describe an encounter between myself and a ${enemy}`,
+      setTimeout(
+        () =>
+          setTextPrompt(
+            `I am a fantasy ${className}. I just encountered a ${enemy}, describe what I see.`,
+          ),
+        2000,
       );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       const pickup = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-      setAdditionalText(`You picked up a ${pickup}:`);
-      setInvisiblePrompt(
-        `I am a fantasy character. Describe an encounter between myself and a ${pickup}`,
+      setGeneratedText(`You picked up a ${pickup}`);
+      setTimeout(
+        () =>
+          setTextPrompt(
+            `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
+          ),
+        2000,
       );
       setCurrentMap(currentMap);
     }
@@ -150,9 +204,8 @@ export default function GameViewer({ className }) {
         <TextBox
           generatedText={generatedText}
           setGeneratedText={setGeneratedText}
-          additionalText={additionalText}
-          invisiblePrompt={invisiblePrompt}
-          setInvisiblePrompt={setInvisiblePrompt}
+          invisiblePrompt={textPrompt}
+          setInvisiblePrompt={setTextPrompt}
         />
       </div>
       <div className="inventoryContainer">

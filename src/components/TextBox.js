@@ -12,7 +12,6 @@ const hf = new HfInference("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");
 export default function TextBox({
   generatedText,
   setGeneratedText,
-  additionalText,
   invisiblePrompt,
   setInvisiblePrompt,
 }) {
@@ -44,9 +43,10 @@ export default function TextBox({
         break;
       }
       textStream += r.token.text;
+      setGeneratedText(textStream);
     }
-    const text = `${additionalText}\n${textStream}`;
-    setGeneratedText(text);
+    // const text = `${additionalText}\n${textStream}`;
+    // setGeneratedText(text);
   }
 
   return (
@@ -68,8 +68,6 @@ TextBox.propTypes = {
   generatedText: PropTypes.string,
   // eslint-disable-next-line react/require-default-props
   setGeneratedText: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  additionalText: PropTypes.string,
   // eslint-disable-next-line react/require-default-props
   invisiblePrompt: PropTypes.string,
   // eslint-disable-next-line react/require-default-props
