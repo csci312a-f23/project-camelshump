@@ -24,7 +24,7 @@ export default function MapDisplay({ currentMap, position, updateItem }) {
             <div className={styles.cell} data-testid="map" key={colIndex}>
               <ul className={char !== "-" ? styles.usefulChar : ""}>
                 {rowIndex === position[0] && colIndex === position[1] ? (
-                  <ul>
+                  <ul className={styles.highlightedX}>
                     {" "}
                     X
                     {char !== "-"
