@@ -4,7 +4,7 @@ html,
 }
 body {
   padding: 0;
-  margin: 0;
+  margin: auto;
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -17,6 +17,7 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
+  caret-color: transparent;
 }
 .gridContainer {
   display: grid;
@@ -24,6 +25,8 @@ body {
 }
 
 .mapContainer {
+  margin: auto;
+
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
