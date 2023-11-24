@@ -73,10 +73,13 @@ export default function GameViewer({ className }) {
   ]);
 
   const togglePopup = () => {
-    setEnemyPopup(!enemyPopup);
+    console.log(`Pre-toggle: ${enemyPopup}`);
+    setEnemyPopup(true);
+    console.log(`Post-toggle: ${enemyPopup}`);
   };
 
   const closePopup = () => {
+    console.log("Closed popup");
     setEnemyPopup(false);
   };
 
@@ -136,7 +139,6 @@ export default function GameViewer({ className }) {
   }, [enemyKilled]);
 
   const updateItem = (itemPressed) => {
-    setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
       enemy = ENEMIES[getRandom(ENEMIES.length)];
       setGeneratedText(`You encountered a ${enemy}`);
@@ -151,6 +153,7 @@ export default function GameViewer({ className }) {
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
+      setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
       setGeneratedText(`You picked up a ${pickup}`);
       setTimeout(
         () =>
@@ -173,9 +176,11 @@ export default function GameViewer({ className }) {
     setItem("");
   };
 
+  // Could be origin of a bug
   useEffect(() => {
     function handleKeyPress(event) {
-      setPosition(Traversal(currentMap, event.key, position));
+      console.log(`moved and enemyPopup is ${enemyPopup}`);
+      if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
     }
 
     document.addEventListener("keydown", handleKeyPress);
