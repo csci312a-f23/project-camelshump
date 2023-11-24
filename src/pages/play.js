@@ -22,6 +22,9 @@ const ENEMIES = [
   "Dark Wizard",
   "An Evil Ampersand",
 ];
+
+// TODO: Stats dict for enemies and items
+
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
 let enemy;
