@@ -4,10 +4,23 @@ import styles from "../styles/FightEnemy.module.css";
 
 import FightBox from "./FightBox";
 
-export default function FightEnemy({ closePopup, fightAction }) {
+export default function FightEnemy({
+  closePopup,
+  fightAction,
+  setGeneratedText,
+  setTextPrompt,
+}) {
   const [fightOptions, setFightOptions] = useState(false);
 
   const handleClose = () => {
+    setGeneratedText(`You run away`);
+    setTimeout(
+      () =>
+        setTextPrompt(
+          `I'm a fantasy character, I ran away from an enemy, describe what happens.`,
+        ),
+      2000,
+    );
     closePopup(); // Call the close function passed from the play.js
   };
   const handleFight = () => {
@@ -47,4 +60,6 @@ export default function FightEnemy({ closePopup, fightAction }) {
 FightEnemy.propTypes = {
   closePopup: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
+  setGeneratedText: PropTypes.func.isRequired,
+  setTextPrompt: PropTypes.func.isRequired,
 };

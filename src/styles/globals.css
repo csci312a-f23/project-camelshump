@@ -4,7 +4,7 @@ html,
 }
 body {
   padding: 0;
-  margin: 0;
+  margin: auto;
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -17,24 +17,39 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
+  caret-color: transparent;
 }
 .gridContainer {
   display: grid;
-  gap: 15px;
+  gap: 5px;
 }
 
 .mapContainer {
+  margin: auto;
+
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
-  grid-row-end: 3;
+  grid-row-end: 2;
 }
 
 .textContainer {
+  margin: auto;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 600px;
+}
+
+.statsContainer {
   grid-column-start: 2;
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
+  border: 1px solid #000;
+  height: 400px;
+  max-width: 200px;
 }
 
 .inventoryContainer {
@@ -44,12 +59,13 @@ body {
   grid-row-end: 3;
   border: 1px solid #000;
   height: 150px;
-  max-width: 750px;
+  max-width: 600px;
 }
 
 .quitButton {
-  grid-column-start: 2;
-  grid-column-end: 3;
+  margin: auto;
+  grid-column-start: 1;
+  grid-column-end: 2;
   grid-row-start: 3;
   grid-row-end: 4;
 }

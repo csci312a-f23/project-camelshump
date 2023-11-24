@@ -7,7 +7,7 @@
   padding: 20px;
   position: fixed;
   top: 9vh; /* Moved down by 9% of viewport height */
-  /* left: 1%;  Left offset */
+  left: 1%; /* Left offset */
   height: calc(
     90vh - 30vh
   ); /* 90% of viewport height minus 9% of viewport height */
