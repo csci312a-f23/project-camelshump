@@ -59,6 +59,7 @@ export default function GameViewer({ className }) {
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
+  console.log(enemyPopup);
   const [textPrompt, setTextPrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
@@ -73,13 +74,10 @@ export default function GameViewer({ className }) {
   ]);
 
   const togglePopup = () => {
-    console.log(`Pre-toggle: ${enemyPopup}`);
     setEnemyPopup(true);
-    console.log(`Post-toggle: ${enemyPopup}`);
   };
 
   const closePopup = () => {
-    console.log("Closed popup");
     setEnemyPopup(false);
   };
 
@@ -176,10 +174,8 @@ export default function GameViewer({ className }) {
     setItem("");
   };
 
-  // Could be origin of a bug
   useEffect(() => {
     function handleKeyPress(event) {
-      console.log(`moved and enemyPopup is ${enemyPopup}`);
       if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
     }
 
@@ -188,7 +184,7 @@ export default function GameViewer({ className }) {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [currentMap, position]);
+  }, [enemyPopup, currentMap, position]);
 
   return (
     <main className="gridContainer">
