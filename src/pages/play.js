@@ -202,6 +202,12 @@ export default function GameViewer({ className }) {
           <FightEnemy closePopup={closePopup} fightAction={fightAction} />
         )}
       </div>
+      <div className="statsContainer">
+        <p> Stats </p>
+        <p> Health: 50 </p>
+
+        <p> Strength: 10 </p>
+      </div>
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}
