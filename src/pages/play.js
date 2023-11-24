@@ -13,7 +13,14 @@ import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
 
-const ITEMS = ["Sword", "Staff"];
+// const ITEMS = ["Sword", "Staff"];
+const itemDictionary = {
+  A: "Axe",
+  B: "Bow",
+  G: "Grenade",
+  H: "Health Potion",
+  S: "Stamina / Speed Boost",
+};
 const ENEMIES = [
   "Spider monster",
   "Dragon",
@@ -67,16 +74,6 @@ export default function GameViewer({ className }) {
   };
 
   const closePopup = () => {
-    // TODO:
-    // Fix text prompt to produce a better text generation
-    setGeneratedText(`You run away from the ${enemy}`);
-    setTimeout(
-      () =>
-        setTextPrompt(
-          `I'm a fantasy character, I just saw a ${enemy}, describe how I run away from it`,
-        ),
-      2000,
-    );
     setEnemyPopup(false);
   };
 
@@ -87,7 +84,7 @@ export default function GameViewer({ className }) {
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, describe what happens when I punch a ${enemy}.`,
+              `I'm a fantasy character, I punched a ${enemy}, describe what happens.`,
             ),
           2000,
         );
@@ -98,7 +95,7 @@ export default function GameViewer({ className }) {
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, describe what happens when I swing my sword at a ${enemy}.`,
+              `I'm a fantasy character, I swung my sword at a ${enemy}, describe what happens.`,
             ),
           2000,
         );
@@ -109,7 +106,7 @@ export default function GameViewer({ className }) {
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, describe what happens when I dance with a ${enemy}.`,
+              `I'm a fantasy character, I danced with a ${enemy}, describe what happens.`,
             ),
           2000,
         );
@@ -150,7 +147,7 @@ export default function GameViewer({ className }) {
       );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
-      const pickup = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+      const pickup = itemDictionary[itemPressed];
       setGeneratedText(`You picked up a ${pickup}`);
       setTimeout(
         () =>
@@ -199,7 +196,12 @@ export default function GameViewer({ className }) {
         style={{ width: "50%", float: "left", position: "relative" }}
       >
         {enemyPopup && (
-          <FightEnemy closePopup={closePopup} fightAction={fightAction} />
+          <FightEnemy
+            closePopup={closePopup}
+            fightAction={fightAction}
+            setGeneratedText={setGeneratedText}
+            setTextPrompt={setTextPrompt}
+          />
         )}
       </div>
       <div className="statsContainer">
@@ -228,7 +230,12 @@ export default function GameViewer({ className }) {
         >
           {showDictionary ? "Hide Dictionary" : "Show Dictionary"}
         </button>
-        {showDictionary && <Dictionary onClose={handleShowDictionary} />}
+        {showDictionary && (
+          <Dictionary
+            onClose={handleShowDictionary}
+            itemDictionary={itemDictionary}
+          />
+        )}
       </div>
       <button
         className="quitButton"

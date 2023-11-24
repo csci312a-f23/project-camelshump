@@ -4,15 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/Dictionary.module.css";
 
-const itemDictionary = {
-  A: "Axe",
-  B: "Bow",
-  G: "Grenade",
-  H: "Health Potion",
-  S: "Stamina / Speed Boost",
-};
-
-export default function Dictionary({ onClose }) {
+export default function Dictionary({ onClose, itemDictionary }) {
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -33,4 +25,6 @@ export default function Dictionary({ onClose }) {
 
 Dictionary.propTypes = {
   onClose: PropTypes.func.isRequired,
+  itemDictionary: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+    .isRequired,
 };
