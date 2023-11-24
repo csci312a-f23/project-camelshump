@@ -30,15 +30,16 @@ body {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
-  grid-row-end: 3;
+  grid-row-end: 2;
 }
 
 .textContainer {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  width: 750px;
+  margin: auto;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  width: 600px;
 }
 
 .statsContainer {
@@ -47,8 +48,8 @@ body {
   grid-row-start: 1;
   grid-row-end: 2;
   border: 1px solid #000;
-  height: 150px;
-  max-width: 750px;
+  height: 400px;
+  max-width: 200px;
 }
 
 .inventoryContainer {
@@ -58,7 +59,7 @@ body {
   grid-row-end: 3;
   border: 1px solid #000;
   height: 150px;
-  max-width: 750px;
+  max-width: 600px;
 }
 
 .quitButton {
