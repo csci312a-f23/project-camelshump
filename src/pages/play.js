@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
 import Dictionary from "@/components/Dictionary";
+import Stats from "@/components/Stats";
 import FightEnemy from "../components/FightEnemy";
 import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
@@ -229,6 +230,7 @@ export default function GameViewer({ className }) {
         2000,
       );
       togglePopup(); // Show the enemy pop-up
+      setItem(itemPressed);
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
       setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
@@ -243,10 +245,8 @@ export default function GameViewer({ className }) {
       setCurrentMap(currentMap);
     }
     // after you collect items/ fight enemy update its value on map to be -
-    if (itemPressed !== "E") {
-      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
-      setCurrentMap(currentMap);
-    }
+    currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
+    setCurrentMap(currentMap);
   };
 
   const handleItemUpdate = () => {
@@ -291,10 +291,7 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <p> Stats </p>
-        <p> Health: {health} </p>
-
-        <p> Strength: {strength} </p>
+        <Stats item={item} onItemUpdate={handleItemUpdate} />
       </div>
       {
         enemy !== null && (

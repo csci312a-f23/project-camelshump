@@ -1,0 +1,23 @@
+/* StatBar.module.css */
+.statBarContainer {
+  margin-bottom: 10px;
+}
+
+.statBar {
+  background-color: #ddd;
+  height: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.barFill {
+  height: 100%;
+  background-color: black;
+}
+
+.percentageText {
+  margin-left: 5px;
+}
