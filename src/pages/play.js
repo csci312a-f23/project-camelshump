@@ -24,24 +24,12 @@ const itemDictionary = {
 };
 
 const ENEMIES = [
-  {name: "Spider Monster",
-  health: 10,
-  strength: 4},
-  {name: "Dragon",
-  health: 10,
-  strength: 4},
-  {name: "Thief",
-  health: 10,
-  strength: 4},
-  {name: "Bandit",
-  health: 10,
-  strength: 4},
-  {name: "Dark Wizard",
-  health: 10,
-  strength: 4},
-  {name: "An Evil Ampersand",
-  health: 10,
-  strength: 4},
+  { name: "Spider Monster", health: 10, strength: 4 },
+  { name: "Dragon", health: 10, strength: 4 },
+  { name: "Thief", health: 10, strength: 4 },
+  { name: "Bandit", health: 10, strength: 4 },
+  { name: "Dark Wizard", health: 10, strength: 4 },
+  { name: "An Evil Ampersand", health: 10, strength: 4 },
 ];
 
 // TODO: Stats dict for enemies and items
@@ -94,28 +82,26 @@ export default function GameViewer({ className }) {
 
   const healPlayer = (toHeal) => {
     setHealth(health + toHeal);
-  }
+  };
 
   const damagePlayer = (damage) => {
     setHealth(max(health - damage, 0));
-    if (health === 0)
-      deathPrompt();
-  }
+    if (health === 0) deathPrompt();
+  };
 
   const damageEnemy = (damage) => {
-    if (enemy.health - damage <= 0)
-      setEnemyKilled(true);
+    if (enemy.health - damage <= 0) setEnemyKilled(true);
     else {
       // redundant setEnemyKilled call?
       setEnemyKilled(false);
-      setEnemy({...enemy, health: enemy.health - damage});
+      setEnemy({ ...enemy, health: enemy.health - damage });
     }
-  }
+  };
 
   const deathPrompt = () => {
     // TODO: Change to prompt the AI to write about the enemy you died to
     console.log("You died");
-  }
+  };
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -173,7 +159,7 @@ export default function GameViewer({ className }) {
   // };
 
   const itemAction = (action) => {
-    switch(action) {
+    switch (action) {
       case "A":
         // 15 damage
         damageEnemy(15);
@@ -181,8 +167,7 @@ export default function GameViewer({ className }) {
       case "B":
         // 10 damage twice, 50% chance to hit second shot
         damageEnemy(10);
-        if (Math.random() >= 0.5)
-          damageEnemy(10);
+        if (Math.random() >= 0.5) damageEnemy(10);
         break;
       case "G":
         // 20 damage, 5 to self
@@ -197,7 +182,7 @@ export default function GameViewer({ className }) {
         // Attack twice (probably unimplemented for now)
         break;
     }
-  }
+  };
 
   const handleShowDictionary = () => {
     setShowDictionary((prevShowDictionary) => !prevShowDictionary);
@@ -291,18 +276,16 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats item={item} onItemUpdate={handleItemUpdate} />
+        <Stats health={health} strength={strength} />
       </div>
-      {
-        enemy !== null && (
+      {enemy !== null && (
         <div className="enemyContainer">
           <p> Stats </p>
           <p> Health: {enemy.health} </p>
 
           <p> Strength: {enemy.strength} </p>
         </div>
-        )
-      }
+      )}
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}
@@ -313,7 +296,12 @@ export default function GameViewer({ className }) {
       </div>
       <div className="inventoryContainer">
         <p style={{ fontWeight: "bold", paddingLeft: "10px" }}>Inventory</p>
-        <Inventory item={item} onItemUpdate={handleItemUpdate} inventoryList={inventoryList} setInventoryList={setInventoryList}/>
+        <Inventory
+          item={item}
+          onItemUpdate={handleItemUpdate}
+          inventoryList={inventoryList}
+          setInventoryList={setInventoryList}
+        />
       </div>
       <div className="dictionaryButton">
         <button
