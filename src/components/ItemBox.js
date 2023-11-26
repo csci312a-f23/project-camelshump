@@ -8,9 +8,7 @@ export default function ItemBox({ inventory, closeItemBox, itemAction }) {
         </button>
         )
     });
-
-    console.log(buttonArray);
-
+    
     return (
         <div>
             {buttonArray}

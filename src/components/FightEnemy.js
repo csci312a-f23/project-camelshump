@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/FightEnemy.module.css";
 
@@ -30,6 +30,18 @@ export default function FightEnemy({
   const handleFight = () => {
     setFightOptions(true);
   };
+
+  // useEffects to keep only one box open at once, can probably be improved
+  useEffect(() => {
+    if (itemOptions)
+      setFightOptions(false);
+  }, [itemOptions])
+
+  useEffect(() => {
+    if (fightOptions)
+      setItemOptions(false);
+  }, [fightOptions])
+
   return (
     <div>
       <div />
