@@ -6,8 +6,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/Inventory.module.css";
 
-export default function Inventory({ item, onItemUpdate }) {
-  const [inventoryList, setInventoryList] = useState([]);
+export default function Inventory({ item, onItemUpdate, inventoryList, setInventoryList }) {
 
   const updateInventory = (newItem) => {
     // Check if the item is already in the inventory

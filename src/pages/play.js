@@ -71,11 +71,11 @@ export default function GameViewer({ className }) {
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
-  console.log(enemyPopup);
   const [textPrompt, setTextPrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
+  const [inventoryList, setInventoryList] = useState([]);
 
   // Health and attack, future versions can vary by class
   const [health, setHealth] = useState(10);
@@ -155,6 +155,10 @@ export default function GameViewer({ className }) {
       default:
     }
   };
+
+  const itemAction = () => {
+    return false;
+  }
 
   const handleShowDictionary = () => {
     setShowDictionary((prevShowDictionary) => !prevShowDictionary);
@@ -236,8 +240,10 @@ export default function GameViewer({ className }) {
       >
         {enemyPopup && (
           <FightEnemy
+            inventory={inventoryList}
             closePopup={closePopup}
             fightAction={fightAction}
+            itemAction={itemAction}
             setGeneratedText={setGeneratedText}
             setTextPrompt={setTextPrompt}
           />
@@ -259,7 +265,7 @@ export default function GameViewer({ className }) {
       </div>
       <div className="inventoryContainer">
         <p style={{ fontWeight: "bold", paddingLeft: "10px" }}>Inventory</p>
-        <Inventory item={item} onItemUpdate={handleItemUpdate} />
+        <Inventory item={item} onItemUpdate={handleItemUpdate} inventoryList={inventoryList} setInventoryList={setInventoryList}/>
       </div>
       <div className="dictionaryButton">
         <button
