@@ -19,34 +19,34 @@ const itemDictionary = {
   B: "Bow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Stamina / Speed Boost",
+  S: "Speed Potion",
 };
+
 const ENEMIES = [
   {name: "Spider Monster",
   health: 10,
-  attack: 4},
+  strength: 4},
   {name: "Dragon",
   health: 10,
-  attack: 4},
+  strength: 4},
   {name: "Thief",
   health: 10,
-  attack: 4},
+  strength: 4},
   {name: "Bandit",
   health: 10,
-  attack: 4},
+  strength: 4},
   {name: "Dark Wizard",
   health: 10,
-  attack: 4},
+  strength: 4},
   {name: "An Evil Ampersand",
   health: 10,
-  attack: 4},
+  strength: 4},
 ];
 
 // TODO: Stats dict for enemies and items
+let statelessEnemy;
 
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
-
-let enemy;
 
 export function getRandom(max) {
   return Math.floor(Math.random() * max);
@@ -79,7 +79,9 @@ export default function GameViewer({ className }) {
 
   // Health and attack, future versions can vary by class
   const [health, setHealth] = useState(10);
-  const [attack, setAttack] = useState(10);
+  const [strength, setStrength] = useState(10);
+
+  const [enemy, setEnemy] = useState(null);
   // Might be an extraneous piece of state
   // const [additionalText, setAdditionalText] = useState("");
 
@@ -89,19 +91,23 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  const healPlayer = (toHeal) => {
+    setHealth(health + toHeal);
+  }
+
   const damagePlayer = (damage) => {
     setHealth(max(health - damage, 0));
     if (health === 0)
       deathPrompt();
   }
 
-  const damageEnemy = (damage, enemy) => {
-    // Do we do this in a stateful way instead?
+  const damageEnemy = (damage) => {
     if (enemy.health - damage <= 0)
       setEnemyKilled(true);
     else {
+      // redundant setEnemyKilled call?
       setEnemyKilled(false);
-      return {...enemy, health: enemy.health - damage}
+      setEnemy({...enemy, health: enemy.health - damage});
     }
   }
 
@@ -115,6 +121,7 @@ export default function GameViewer({ className }) {
   };
 
   const closePopup = () => {
+    setEnemy(null);
     setEnemyPopup(false);
   };
 
@@ -156,8 +163,39 @@ export default function GameViewer({ className }) {
     }
   };
 
-  const itemAction = () => {
-    return false;
+  // const itemDictionary = {
+  //   A: "Axe",
+  //   B: "Bow",
+  //   G: "Grenade",
+  //   H: "Health Potion",
+  //   S: "Stamina / Speed Boost",
+  // };
+
+  const itemAction = (action) => {
+    switch(action) {
+      case "A":
+        // 15 damage
+        damageEnemy(15);
+        break;
+      case "B":
+        // 10 damage twice, 50% chance to hit second shot
+        damageEnemy(10);
+        if (Math.random() >= 0.5)
+          damageEnemy(10);
+        break;
+      case "G":
+        // 20 damage, 5 to self
+        damageEnemy(20);
+        damagePlayer(5);
+        break;
+      case "H":
+        // Heal 10
+        healPlayer(10);
+        break;
+      case "S":
+        // Attack twice (probably unimplemented for now)
+        break;
+    }
   }
 
   const handleShowDictionary = () => {
@@ -168,6 +206,7 @@ export default function GameViewer({ className }) {
     if (enemyKilled) {
       currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
       setCurrentMap(currentMap);
+      setEnemy(null);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
       // Will change to include a description of the enemy/the fight
@@ -177,13 +216,15 @@ export default function GameViewer({ className }) {
 
   const updateItem = (itemPressed) => {
     if (itemPressed === "E") {
-      enemy = ENEMIES[getRandom(ENEMIES.length)];
-      setGeneratedText(`You encountered a ${enemy.name}`);
+      statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
+      setEnemy(statelessEnemy);
+
+      setGeneratedText(`You encountered a ${statelessEnemy.name}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
       setTimeout(
         () =>
           setTextPrompt(
-            `I am a fantasy ${className}. I just encountered a ${enemy.name}, describe what I see.`,
+            `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
           ),
         2000,
       );
@@ -251,10 +292,20 @@ export default function GameViewer({ className }) {
       </div>
       <div className="statsContainer">
         <p> Stats </p>
-        <p> Health: 50 </p>
+        <p> Health: {health} </p>
 
-        <p> Strength: 10 </p>
+        <p> Strength: {strength} </p>
       </div>
+      {
+        enemy !== null && (
+        <div className="enemyContainer">
+          <p> Stats </p>
+          <p> Health: {enemy.health} </p>
+
+          <p> Strength: {enemy.strength} </p>
+        </div>
+        )
+      }
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}
