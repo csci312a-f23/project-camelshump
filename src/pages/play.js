@@ -22,12 +22,24 @@ const itemDictionary = {
   S: "Stamina / Speed Boost",
 };
 const ENEMIES = [
-  "Spider monster",
-  "Dragon",
-  "Thief",
-  "Bandit",
-  "Dark Wizard",
-  "An Evil Ampersand",
+  {name: "Spider Monster",
+  health: 10,
+  attack: 4},
+  {name: "Dragon",
+  health: 10,
+  attack: 4},
+  {name: "Thief",
+  health: 10,
+  attack: 4},
+  {name: "Bandit",
+  health: 10,
+  attack: 4},
+  {name: "Dark Wizard",
+  health: 10,
+  attack: 4},
+  {name: "An Evil Ampersand",
+  health: 10,
+  attack: 4},
 ];
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
@@ -60,6 +72,10 @@ export default function GameViewer({ className }) {
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
+
+  // Health and attack, future versions can vary by class
+  const [health, setHealth] = useState(10);
+  const [attack, setAttack] = useState(10);
   // Might be an extraneous piece of state
   // const [additionalText, setAdditionalText] = useState("");
 
@@ -68,6 +84,27 @@ export default function GameViewer({ className }) {
     Math.floor(currentMap[0].length / 2),
     5,
   ]);
+
+  const damagePlayer = (damage) => {
+    setHealth(max(health - damage, 0));
+    if (health === 0)
+      deathPrompt();
+  }
+
+  const damageEnemy = (damage, enemy) => {
+    // Do we do this in a stateful way instead?
+    if (enemy.health - damage <= 0)
+      setEnemyKilled(true);
+    else {
+      setEnemyKilled(false);
+      return {...enemy, health: enemy.health - damage}
+    }
+  }
+
+  const deathPrompt = () => {
+    // TODO: Change to prompt the AI to write about the enemy you died to
+    console.log("You died");
+  }
 
   const togglePopup = () => {
     setEnemyPopup(!enemyPopup);
@@ -80,40 +117,38 @@ export default function GameViewer({ className }) {
   const fightAction = (action) => {
     switch (action) {
       case "punch":
-        setGeneratedText(`You punched the ${enemy}`);
+        setGeneratedText(`You punched the ${enemy.name}`);
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, I punched a ${enemy}, describe what happens.`,
+              `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
             ),
           2000,
         );
-        setEnemyKilled(true);
+        damageEnemy(3, enemy);
         break;
       case "sword":
-        setGeneratedText(`You swing your sword at the ${enemy}`);
+        setGeneratedText(`You swing your sword at the ${enemy.name}`);
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, I swung my sword at a ${enemy}, describe what happens.`,
+              `I'm a fantasy character, I swung my sword at a ${enemy.name}, describe what happens.`,
             ),
           2000,
         );
-        setEnemyKilled(true);
+        // setEnemyKilled(true);
         break;
       case "dance":
-        setGeneratedText(`You dance with the ${enemy}`);
+        setGeneratedText(`You dance with the ${enemy.name}`);
         setTimeout(
           () =>
             setTextPrompt(
-              `I'm a fantasy character, I danced with a ${enemy}, describe what happens.`,
+              `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
             ),
           2000,
         );
-        setEnemyKilled(false);
         break;
       default:
-        setEnemyKilled(false);
     }
   };
 
@@ -136,12 +171,12 @@ export default function GameViewer({ className }) {
     setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
       enemy = ENEMIES[getRandom(ENEMIES.length)];
-      setGeneratedText(`You encountered a ${enemy}`);
+      setGeneratedText(`You encountered a ${enemy.name}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
       setTimeout(
         () =>
           setTextPrompt(
-            `I am a fantasy ${className}. I just encountered a ${enemy}, describe what I see.`,
+            `I am a fantasy ${className}. I just encountered a ${enemy.name}, describe what I see.`,
           ),
         2000,
       );

@@ -42,6 +42,10 @@ export default function FightEnemy({
           {" "}
           Fight{" "}
         </button>
+        <button type="button" onClick={() => handleItem()}>
+          {" "}
+          Item{" "}
+        </button>
         <button type="button" onClick={() => handleClose()}>
           {" "}
           Run{" "}
