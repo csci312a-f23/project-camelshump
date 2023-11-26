@@ -41,6 +41,9 @@ const ENEMIES = [
   health: 10,
   attack: 4},
 ];
+
+// TODO: Stats dict for enemies and items
+
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
 let enemy;
@@ -68,6 +71,7 @@ export default function GameViewer({ className }) {
   const [currentMap, setCurrentMap] = useState(initialMap);
   const [item, setItem] = useState(classDict[className] || "");
   const [enemyPopup, setEnemyPopup] = useState(false);
+  console.log(enemyPopup);
   const [textPrompt, setTextPrompt] = useState("");
   const [enemyKilled, setEnemyKilled] = useState(false);
   const [showDictionary, setShowDictionary] = useState(false);
@@ -107,7 +111,7 @@ export default function GameViewer({ className }) {
   }
 
   const togglePopup = () => {
-    setEnemyPopup(!enemyPopup);
+    setEnemyPopup(true);
   };
 
   const closePopup = () => {
@@ -168,7 +172,6 @@ export default function GameViewer({ className }) {
   }, [enemyKilled]);
 
   const updateItem = (itemPressed) => {
-    setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
     if (itemPressed === "E") {
       enemy = ENEMIES[getRandom(ENEMIES.length)];
       setGeneratedText(`You encountered a ${enemy.name}`);
@@ -183,6 +186,7 @@ export default function GameViewer({ className }) {
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
+      setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
       setGeneratedText(`You picked up a ${pickup}`);
       setTimeout(
         () =>
@@ -207,7 +211,7 @@ export default function GameViewer({ className }) {
 
   useEffect(() => {
     function handleKeyPress(event) {
-      setPosition(Traversal(currentMap, event.key, position));
+      if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
     }
 
     document.addEventListener("keydown", handleKeyPress);
@@ -215,7 +219,7 @@ export default function GameViewer({ className }) {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [currentMap, position]);
+  }, [enemyPopup, currentMap, position]);
 
   return (
     <main className="gridContainer">
