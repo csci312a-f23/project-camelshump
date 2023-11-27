@@ -79,13 +79,19 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  const deathPrompt = () => {
+    setTextPrompt(
+      `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
+    );
+  };
+
   const raiseStrength = (amount) => {
     setStrength(strength + amount);
-  }
+  };
 
   const lowerEnemyStrength = (amount) => {
-    setEnemy({...enemy, strength: Math.max(1, enemy.strength - amount)});      
-  }
+    setEnemy({ ...enemy, strength: Math.max(1, enemy.strength - amount) });
+  };
 
   const healPlayer = (toHeal) => {
     // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
@@ -107,13 +113,7 @@ export default function GameViewer({ className }) {
   };
 
   // Might be a better way to do this!
-  const getEnemy = (name) => {
-    return ENEMIES.find((element) => element.name === name);
-  }
-
-  const deathPrompt = () => {
-    setTextPrompt(`I'm a fantasy character, I died to a ${enemy}, describe what happened.`)
-  };
+  const getEnemy = (name) => ENEMIES.find((element) => element.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -126,23 +126,23 @@ export default function GameViewer({ className }) {
 
   const fightPrompt = (preGeneratedString, promptToGenerate) => {
     setGeneratedText(preGeneratedString);
-    setTimeout(
-      () =>
-        setTextPrompt(
-          promptToGenerate,
-        ),
-      2000,
-    );
-  }
+    setTimeout(() => setTextPrompt(promptToGenerate), 2000);
+  };
 
   const fightAction = (action) => {
     switch (action) {
       case "punch":
-        fightPrompt(`You punched the ${enemy.name}`, `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`);
+        fightPrompt(
+          `You punched the ${enemy.name}`,
+          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
+        );
         damageEnemy(Math.floor(strength * 0.5));
         break;
       case "dance":
-        fightPrompt(`You dance with the ${enemy.name}`, `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`);
+        fightPrompt(
+          `You dance with the ${enemy.name}`,
+          `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
+        );
         lowerEnemyStrength(5);
         break;
       default:
@@ -153,35 +153,51 @@ export default function GameViewer({ className }) {
     switch (action) {
       case "A":
         // 15 damage
-        fightPrompt(`You used an axe on the ${enemy.name}`, `I'm a fantasy character, I used an axe on a ${enemy.name}, describe what happens.`);
+        fightPrompt(
+          `You used an axe on the ${enemy.name}`,
+          `I'm a fantasy character, I used an axe on a ${enemy.name}, describe what happens.`,
+        );
         damageEnemy(15);
         break;
       case "B":
         // 10 damage twice, 50% chance to hit second shot
-        fightPrompt(`You shot the ${enemy.name} with a bow`, `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`);
+        fightPrompt(
+          `You shot the ${enemy.name} with a bow`,
+          `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`,
+        );
         damageEnemy(10);
         if (Math.random() >= 0.5) damageEnemy(10);
         break;
       case "G":
         // 20 damage, 5 to self
-        fightPrompt(`You punched the ${enemy.name}`, `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`);
+        fightPrompt(
+          `You punched the ${enemy.name}`,
+          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
+        );
         damageEnemy(20);
         damagePlayer(5);
         break;
       case "H":
         // Heal 10
-        fightPrompt(`You used a healing potion`, "I'm a fantasy character, I used a healing potion, describe what happens.");
+        fightPrompt(
+          `You used a healing potion`,
+          "I'm a fantasy character, I used a healing potion, describe what happens.",
+        );
         healPlayer(10);
         break;
       case "S":
         // Buff strength for now
-        raiseStrength(5);        
+        raiseStrength(5);
         break;
-      case `${classWeapon}`:
-        fightPrompt(`You use your ${classWeapon} on the ${enemy.name}`, `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`);
+      case classWeapon:
+        fightPrompt(
+          `You use your ${classWeapon} on the ${enemy.name}`,
+          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
+        );
         setGeneratedText();
         damageEnemy(strength);
         break;
+      default:
     }
   };
 

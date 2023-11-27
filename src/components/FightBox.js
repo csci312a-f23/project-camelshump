@@ -3,7 +3,7 @@
  */
 import PropTypes from "prop-types";
 
-export default function FightBox({ closeFightBox, fightAction, classWeapon }) {
+export default function FightBox({ closeFightBox, fightAction }) {
   const handleClose = () => {
     closeFightBox();
   };

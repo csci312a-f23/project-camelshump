@@ -85,8 +85,11 @@ export default function FightEnemy({
 }
 
 FightEnemy.propTypes = {
+  inventory: PropTypes.arrayOf(Object).isRequired,
   closePopup: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
+  itemAction: PropTypes.func.isRequired,
   setGeneratedText: PropTypes.func.isRequired,
   setTextPrompt: PropTypes.func.isRequired,
+  classWeapon: PropTypes.string.isRequired,
 };
