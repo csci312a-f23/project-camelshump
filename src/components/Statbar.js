@@ -10,7 +10,9 @@ export default function StatBar({ label, value, maxValue }) {
       <p>{label}</p>
       <div className={styles.statBar}>
         <div className={styles.barFill} style={{ width: `${percentage}%` }} />
-        <span className={styles.percentageText}>{percentage.toFixed(0)}%</span>
+        <span className={styles.percentageText}>
+          {value}/{maxValue}
+        </span>
       </div>
     </div>
   );
