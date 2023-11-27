@@ -124,7 +124,7 @@ export default function GameViewer({ className }) {
             ),
           2000,
         );
-        damageEnemy(3, enemy);
+        damageEnemy(3);
         break;
       case "sword":
         setGeneratedText(`You swing your sword at the ${enemy.name}`);
@@ -216,7 +216,6 @@ export default function GameViewer({ className }) {
         2000,
       );
       togglePopup(); // Show the enemy pop-up
-      setItem(itemPressed);
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
       setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
@@ -293,6 +292,7 @@ export default function GameViewer({ className }) {
       {/* Conditionally render in the enemy container if an enemy exists */}
       { enemy !== null && 
       <div className="enemyContainer">
+        <p>{enemy.name}</p>
         <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50}/> 
       </div> } 
       <div className="textContainer">

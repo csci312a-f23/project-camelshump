@@ -2,13 +2,14 @@ import PropTypes from "prop-types";
 
 export default function ItemBox({ inventory, closeItemBox, itemAction }) {
     const buttonArray = inventory.map((item) => {
-        return ( <button type="button" onClick={() => itemAction(item)}>
+        return ( 
+        <button type="button" onClick={() => itemAction(`${item.name}`)}>
             {" "}
             {item.name}{" "}
         </button>
         )
     });
-    
+
     return (
         <div>
             {buttonArray}
