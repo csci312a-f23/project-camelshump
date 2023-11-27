@@ -530,6 +530,7 @@ export default function GameViewer({ className }) {
             strength={enemy.strength}
             maxHealth={getEnemy(enemy.name).health}
             maxStrength={getEnemy(enemy.name).strength}
+            art={getEnemy(enemy.name).art}
           />
         </div>
       )}
