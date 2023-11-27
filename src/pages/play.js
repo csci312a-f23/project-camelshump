@@ -266,10 +266,8 @@ export default function GameViewer({ className }) {
         2000,
       );
       setCurrentMap(currentMap);
+      currentMap[position[2]][position[0]][position[1]] = "-";
     }
-    // after you collect items/ fight enemy update its value on map to be -
-    currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
-    setCurrentMap(currentMap);
   };
 
   const handleItemUpdate = () => {
