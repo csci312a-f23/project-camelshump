@@ -66,7 +66,7 @@ export default function GameViewer({ className }) {
   const [inventoryList, setInventoryList] = useState([]);
 
   // Health and attack, future versions can vary by class
-  const [health, setHealth] = useState(10);
+  const [health, setHealth] = useState(50);
   const [strength, setStrength] = useState(10);
 
   const [enemy, setEnemy] = useState(null);
@@ -80,11 +80,12 @@ export default function GameViewer({ className }) {
   ]);
 
   const healPlayer = (toHeal) => {
-    setHealth(health + toHeal);
+    // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
+    setHealth(Math.min(50, health + toHeal));
   };
 
   const damagePlayer = (damage) => {
-    setHealth(max(health - damage, 0));
+    setHealth(Math.max(health - damage, 0));
     if (health === 0) deathPrompt();
   };
 
@@ -96,6 +97,11 @@ export default function GameViewer({ className }) {
       setEnemy({ ...enemy, health: enemy.health - damage });
     }
   };
+
+  // Might be a better way to do this!
+  const getEnemy = (name) => {
+    return ENEMIES.find((element) => element.name === name);
+  }
 
   const deathPrompt = () => {
     // TODO: Change to prompt the AI to write about the enemy you died to
@@ -170,6 +176,8 @@ export default function GameViewer({ className }) {
             ),
           2000,
         );
+        // TODO: Make classWeapon and punch a scaled factor of your class' strength
+        damageEnemy(10);
         // setEnemyKilled(true);
         break;
     }
@@ -268,14 +276,25 @@ export default function GameViewer({ className }) {
       </div>
       <div className="statsContainer">
         {/* Hardcoding max health and strength values for now */}
-        <Stats health={health} strength={strength} maxHealth={10} maxStrength={10} />
+        <Stats
+          health={health}
+          strength={strength}
+          maxHealth={50}
+          maxStrength={10}
+        />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
-      {enemy !== null &&
+      {enemy !== null && (
         <div className="enemyContainer">
           <p>{enemy.name}</p>
-          <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50} />
-        </div>}
+          <Stats
+            health={enemy.health}
+            strength={enemy.strength}
+            maxHealth={getEnemy(enemy.name).health}
+            maxStrength={getEnemy(enemy.name).strength}
+          />
+        </div>
+      )}
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}

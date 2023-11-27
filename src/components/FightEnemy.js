@@ -12,7 +12,7 @@ export default function FightEnemy({
   itemAction,
   setGeneratedText,
   setTextPrompt,
-  classWeapon
+  classWeapon,
 }) {
   const [fightOptions, setFightOptions] = useState(false);
   const [itemOptions, setItemOptions] = useState(false);
@@ -34,14 +34,12 @@ export default function FightEnemy({
 
   // useEffects to keep only one box open at once, can probably be improved
   useEffect(() => {
-    if (itemOptions)
-      setFightOptions(false);
-  }, [itemOptions])
+    if (itemOptions) setFightOptions(false);
+  }, [itemOptions]);
 
   useEffect(() => {
-    if (fightOptions)
-      setItemOptions(false);
-  }, [fightOptions])
+    if (fightOptions) setItemOptions(false);
+  }, [fightOptions]);
 
   return (
     <div>
@@ -76,7 +74,7 @@ export default function FightEnemy({
         )}
         {itemOptions && (
           <ItemBox
-            inventory = {inventory}
+            inventory={inventory}
             closeItemBox={() => setItemOptions(false)}
             itemAction={itemAction}
           />
