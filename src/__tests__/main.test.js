@@ -20,7 +20,7 @@ describe("End-to-end testing", () => {
     render(<CamelsHump />);
   });
   test("Render GameViewer page", () => {
-    render(<GameViewer />);
+    render(<GameViewer className="warrior" />);
   });
 });
 
@@ -56,11 +56,11 @@ describe("Play: Button tests", () => {
     mockRouter.setCurrentUrl("/play");
   });
   test("Play: Quit button is visible", () => {
-    render(<GameViewer />);
+    render(<GameViewer className="mage" />);
     expect(screen.queryByRole("button", { name: "Quit" })).toBeInTheDocument();
   });
   test("Play: Quit button routes back to menu", () => {
-    render(<GameViewer />);
+    render(<GameViewer className="rogue" />);
 
     const quit = screen.queryByRole("button", { name: "Quit" });
     fireEvent.click(quit);

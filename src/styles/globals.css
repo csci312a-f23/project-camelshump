@@ -52,6 +52,16 @@ body {
   max-width: 200px;
 }
 
+.enemyContainer {
+  grid-column-start: 4;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  border: 1px solid #000;
+  height: 400px;
+  max-width: 200px;
+}
+
 .inventoryContainer {
   grid-column-start: 2;
   grid-column-end: 4;

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/FightEnemy.module.css";
 
 import FightBox from "./FightBox";
+import ItemBox from "./ItemBox";
 
 export default function FightEnemy({
+  inventory,
   closePopup,
   fightAction,
+  itemAction,
   setGeneratedText,
   setTextPrompt,
+  classWeapon,
 }) {
   const [fightOptions, setFightOptions] = useState(false);
+  const [itemOptions, setItemOptions] = useState(false);
 
   const handleClose = () => {
     setGeneratedText(`You run away`);
@@ -26,6 +31,16 @@ export default function FightEnemy({
   const handleFight = () => {
     setFightOptions(true);
   };
+
+  // useEffects to keep only one box open at once, can probably be improved
+  useEffect(() => {
+    if (itemOptions) setFightOptions(false);
+  }, [itemOptions]);
+
+  useEffect(() => {
+    if (fightOptions) setItemOptions(false);
+  }, [fightOptions]);
+
   return (
     <div>
       <div />
@@ -42,6 +57,10 @@ export default function FightEnemy({
           {" "}
           Fight{" "}
         </button>
+        <button type="button" onClick={() => setItemOptions(true)}>
+          {" "}
+          Item{" "}
+        </button>
         <button type="button" onClick={() => handleClose()}>
           {" "}
           Run{" "}
@@ -50,6 +69,14 @@ export default function FightEnemy({
           <FightBox
             closeFightBox={() => setFightOptions(false)}
             fightAction={fightAction}
+            classWeapon={classWeapon}
+          />
+        )}
+        {itemOptions && (
+          <ItemBox
+            inventory={inventory}
+            closeItemBox={() => setItemOptions(false)}
+            itemAction={itemAction}
           />
         )}
       </div>
@@ -58,8 +85,11 @@ export default function FightEnemy({
 }
 
 FightEnemy.propTypes = {
+  inventory: PropTypes.arrayOf(Object).isRequired,
   closePopup: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
+  itemAction: PropTypes.func.isRequired,
   setGeneratedText: PropTypes.func.isRequired,
   setTextPrompt: PropTypes.func.isRequired,
+  classWeapon: PropTypes.string.isRequired,
 };

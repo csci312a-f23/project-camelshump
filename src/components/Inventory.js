@@ -2,13 +2,16 @@
  * Inventory.js
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/Inventory.module.css";
 
-export default function Inventory({ item, onItemUpdate }) {
-  const [inventoryList, setInventoryList] = useState([]);
-
+export default function Inventory({
+  item,
+  onItemUpdate,
+  inventoryList,
+  setInventoryList,
+}) {
   const updateInventory = (newItem) => {
     // Check if the item is already in the inventory
     const itemExists = inventoryList.find(
@@ -55,4 +58,6 @@ export default function Inventory({ item, onItemUpdate }) {
 Inventory.propTypes = {
   item: PropTypes.string.isRequired,
   onItemUpdate: PropTypes.func.isRequired,
+  inventoryList: PropTypes.arrayOf(Object).isRequired,
+  setInventoryList: PropTypes.func.isRequired,
 };

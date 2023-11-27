@@ -14,10 +14,6 @@ export default function FightBox({ closeFightBox, fightAction }) {
         {" "}
         Punch{" "}
       </button>
-      <button type="button" onClick={() => fightAction("sword")}>
-        {" "}
-        Swing Sword{" "}
-      </button>
       <button type="button" onClick={() => fightAction("dance")}>
         {" "}
         Dance{" "}
