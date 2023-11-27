@@ -142,7 +142,15 @@ export default function GameViewer({ className }) {
 
   const fightPrompt = (preGeneratedString, promptToGenerate) => {
     setGeneratedText(preGeneratedString);
-    setTimeout(() => setTextPrompt(promptToGenerate), 2000);
+    setTimeout(() => setTextPrompt(promptToGenerate), 1000);
+  };
+
+  const enemyAction = () => {
+    damagePlayer(enemy.strength);
+    fightPrompt(
+      `${enemy.name} attacks and deals ${enemy.strength} damage.`,
+      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
+    );
   };
 
   const fightAction = (action) => {
@@ -153,6 +161,7 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(Math.floor(strength * 0.5));
+        setTimeout(() => enemyAction(), 4000);
         break;
       case "dance":
         fightPrompt(
@@ -160,6 +169,7 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
         );
         lowerEnemyStrength(5);
+        setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
@@ -229,8 +239,9 @@ export default function GameViewer({ className }) {
 
   useEffect(() => {
     if (enemyKilled) {
-      currentMap[position[2]][position[0]][position[1]] = "-"; // how do we do this without mutating props?
-      setCurrentMap(currentMap);
+      const newMap = [...currentMap];
+      newMap[position[2]][position[0]][position[1]] = "-";
+      setCurrentMap(newMap);
       setEnemy(null);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
