@@ -19,7 +19,7 @@ const itemDictionary = {
   B: "Bow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Speed Potion",
+  S: "Stamina Potion",
 };
 
 const ENEMIES = [
@@ -79,8 +79,12 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
-  const raiseStrength = (toBuff) => {
-    setStrength(strength + toBuff);
+  const raiseStrength = (amount) => {
+    setStrength(strength + amount);
+  }
+
+  const lowerEnemyStrength = (amount) => {
+    setEnemy({...enemy, strength: Math.max(1, enemy.strength - amount)});      
   }
 
   const healPlayer = (toHeal) => {
@@ -139,6 +143,7 @@ export default function GameViewer({ className }) {
         break;
       case "dance":
         fightPrompt(`You dance with the ${enemy.name}`, `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`);
+        lowerEnemyStrength(5);
         break;
       default:
     }
@@ -169,12 +174,12 @@ export default function GameViewer({ className }) {
         healPlayer(10);
         break;
       case "S":
-        // Attack twice (probably unimplemented for now)
+        // Buff strength for now
+        raiseStrength(5);        
         break;
       case `${classWeapon}`:
         fightPrompt(`You use your ${classWeapon} on the ${enemy.name}`, `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`);
         setGeneratedText();
-        // TODO: Make classWeapon and punch a scaled factor of your class' strength
         damageEnemy(strength);
         break;
     }
