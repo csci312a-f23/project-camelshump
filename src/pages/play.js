@@ -79,6 +79,22 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  const reduceItem = (newItem) => {
+    const itemExists = inventoryList.find(
+      (inventoryItem) => inventoryItem.name === newItem,
+    );
+
+    if (itemExists) {
+      // If the item exists, update the inventory by mapping through and modifying the target item
+      const updatedInventory = inventoryList.map((inventoryItem) =>
+        inventoryItem.name === newItem
+          ? { ...inventoryItem, quantity: inventoryItem.quantity - 1 }
+          : inventoryItem,
+      );
+      setInventoryList(updatedInventory);
+    }
+  };
+
   const deathPrompt = () => {
     setTextPrompt(
       `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
@@ -171,11 +187,12 @@ export default function GameViewer({ className }) {
       case "G":
         // 20 damage, 5 to self
         fightPrompt(
-          `You punched the ${enemy.name}`,
-          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
+          `You throw a grenade at the ${enemy.name}`,
+          `I'm a fantasy character, I threw a grenade at a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(20);
         damagePlayer(5);
+        reduceItem("G");
         break;
       case "H":
         // Heal 10
@@ -184,17 +201,22 @@ export default function GameViewer({ className }) {
           "I'm a fantasy character, I used a healing potion, describe what happens.",
         );
         healPlayer(10);
+        reduceItem("H");
         break;
       case "S":
         // Buff strength for now
+        fightPrompt(
+          `You used a Stamina potion`,
+          "I'm a fantasy character, I used a stamina potion, describe what happens.",
+        );
         raiseStrength(5);
+        reduceItem("S");
         break;
       case classWeapon:
         fightPrompt(
           `You use your ${classWeapon} on the ${enemy.name}`,
           `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
-        setGeneratedText();
         damageEnemy(strength);
         break;
       default:
