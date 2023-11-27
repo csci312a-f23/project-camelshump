@@ -79,6 +79,10 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  const raiseStrength = (toBuff) => {
+    setStrength(strength + toBuff);
+  }
+
   const healPlayer = (toHeal) => {
     // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
     setHealth(Math.min(50, health + toHeal));
@@ -104,8 +108,7 @@ export default function GameViewer({ className }) {
   }
 
   const deathPrompt = () => {
-    // TODO: Change to prompt the AI to write about the enemy you died to
-    console.log("You died");
+    setTextPrompt(`I'm a fantasy character, I died to a ${enemy}, describe what happened.`)
   };
 
   const togglePopup = () => {
@@ -117,28 +120,25 @@ export default function GameViewer({ className }) {
     setEnemyPopup(false);
   };
 
+  const fightPrompt = (preGeneratedString, promptToGenerate) => {
+    setGeneratedText(preGeneratedString);
+    setTimeout(
+      () =>
+        setTextPrompt(
+          promptToGenerate,
+        ),
+      2000,
+    );
+  }
+
   const fightAction = (action) => {
     switch (action) {
       case "punch":
-        setGeneratedText(`You punched the ${enemy.name}`);
-        setTimeout(
-          () =>
-            setTextPrompt(
-              `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
-            ),
-          2000,
-        );
-        damageEnemy(3);
+        fightPrompt(`You punched the ${enemy.name}`, `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`);
+        damageEnemy(Math.floor(strength * 0.5));
         break;
       case "dance":
-        setGeneratedText(`You dance with the ${enemy.name}`);
-        setTimeout(
-          () =>
-            setTextPrompt(
-              `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
-            ),
-          2000,
-        );
+        fightPrompt(`You dance with the ${enemy.name}`, `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`);
         break;
       default:
     }
@@ -148,37 +148,34 @@ export default function GameViewer({ className }) {
     switch (action) {
       case "A":
         // 15 damage
+        fightPrompt(`You used an axe on the ${enemy.name}`, `I'm a fantasy character, I used an axe on a ${enemy.name}, describe what happens.`);
         damageEnemy(15);
         break;
       case "B":
         // 10 damage twice, 50% chance to hit second shot
+        fightPrompt(`You shot the ${enemy.name} with a bow`, `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`);
         damageEnemy(10);
         if (Math.random() >= 0.5) damageEnemy(10);
         break;
       case "G":
         // 20 damage, 5 to self
+        fightPrompt(`You punched the ${enemy.name}`, `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`);
         damageEnemy(20);
         damagePlayer(5);
         break;
       case "H":
         // Heal 10
+        fightPrompt(`You used a healing potion`, "I'm a fantasy character, I used a healing potion, describe what happens.");
         healPlayer(10);
         break;
       case "S":
         // Attack twice (probably unimplemented for now)
         break;
       case `${classWeapon}`:
-        setGeneratedText(`You use your ${classWeapon} on the ${enemy.name}`);
-        setTimeout(
-          () =>
-            setTextPrompt(
-              `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
-            ),
-          2000,
-        );
+        fightPrompt(`You use your ${classWeapon} on the ${enemy.name}`, `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`);
+        setGeneratedText();
         // TODO: Make classWeapon and punch a scaled factor of your class' strength
-        damageEnemy(10);
-        // setEnemyKilled(true);
+        damageEnemy(strength);
         break;
     }
   };
