@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import StatBar from "./Statbar";
 
-export default function Stats({ health, strength }) {
+export default function Stats({ health, strength, maxHealth, maxStrength }) {
   // const [statValues, setStatValues] = useState({
   //   health: 50,
   //   strength: 10,
@@ -50,8 +50,8 @@ export default function Stats({ health, strength }) {
 
   return (
     <div>
-      <StatBar label="Health" value={health} maxValue={100} />
-      <StatBar label="Strength" value={strength} maxValue={100} />
+      <StatBar label="Health" value={health} maxValue={maxHealth} />
+      <StatBar label="Strength" value={strength} maxValue={maxStrength} />
     </div>
   );
 }

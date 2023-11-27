@@ -34,6 +34,7 @@ const ENEMIES = [
 
 // TODO: Stats dict for enemies and items
 let statelessEnemy;
+let enemyContainer = <div className="enemyContainer"></div>;
 
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
@@ -251,6 +252,16 @@ export default function GameViewer({ className }) {
     };
   }, [enemyPopup, currentMap, position]);
 
+  useEffect(() => {
+    if (enemy !== null) {
+      enemyContainer = <div className="enemyContainer">
+        <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50}/>
+      </div>
+    }
+    else
+      enemyContainer = <div className="enemyContainer"></div>
+  }, [enemy])
+
   return (
     <main className="gridContainer">
       <div className="mapContainer">
@@ -276,16 +287,14 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats health={health} strength={strength} />
+        {/* Hardcoding max health and strength values for now */}
+        <Stats health={health} strength={strength} maxHealth={10} maxStrength={10}/>
       </div>
-      {enemy !== null && (
-        <div className="enemyContainer">
-          <p> Stats </p>
-          <p> Health: {enemy.health} </p>
-
-          <p> Strength: {enemy.strength} </p>
-        </div>
-      )}
+      {/* Conditionally render in the enemy container if an enemy exists */}
+      { enemy !== null && 
+      <div className="enemyContainer">
+        <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50}/> 
+      </div> } 
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}
