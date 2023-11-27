@@ -3,7 +3,7 @@
  */
 import PropTypes from "prop-types";
 
-export default function FightBox({ closeFightBox, fightAction }) {
+export default function FightBox({ closeFightBox, fightAction, classWeapon }) {
   const handleClose = () => {
     closeFightBox();
   };
@@ -13,10 +13,6 @@ export default function FightBox({ closeFightBox, fightAction }) {
       <button type="button" onClick={() => fightAction("punch")}>
         {" "}
         Punch{" "}
-      </button>
-      <button type="button" onClick={() => fightAction("sword")}>
-        {" "}
-        Swing Sword{" "}
       </button>
       <button type="button" onClick={() => fightAction("dance")}>
         {" "}

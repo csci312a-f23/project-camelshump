@@ -14,7 +14,6 @@ import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
 
-// const ITEMS = ["Sword", "Staff"];
 const itemDictionary = {
   A: "Axe",
   B: "Bow",
@@ -24,17 +23,15 @@ const itemDictionary = {
 };
 
 const ENEMIES = [
-  { name: "Spider Monster", health: 10, strength: 4 },
-  { name: "Dragon", health: 10, strength: 4 },
-  { name: "Thief", health: 10, strength: 4 },
-  { name: "Bandit", health: 10, strength: 4 },
-  { name: "Dark Wizard", health: 10, strength: 4 },
-  { name: "An Evil Ampersand", health: 10, strength: 4 },
+  { name: "Spider Monster", health: 60, strength: 6 },
+  { name: "Dragon", health: 55, strength: 8 },
+  { name: "Thief", health: 20, strength: 4 },
+  { name: "Bandit", health: 14, strength: 5 },
+  { name: "Dark Wizard", health: 10, strength: 8 },
+  { name: "An Evil Ampersand", health: 100, strength: 10 },
 ];
 
-// TODO: Stats dict for enemies and items
 let statelessEnemy;
-let enemyContainer = <div className="enemyContainer"></div>;
 
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
@@ -45,8 +42,8 @@ export function getRandom(max) {
 /*
 
 TODO: bugs
-	- wrong prompt showing for certain items
-	- initial prompt should not be visible when responding to the text prompt box
+  - wrong prompt showing for certain items
+  - initial prompt should not be visible when responding to the text prompt box
 
 */
 
@@ -56,6 +53,7 @@ export default function GameViewer({ className }) {
   const numSections = 9;
   // Create a new map with 9 sections and each map is 16x16 characters
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
+  const classWeapon = classDict[className];
 
   // Set map state to the initial map
   const [currentMap, setCurrentMap] = useState(initialMap);
@@ -126,17 +124,6 @@ export default function GameViewer({ className }) {
         );
         damageEnemy(3);
         break;
-      case "sword":
-        setGeneratedText(`You swing your sword at the ${enemy.name}`);
-        setTimeout(
-          () =>
-            setTextPrompt(
-              `I'm a fantasy character, I swung my sword at a ${enemy.name}, describe what happens.`,
-            ),
-          2000,
-        );
-        // setEnemyKilled(true);
-        break;
       case "dance":
         setGeneratedText(`You dance with the ${enemy.name}`);
         setTimeout(
@@ -150,14 +137,6 @@ export default function GameViewer({ className }) {
       default:
     }
   };
-
-  // const itemDictionary = {
-  //   A: "Axe",
-  //   B: "Bow",
-  //   G: "Grenade",
-  //   H: "Health Potion",
-  //   S: "Stamina / Speed Boost",
-  // };
 
   const itemAction = (action) => {
     switch (action) {
@@ -181,6 +160,17 @@ export default function GameViewer({ className }) {
         break;
       case "S":
         // Attack twice (probably unimplemented for now)
+        break;
+      case `${classWeapon}`:
+        setGeneratedText(`You use your ${classWeapon} on the ${enemy.name}`);
+        setTimeout(
+          () =>
+            setTextPrompt(
+              `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
+            ),
+          2000,
+        );
+        // setEnemyKilled(true);
         break;
     }
   };
@@ -251,16 +241,6 @@ export default function GameViewer({ className }) {
     };
   }, [enemyPopup, currentMap, position]);
 
-  useEffect(() => {
-    if (enemy !== null) {
-      enemyContainer = <div className="enemyContainer">
-        <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50}/>
-      </div>
-    }
-    else
-      enemyContainer = <div className="enemyContainer"></div>
-  }, [enemy])
-
   return (
     <main className="gridContainer">
       <div className="mapContainer">
@@ -282,19 +262,20 @@ export default function GameViewer({ className }) {
             itemAction={itemAction}
             setGeneratedText={setGeneratedText}
             setTextPrompt={setTextPrompt}
+            classWeapon={classWeapon}
           />
         )}
       </div>
       <div className="statsContainer">
         {/* Hardcoding max health and strength values for now */}
-        <Stats health={health} strength={strength} maxHealth={10} maxStrength={10}/>
+        <Stats health={health} strength={strength} maxHealth={10} maxStrength={10} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
-      { enemy !== null && 
-      <div className="enemyContainer">
-        <p>{enemy.name}</p>
-        <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50}/> 
-      </div> } 
+      {enemy !== null &&
+        <div className="enemyContainer">
+          <p>{enemy.name}</p>
+          <Stats health={enemy.health} strength={enemy.strength} maxHealth={50} maxStrength={50} />
+        </div>}
       <div className="textContainer">
         <TextBox
           generatedText={generatedText}

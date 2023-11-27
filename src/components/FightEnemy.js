@@ -12,6 +12,7 @@ export default function FightEnemy({
   itemAction,
   setGeneratedText,
   setTextPrompt,
+  classWeapon
 }) {
   const [fightOptions, setFightOptions] = useState(false);
   const [itemOptions, setItemOptions] = useState(false);
@@ -70,6 +71,7 @@ export default function FightEnemy({
           <FightBox
             closeFightBox={() => setFightOptions(false)}
             fightAction={fightAction}
+            classWeapon={classWeapon}
           />
         )}
         {itemOptions && (
