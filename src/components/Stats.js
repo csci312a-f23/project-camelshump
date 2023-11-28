@@ -13,12 +13,12 @@ export default function Stats({
 }) {
   return (
     <div>
-      <div className={styles.art}>
-        <pre>{art}</pre>
-      </div>
       <div>
         <StatBar label="Health" value={health} maxValue={maxHealth} />
         <StatBar label="Strength" value={strength} maxValue={maxStrength} />
+      </div>
+      <div className={styles.art}>
+        <pre>{art}</pre>
       </div>
     </div>
   );

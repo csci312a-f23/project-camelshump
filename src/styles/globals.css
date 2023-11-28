@@ -44,32 +44,32 @@ body {
 
 .statsContainer {
   grid-column-start: 2;
-  grid-column-end: 4;
+  grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 2;
   border: 1px solid #000;
   height: 400px;
-  max-width: 200px;
+  max-width: 400px;
 }
 
 .enemyContainer {
-  grid-column-start: 4;
-  grid-column-end: 6;
+  grid-column-start: 3;
+  grid-column-end: 4;
   grid-row-start: 1;
-  grid-row-end: 2;
+  grid-row-end: 3;
   border: 1px solid #000;
-  height: 400px;
-  max-width: 200px;
+  height: 655px;
+  max-width: 450px;
 }
 
 .inventoryContainer {
   grid-column-start: 2;
-  grid-column-end: 4;
+  grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
   border: 1px solid #000;
-  height: 150px;
-  max-width: 600px;
+  height: 250px;
+  max-width: 400px;
 }
 
 .quitButton {
