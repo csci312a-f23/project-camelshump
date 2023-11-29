@@ -2,13 +2,13 @@
 
 .gridContainer {
   display: grid;
-  gap: 15px;
+  gap: 1.5vh;
   grid-template-rows: 15% 20% 5% 20% 5% 20% 15%;
 }
 
 #class {
   border: 1px solid #000;
-  height: 450px;
+  height: 50vh;
   grid-row-start: 2;
 }
 
