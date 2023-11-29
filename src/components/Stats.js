@@ -7,15 +7,22 @@ import styles from "../styles/Stats.module.css";
 export default function Stats({
   health,
   strength,
+  defense,
+  intelligence,
+  speed,
+  rizz,
   maxHealth,
-  maxStrength,
   art,
 }) {
   return (
     <div>
-      <div>
+      <div className={styles.stats}>
         <StatBar label="Health" value={health} maxValue={maxHealth} />
-        <StatBar label="Strength" value={strength} maxValue={maxStrength} />
+        <StatBar label="Strength" value={strength} />
+        <StatBar label="Defense" value={defense} />
+        <StatBar label="Speed" value={speed} />
+        <StatBar label="Defense" value={intelligence} />
+        <StatBar label="Defense" value={rizz} />
       </div>
       <div className={styles.art}>
         <pre>{art}</pre>
@@ -27,8 +34,11 @@ export default function Stats({
 Stats.propTypes = {
   health: PropTypes.number.isRequired,
   strength: PropTypes.number.isRequired,
+  defense: PropTypes.number.isRequired,
+  speed: PropTypes.number.isRequired,
+  intelligence: PropTypes.number.isRequired,
+  rizz: PropTypes.number.isRequired,
   maxHealth: PropTypes.number.isRequired,
-  maxStrength: PropTypes.number.isRequired,
   // eslint-disable-next-line react/require-default-props
-  art: PropTypes.string,
+  art: PropTypes.string.isRequired,
 };

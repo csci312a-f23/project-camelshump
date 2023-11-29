@@ -1,7 +1,8 @@
 /*
  * play.js
  */
-import PropTypes from "prop-types";
+// eslint-disable-next-line no-unused-vars
+import PropTypes, { element } from "prop-types";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
@@ -13,6 +14,8 @@ import MapDisplay from "../components/MapDisplay";
 import { Traversal } from "../components/Traversal";
 import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
+import ENEMIES from "../components/Enemy";
+import CHARACTERS from "../components/Character";
 
 const itemDictionary = {
   A: "Axe",
@@ -22,205 +25,8 @@ const itemDictionary = {
   S: "Stamina Potion",
 };
 
-const ENEMIES = [
-  {
-    name: "Spider Monster",
-    health: 60,
-    strength: 6,
-    art: `           ____                      , \n
-          /---.'.__             ____// \n
-               '--.\\           /.---' \n
-          _______  \\\\         // \n
-        /.------.\\  \\|      .'/  ______ \n
-       //  ___  \\ \\ ||/|\\  //  _/_----.\\__ \n
-      |/  /.-.\\  \\ \\:|< >|// _/.'..\\   '--' \n
-         //   \\'. | \\'.|.'/ /_/ /  \\\\ \n
-        //     \\ \\_\\/" ' ~\\-'.-'    \\\\ \n
-       //       '-._| :H: |'-.__     \\\\ \n
-      //           (/'==='\\)'-._\\     || \n
-      ||                        \\\\    \\| \n
-      ||                         \\\\    ' \n
-      |/                          \\\\ \n
-                                   || \n
-                                   || \n
-                                   \\\\ \n
-                                    '  \n
-  `,
-  },
-  {
-    name: "Dragon",
-    health: 55,
-    strength: 8,
-    art: `          /                            ) \n
-          (                             |\\ \n
-         /|                              \\\\ \n
-        //                                \\\\ \n
-       ///                                 \\| \n
-      /( \\                                  )\\ \n
-      \\\\  \\_                               //) \n
-       \\\\  :\\__                           /// \n
-        \\\\     )                         // \\ \n
-         \\\\:  /                         // |/ \n
-          \\\\ / \\                       //  \\ \n
-           /)   \\   ___..-'           (|  \\_| \n
-          //     /   _.'              \\ \\  \\ \n
-         /|       \\ \\________          \\ | / \n
-        (| _ _  __/          '-.       ) /.' \n
-         \\\\ .  '-.__            \\_    / / \\ \n
-          \\\\_'.     > --._ '.     \\  / / / \n
-           \\ \\      \\     \\  \\     .' /.' \n
-            \\ \\  '._ /     \\ )    / .' | \n
-             \\ \\_     \\_   |    .'_/ __/ \n
-              \\  \\      \\_ |   / /  _/ \\_ \n
-               \\  \\       / _.' /  /     \\ \n
-               \\   |     /.'   / .'       '-,_ \n
-                \\   \\  .'   _.'_/             \\ \n
-   /\\    /\\      ) ___(    /_.'           \\    | \n
-  | _\\__// \\    (.'      _/               |    | \n
-  \\/_  __  /--''    ,                   __/    / \n
-  (_ ) /b)  \\  '.   :            \\___.-'_/ \\__/ \n
-  /:/:  ,     ) :        (      /_.'__/-'|_ _ / \n
- /:/: __/\\ >  __,_.----.__\\    /        (/(/(/ \n
-(_(,_/V .'/--'    _/  __/ |   / \n
- VvvV  //'    _.-' _.'     \\   \\ \n
-   n_n//     (((/->/        |   / \n
-   '--'         ~='          \\  | \n
-                              | |_,,, \n
-                              \\  \\  / \n
-                               '.__) \n
-`,
-  },
-  {
-    name: "Thief",
-    health: 20,
-    strength: 4,
-    art: ` -'   ||             , \n
-      ||           _,''/ \n
-      ||         ,/'   < \n
-      ||       .-'\\\\_.-' \n
-      ||      /'' '| \n
-     _!|      |o o ?    \n
-     |/\\      '.=.'.__   . \n
-     '| L   _.-J ' L '\\.' '. \n
-      ||/'.'  | \\ /'_.'  .  \\  \n
-        \\   .=\\__v__<    \\.  L   \n
-         '-'   |    _\\    \\. | \n
-                \\'_'  \\.     F \n
-                )\\/    '-.__J \n
-               /  |   -| \n
-              /   |   / \n
-             ( ' <|' | \n
-              \\_.'\\. \\ \n
-               '. |._ | \n
-                 'J' / \n
-             ,    _)'|>.__,_\\ \n
-       ' .,-.+- .'_._\\  "'-=-i"" ---- \n
-                _,. -''' \n
-`,
-  },
-  {
-    name: "Skeleton",
-    health: 14,
-    strength: 5,
-    art: `              .7 \n
-            .'/ \n
-           / / \n
-          / / \n
-         / / \n
-        / / \n
-       / / \n
-      / / \n
-     / / \n     
-    / / \n      
-  __|/ \n
-,-\\__\\ \n
-|f-"Y\\| \n
-\\()7L/ \n
- cgD                            __ _ \n
- |\\(                          .'  Y '>, \n
-  \\ \\                        / _   _   \\ \n
-   \\\\\\                       )(_) (_)(|} \n
-    \\\\\\                      {  4A   } / \n
-     \\\\\\                      \\uLuJJ/\\l \n
-      \\\\\\                     |3    p)/ \n
-       \\\\\\___ __________      /nnm_n// \n
-       c7___-__,__-)\\,__)(".  \\_>-<_/D \n
-                  //V     \\_"-._.__G G_c__.-__<"/ ( \\ \n
-                         <"-._>__-,G_.___)\\   \\7\\ \n
-                        ("-.__.| \\"<.__.-" )   \\ \\ \n
-                        |"-.__"\\  |"-.__.-".\\   \\ \\ \n
-                        ("-.__"". \\"-.__.-".|    \\_\\ \n
-                        \\"-.__""|!|"-.__.-".)     \\ \\ \n
-                         "-.__""\\_|"-.__.-"./      \\ l \n
-                          ".__""">G>-.__.-">       .--,_ \n
-                              ""  G \n
-`,
-  },
-  {
-    name: "Dark Wizard",
-    health: 10,
-    strength: 8,
-    art: `                                  .... \n
-                                .'' .''' \n
-.                             .'   : \n
-                          .:    : \n
-                         _:    :       ..----.._ \n
-                      .:::.....:::.. .'         ''. \n
-\\                   .'  #-. .-######'     #        '. \n
-\\\\                 '.##'/ ' ################       : \n
- \\\\                  #####################         : \n
-  \\\\               ..##.-.#### .''''###'.._        : \n
-   \\\\             :--:########:            '.    .' : \n
-    \\\\..__...--.. :--:#######.'   '.         '.     : \n
-    :     :  : : '':'-:'':'::        .         '.  .' \n
-    '---'''..: :    ':    '..'''.      '.        :' \n
-       \\\\  :: : :     '      ''''''.     '.      .: \n
-        \\\\ ::  : :     '            '.      '      : \n
-         \\\\::   : :           ....' ..:       '     '. \n
-          \\\\::  : :    .....####\\\\ .~~.:.             : \n
-           \\\\':.:.:.:'#########.===. ~ |.'-.   . '''.. : \n
-            \\\\    .'  ########## \\ \\ _.' '. '-.       '''. \n
-            :\\\\  :     ########   \\ \\      '.  '-.        : \n
-           :  \\\\'    '   #### :    \\ \\      :.    '-.      : \n
-          :  .'\\\\   :'  :     :     \\ \\       :      '-.    : \n
-         : .'  .\\\\  '  :      :     :\\ \\       :        '.   : \n
-         ::   :  \\\\'  :.      :     : \\ \\      :          '. : \n
-         ::. :    \\\\  : :      :    ;  \\ \\     :           '.: \n
-          : ':    '\\\\ :  :     :     :  \\:\\     :        ..' \n
-             :    ' \\\\ :        :     ;  \\|      :   .''' \n
-             '.   '  \\\\:                         :.'' \n
-              .:..... \\\\:       :            ..'' \n
-             '._____|'.\\\\......'''''''.:..''' \n
-                        \\\\ \n
-`,
-  },
-  {
-    name: "An Evil Ampersand",
-    health: 100,
-    strength: 10,
-    art: ` 
-                            ,-.                               \n
-       ___,---.__          /'|'\\          __,---,___          \n
-    ,-'    \\'    '-.____,-'  |  '-.____,-'    //    '-.       \n
-  ,'        |           ~'\\     /'~           |        '.      \n
- /      ___//              '. ,'          ,  , \\___      \\    \n
-|    ,-'   '-.__   _         |        ,    __,-'   '-.    |    \n
-|   /          /\\_  '   .    |    ,      _/\\          \\   |   \n
-\\  |           \\ \\'-.___ \\   |   / ___,-'/ /           |  /  \n
- \\  \\           | '._   '\\\\  |  //'   _,' |           /  /     \n 
-  '-.\\         /'  _ '---'' , . ''---' _  '\\         /,-'     \n
-     ''       /     \\    ,='/ \\'=.    /     \\       ''         \n 
-             |__   /|\\_,--.,-.--,--._/|\\   __|                  \n
-             /  './  \\\\'\\ |  |  | /,//' \\,'  \\                 \n 
-            /   /     ||--+--|--+-/-|     \\   \\                 \n
-           |   |     /'\\_\\_\\ | /_/_/'\\     |   |                \n
-            \\   \\__, \\_     '~'     _/ .__/   /            \n
-             '-._,-'   '-._______,-'   '-._,-'\n
-`,
-  },
-];
-
 let statelessEnemy;
+let character;
 
 const classDict = { warrior: "Sword", mage: "Staff", rogue: "Knife" };
 
@@ -242,7 +48,8 @@ export default function GameViewer({ className }) {
   const numSections = 9;
   // Create a new map with 9 sections and each map is 16x16 characters
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
-  const classWeapon = classDict[className];
+  character = CHARACTERS.find((elem) => elem.name === className);
+  const classWeapon = character.weapon;
 
   // Set map state to the initial map
   const [currentMap, setCurrentMap] = useState(initialMap);
@@ -255,8 +62,16 @@ export default function GameViewer({ className }) {
   const [inventoryList, setInventoryList] = useState([]);
 
   // Health and attack, future versions can vary by class
-  const [health, setHealth] = useState(50);
-  const [strength, setStrength] = useState(10);
+  const [health, setHealth] = useState(character.health);
+  const [strength, setStrength] = useState(character.strength);
+  // eslint-disable-next-line no-unused-vars
+  const [intelligence, setIntelligence] = useState(character.intelligence);
+  // eslint-disable-next-line no-unused-vars
+  const [speed, setSpeed] = useState(character.speed);
+  // eslint-disable-next-line no-unused-vars
+  const [defense, setDefense] = useState(character.defense);
+  // eslint-disable-next-line no-unused-vars
+  const [rizz, setRizz] = useState(character.rizz);
 
   const [enemy, setEnemy] = useState(null);
   // Might be an extraneous piece of state
@@ -290,6 +105,10 @@ export default function GameViewer({ className }) {
     );
   };
 
+  // const raiseDefense = (amount) => {
+  //   setDefense(defense + amount);
+  // }
+
   const raiseStrength = (amount) => {
     setStrength(strength + amount);
   };
@@ -318,7 +137,7 @@ export default function GameViewer({ className }) {
   };
 
   // Might be a better way to do this!
-  const getEnemy = (name) => ENEMIES.find((element) => element.name === name);
+  const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -437,6 +256,7 @@ export default function GameViewer({ className }) {
       // Will change to include a description of the enemy/the fight
       // setGeneratedText("YOU WON!");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemyKilled]);
 
   const updateItem = (itemPressed) => {
@@ -517,8 +337,12 @@ export default function GameViewer({ className }) {
         <Stats
           health={health}
           strength={strength}
-          maxHealth={50}
-          maxStrength={10}
+          defense={defense}
+          intelligence={intelligence}
+          speed={speed}
+          rizz={rizz}
+          maxHealth={character.health}
+          art=""
         />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
@@ -528,8 +352,11 @@ export default function GameViewer({ className }) {
           <Stats
             health={enemy.health}
             strength={enemy.strength}
+            defense={defense}
+            intelligence={intelligence}
+            speed={speed}
+            rizz={rizz}
             maxHealth={getEnemy(enemy.name).health}
-            maxStrength={getEnemy(enemy.name).strength}
             art={getEnemy(enemy.name).art}
           />
         </div>
