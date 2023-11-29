@@ -1,14 +1,14 @@
 /* StatBar.module.css */
 .statBarContainer {
-  margin-bottom: 10px;
+  margin-bottom: 1vh;
 }
 
 .statBar {
   background-color: #ddd;
-  height: 20px;
-  border-radius: 5px;
+  height: 2vh;
+  border-radius: 0.5vh;
   overflow: hidden;
-  margin-top: 5px;
+  margin-top: 0.5vh;
   display: flex;
   align-items: center;
 }
@@ -19,5 +19,5 @@
 }
 
 .percentageText {
-  margin-left: 5px;
+  margin-left: 0.5vh;
 }

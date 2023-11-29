@@ -2,7 +2,7 @@
 
 .gridContainer {
   display: grid;
-  gap: 15px;
+  gap: 1.5vh;
   grid-template-columns: 35% 30% 35%;
   grid-template-rows: 50% 10% 10% 30%;
 }
