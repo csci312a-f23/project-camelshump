@@ -49,6 +49,10 @@ export default function GameViewer({ className }) {
   // Create a new map with 9 sections and each map is 16x16 characters
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
   character = CHARACTERS.find((elem) => elem.name === className);
+  if (!character) {
+    // eslint-disable-next-line prefer-destructuring
+    character = CHARACTERS[0];
+  }
   const classWeapon = character.weapon;
 
   // Set map state to the initial map
