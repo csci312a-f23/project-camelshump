@@ -11,6 +11,7 @@
 .InventoryItem {
   margin-right: 0.5vh;
   font-weight: bold;
+  font-size: 1.7vh;
 }
 
 .InventoryList {
