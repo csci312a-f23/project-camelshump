@@ -3,16 +3,25 @@ import PropTypes from "prop-types";
 import styles from "../styles/StatBar.module.css";
 
 export default function StatBar({ label, value, maxValue }) {
-  const percentage = (value / maxValue) * 100;
+  let percentage;
+  if (label === "Health") {
+    percentage = (value / maxValue) * 100;
+  } else {
+    percentage = (value / 10) * 100;
+  }
 
   return (
     <div className={styles.statBarContainer}>
       <p>{label}</p>
       <div className={styles.statBar}>
         <div className={styles.barFill} style={{ width: `${percentage}%` }} />
-        <span className={styles.percentageText}>
-          {value}/{maxValue}
-        </span>
+        {label === "Health" ? (
+          <span className={styles.percentageText}>
+            {value}/{maxValue}
+          </span>
+        ) : (
+          <span className={styles.percentageText}>{value}</span>
+        )}
       </div>
     </div>
   );

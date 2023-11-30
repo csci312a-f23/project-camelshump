@@ -1,4 +1,8 @@
 .art {
-  line-height: 0.5;
+  line-height: 0.25;
+}
+
+.stats {
+  line-height: 0.075;
   font-size: 1.2vh;
 }

@@ -91,5 +91,6 @@ FightEnemy.propTypes = {
   itemAction: PropTypes.func.isRequired,
   setGeneratedText: PropTypes.func.isRequired,
   setTextPrompt: PropTypes.func.isRequired,
-  classWeapon: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  classWeapon: PropTypes.string,
 };
