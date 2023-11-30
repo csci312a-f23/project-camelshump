@@ -4,7 +4,7 @@
   /* Styles for the popup container */
   background-color: #fff;
   border: 2px solid #000;
-  padding: 20px;
+  padding: 2vh;
   position: fixed;
   top: 9vh; /* Moved down by 9% of viewport height */
   left: 1%; /* Left offset */
@@ -18,8 +18,8 @@
 .close-button {
   /* Styles for the close button */
   position: absolute;
-  top: 10px;
-  right: 10px; /* Positioned to the right */
+  top: 1vh;
+  right: 1vh; /* Positioned to the right */
   background: none;
   border: none;
   cursor: pointer;
@@ -38,8 +38,8 @@
 
 .popup button {
   /* Styles for the buttons inside the popup */
-  margin: 5px;
-  padding: 10px 20px;
+  margin: 0.5vh;
+  padding: 1vh 2vh;
   background-color: #f0f0f0;
   border: none;
   cursor: pointer;

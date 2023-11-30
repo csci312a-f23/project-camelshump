@@ -2,20 +2,21 @@
 
 .InventoryContainer {
   border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  max-width: 300px;
+  padding: 1vh;
+  margin: 1vh;
+  max-width: 30vh;
   text-align: center;
 }
 
 .InventoryItem {
-  margin-right: 5px;
+  margin-right: 0.5vh;
   font-weight: bold;
+  font-size: 1.7vh;
 }
 
 .InventoryList {
   columns: 2;
-  column-gap: 10px;
+  column-gap: 1vh;
   list-style-type: none;
   padding: 0;
   margin: 0;
