@@ -2,8 +2,11 @@
 
 .gridContainer {
   display: grid;
-  gap: 1.5vh;
+  gap: 15px;
+  grid-template-columns: 25% auto 25% auto 25%;
   grid-template-rows: 15% 20% 5% 20% 5% 20% 15%;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 #class {

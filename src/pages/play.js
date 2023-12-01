@@ -4,6 +4,7 @@
 // eslint-disable-next-line no-unused-vars
 import PropTypes, { element } from "prop-types";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
@@ -44,6 +45,8 @@ TODO: bugs
 
 export default function GameViewer({ className }) {
   const router = useRouter();
+  useSession({ required: true });
+
   const sectionLength = 16;
   const numSections = 9;
   // Create a new map with 9 sections and each map is 16x16 characters
@@ -86,6 +89,21 @@ export default function GameViewer({ className }) {
     Math.floor(currentMap[0].length / 2),
     5,
   ]);
+
+  // Disable arrow scrolling
+  const keys = { 38: 1, 40: 1 };
+
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+  }
 
   const reduceItem = (newItem) => {
     const itemExists = inventoryList.find(
