@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import styles from "../styles/Classes.module.css";
 import CHARACTERS from "../components/Character";
+import StatBar from "../components/Statbar";
 
 export default function ClassSelector({ setClassName }) {
   const router = useRouter();
@@ -13,6 +14,13 @@ export default function ClassSelector({ setClassName }) {
     setClassName(selection);
     router.push("/play");
   };
+
+  const warriorObj = CHARACTERS.find((elem) => elem.name === "warrior");
+  const mageObj = CHARACTERS.find((elem) => elem.name === "mage");
+
+  const rogueObj = CHARACTERS.find((elem) => elem.name === "rogue");
+
+  const maxHealth = 60;
 
   return (
     <main className={styles.gridContainer}>
@@ -23,7 +31,19 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Warrior</div>
         <div className={styles.art}>
-          <pre>{CHARACTERS.find((elem) => elem.name === "warrior").art}</pre>
+          <pre>{warriorObj.art}</pre>
+        </div>
+        <div className={styles.stats}>
+          <StatBar
+            label="Health"
+            value={warriorObj.health}
+            maxValue={maxHealth}
+          />
+          <StatBar label="Strength" value={warriorObj.strength} />
+          <StatBar label="Defense" value={warriorObj.defense} />
+          <StatBar label="Speed" value={warriorObj.speed} />
+          <StatBar label="Defense" value={warriorObj.intelligence} />
+          <StatBar label="Defense" value={warriorObj.rizz} />
         </div>
       </div>
       <div
@@ -33,7 +53,15 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Mage</div>
         <div className={styles.art}>
-          <pre>{CHARACTERS.find((elem) => elem.name === "mage").art}</pre>
+          <pre>{mageObj.art}</pre>
+        </div>
+        <div className={styles.stats}>
+          <StatBar label="Health" value={mageObj.health} maxValue={maxHealth} />
+          <StatBar label="Strength" value={mageObj.strength} />
+          <StatBar label="Defense" value={mageObj.defense} />
+          <StatBar label="Speed" value={mageObj.speed} />
+          <StatBar label="Defense" value={mageObj.intelligence} />
+          <StatBar label="Defense" value={mageObj.rizz} />
         </div>
       </div>
       <div
@@ -43,7 +71,19 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Rogue</div>
         <div className={styles.art}>
-          <pre>{CHARACTERS.find((elem) => elem.name === "rogue").art}</pre>
+          <pre>{rogueObj.art}</pre>
+        </div>
+        <div className={styles.stats}>
+          <StatBar
+            label="Health"
+            value={rogueObj.health}
+            maxValue={maxHealth}
+          />
+          <StatBar label="Strength" value={rogueObj.strength} />
+          <StatBar label="Defense" value={rogueObj.defense} />
+          <StatBar label="Speed" value={rogueObj.speed} />
+          <StatBar label="Defense" value={rogueObj.intelligence} />
+          <StatBar label="Defense" value={rogueObj.rizz} />
         </div>
       </div>
     </main>
