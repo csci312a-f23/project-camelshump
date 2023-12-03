@@ -29,6 +29,12 @@ const CHARACTERS = [
    'Y-.____(__} \n
     |     {__) \n
           () \n
+		  \n
+		  \n
+		  \n
+		  \n
+		  \n
+		  \n
 `,
   },
   {
@@ -62,6 +68,10 @@ const CHARACTERS = [
   ||         |_|   ccc/ \n
   ||        ccc/ \n
   ||                 \n
+  \n
+  \n
+  \n
+  \n
 
 `,
   },
