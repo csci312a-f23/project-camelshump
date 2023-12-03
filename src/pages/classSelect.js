@@ -1,9 +1,10 @@
 /*
- * menu.js
+ * classSelect.js
  */
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import styles from "../styles/Classes.module.css";
+import CHARACTERS from "../components/Character";
 
 export default function ClassSelector({ setClassName }) {
   const router = useRouter();
@@ -12,83 +13,6 @@ export default function ClassSelector({ setClassName }) {
     setClassName(selection);
     router.push("/play");
   };
-
-  const mageArt = `
-              _,-'| \n
-           ,-'._  | \n
- .||,      |####\\ | \n
-\\.*',/     \\####| | \n
-= ,. =      |###| | \n
-/ || \\    ,-'\\#/,''. \n
-  ||     ,'   ',,. '. \n
-  ,|____,' , ,;' \\| | \n 
- (3|\\    _/|/'   _| | \n
-  ||/,-''  | >-'' _,\\\\ \n
-  ||'      ==\\ ,-'  ,' \n
-  ||       |  V \\ ,| \n
-  ||       |    |' | \n
-  ||       |    |   \\ \n
-  ||       |    \\    \\ \n
-  ||       |     |    \\ \n
-  ||       |      \\_,-' \n
-  ||       |___,,--")_\\ \n
-  ||         |_|   ccc/ \n
-  ||        ccc/ \n
-  ||                 \n
-
-`;
-
-  const warriorArt = `
-      _,. \n
-    ,' -.) \n
-   ( _/-\\\\-._ \n
-  /,|'--._,-^|            , \n
-  \\_| |'-._/||          ,'| \n
-    |  '-, / |         /  / \n
-    |     || |        /  / \n
-     'r-._||/   __   /  / \n
- __,-<_     )'-/  './  / \n
-'  \\   '---'   \\   /  / \n
-    |           |./  / \n
-    /           //  / \n
-\\_/' \\         |/  / \n
- |    |   _,^-'/  / \n
- |    , ''  (\\/  /_ \n
-  \\,.->._    \\X-=/^ \n
-  (  /   '-._//^' \n
-   'Y-.____(__} \n
-    |     {__) \n
-          () \n
-`;
-
-  const rogueArt = `
-                 /| \n
-  _______________)|.. \n
-<'______________<(,_|) \n
-           .((()))| )) \n
-           (======)| \\ \n
-          ((( "_"()|_ \\ \n
-         '()))(_)/_/ ' ) \n
-         .--/_\\ /(  /./ \n
-        /'._.--\\ .-(_/ \n
-       / / )\\___:___) \n
-      ( -.'.._  |  /  \n
-       \\  \\_\\ ( | ) \n
-        '. /\\)_(_)| \n
-          '-|  XX | \n
-           %%%%%%%% \n
-          / %%%%%%%\\ \n
-         ( /.-'%%%. \\ \n
-        /(.'   %%\\ :| \n
-       / ,|    %  ) ) \n
-     _|___)   %  (__|_ \n
-     )___/       )___( \n
-      |x/         \\ > \n
-      |x)         / '. \n
-      |x\\       _(____''.__ \n
-    --\\ -\\-- \n
-     --\\__|-- \n
-`;
 
   return (
     <main className={styles.gridContainer}>
@@ -99,7 +23,7 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Warrior</div>
         <div className={styles.art}>
-          <pre>{warriorArt}</pre>
+          <pre>{CHARACTERS.find((elem) => elem.name === "warrior").art}</pre>
         </div>
       </div>
       <div
@@ -109,7 +33,7 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Mage</div>
         <div className={styles.art}>
-          <pre>{mageArt}</pre>
+          <pre>{CHARACTERS.find((elem) => elem.name === "mage").art}</pre>
         </div>
       </div>
       <div
@@ -119,7 +43,7 @@ export default function ClassSelector({ setClassName }) {
       >
         <div>Rogue</div>
         <div className={styles.art}>
-          <pre>{rogueArt}</pre>
+          <pre>{CHARACTERS.find((elem) => elem.name === "rogue").art}</pre>
         </div>
       </div>
     </main>
