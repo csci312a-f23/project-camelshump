@@ -42,8 +42,8 @@ export default function ClassSelector({ setClassName }) {
           <StatBar label="Strength" value={warriorObj.strength} />
           <StatBar label="Defense" value={warriorObj.defense} />
           <StatBar label="Speed" value={warriorObj.speed} />
-          <StatBar label="Defense" value={warriorObj.intelligence} />
-          <StatBar label="Defense" value={warriorObj.rizz} />
+          <StatBar label="Intelligence" value={warriorObj.intelligence} />
+          <StatBar label="Rizz" value={warriorObj.rizz} />
         </div>
       </div>
       <div
@@ -60,8 +60,8 @@ export default function ClassSelector({ setClassName }) {
           <StatBar label="Strength" value={mageObj.strength} />
           <StatBar label="Defense" value={mageObj.defense} />
           <StatBar label="Speed" value={mageObj.speed} />
-          <StatBar label="Defense" value={mageObj.intelligence} />
-          <StatBar label="Defense" value={mageObj.rizz} />
+          <StatBar label="Intelligence" value={mageObj.intelligence} />
+          <StatBar label="Rizz" value={mageObj.rizz} />
         </div>
       </div>
       <div
@@ -82,8 +82,8 @@ export default function ClassSelector({ setClassName }) {
           <StatBar label="Strength" value={rogueObj.strength} />
           <StatBar label="Defense" value={rogueObj.defense} />
           <StatBar label="Speed" value={rogueObj.speed} />
-          <StatBar label="Defense" value={rogueObj.intelligence} />
-          <StatBar label="Defense" value={rogueObj.rizz} />
+          <StatBar label="Intelligence" value={rogueObj.intelligence} />
+          <StatBar label="Rizz" value={rogueObj.rizz} />
         </div>
       </div>
     </main>

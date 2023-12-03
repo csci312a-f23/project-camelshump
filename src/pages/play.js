@@ -57,7 +57,6 @@ export default function GameViewer({ className }) {
   const [generatedText, setGeneratedText] = useState("");
   const [inventoryList, setInventoryList] = useState([]);
 
-  // Health and attack, future versions can vary by class
   const [health, setHealth] = useState(character.health);
   const [strength, setStrength] = useState(character.strength);
   // eslint-disable-next-line no-unused-vars
@@ -70,8 +69,6 @@ export default function GameViewer({ className }) {
   const [rizz, setRizz] = useState(character.rizz);
 
   const [enemy, setEnemy] = useState(null);
-  // Might be an extraneous piece of state
-  // const [additionalText, setAdditionalText] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -329,7 +326,6 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        {/* Hardcoding max health and strength values for now */}
         <Stats
           health={health}
           strength={strength}
