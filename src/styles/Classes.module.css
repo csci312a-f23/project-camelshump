@@ -8,7 +8,7 @@
 
 #class {
   border: 1px solid #000;
-  height: 50vh;
+  height: 65vh;
   grid-row-start: 2;
 }
 
@@ -33,5 +33,10 @@
 
 .art {
   line-height: 0.5;
+  font-size: 1.2vh;
+}
+
+.stats {
+  line-height: 0.075;
   font-size: 1.2vh;
 }

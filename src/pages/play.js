@@ -34,14 +34,6 @@ export function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-/*
-
-TODO: bugs
-  - wrong prompt showing for certain items
-  - initial prompt should not be visible when responding to the text prompt box
-
-*/
-
 export default function GameViewer({ className }) {
   const router = useRouter();
   const sectionLength = 16;

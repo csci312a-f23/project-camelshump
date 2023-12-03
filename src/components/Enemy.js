@@ -3,7 +3,8 @@ const ENEMIES = [
     name: "Spider Monster",
     health: 60,
     strength: 6,
-    art: `           ____                      , \n
+    art: `           
+             ____                      , \n
             /---.'.__             ____// \n
                  '--.\\           /.---' \n
             _______  \\\\         // \n
@@ -27,7 +28,8 @@ const ENEMIES = [
     name: "Dragon",
     health: 55,
     strength: 8,
-    art: `          /                            ) \n
+    art: `
+             /                            ) \n
             (                             |\\ \n
            /|                              \\\\ \n
           //                                \\\\ \n
@@ -70,7 +72,8 @@ const ENEMIES = [
     name: "Thief",
     health: 20,
     strength: 4,
-    art: ` -'   ||             , \n
+    art: `
+        /\\             , \n
         ||           _,''/ \n
         ||         ,/'   < \n
         ||       .-'\\\\_.-' \n
@@ -98,7 +101,8 @@ const ENEMIES = [
     name: "Skeleton",
     health: 14,
     strength: 5,
-    art: `              .7 \n
+    art: `
+                .7 \n
               .'/ \n
              / / \n
             / / \n
@@ -136,13 +140,14 @@ const ENEMIES = [
     name: "Dark Wizard",
     health: 10,
     strength: 8,
-    art: `                                  .... \n
+    art: `                            
+                                      .... \n
                                   .'' .''' \n
-  .                             .'   : \n
+                                .'   : \n
                             .:    : \n
-                           _:    :       ..----.._ \n
-                        .:::.....:::.. .'         ''. \n
-  \\                   .'  #-. .-######'     #        '. \n
+\\                         _:    :       ..----.._ \n
+\\\\                    .:::.....:::.. .'         ''. \n
+ \\\\                  .'  #-. .-######'     #        '. \n
   \\\\                 '.##'/ ' ################       : \n
    \\\\                  #####################         : \n
     \\\\               ..##.-.#### .''''###'.._        : \n
