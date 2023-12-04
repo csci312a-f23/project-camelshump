@@ -3,6 +3,10 @@ const ENEMIES = [
     name: "Spider Monster",
     health: 60,
     strength: 6,
+    defense: 10,
+    intelligence: 2,
+    speed: 9,
+    rizz: 1,
     art: `           
              ____                      , \n
             /---.'.__             ____// \n
@@ -28,6 +32,10 @@ const ENEMIES = [
     name: "Dragon",
     health: 55,
     strength: 8,
+    defense: 10,
+    intelligence: 8,
+    speed: 4,
+    rizz: 6,
     art: `
              /                            ) \n
             (                             |\\ \n
@@ -72,6 +80,10 @@ const ENEMIES = [
     name: "Thief",
     health: 20,
     strength: 4,
+    defense: 7,
+    intelligence: 7,
+    speed: 10,
+    rizz: 8,
     art: `
         /\\             , \n
         ||           _,''/ \n
@@ -101,6 +113,10 @@ const ENEMIES = [
     name: "Skeleton",
     health: 14,
     strength: 5,
+    defense: 2,
+    intelligence: 9,
+    speed: 8,
+    rizz: 10,
     art: `
                 .7 \n
               .'/ \n
@@ -138,8 +154,12 @@ const ENEMIES = [
   },
   {
     name: "Dark Wizard",
-    health: 10,
+    health: 30,
     strength: 8,
+    defense: 3,
+    intelligence: 10,
+    speed: 4,
+    rizz: 10,
     art: `                            
                                       .... \n
                                   .'' .''' \n
@@ -177,8 +197,12 @@ const ENEMIES = [
   },
   {
     name: "An Evil Ampersand",
-    health: 100,
+    health: 70,
     strength: 10,
+    defense: 8,
+    intelligence: 2,
+    speed: 1,
+    rizz: 0,
     art: ` 
                               ,-.                               \n
          ___,---.__          /'|'\\          __,---,___          \n

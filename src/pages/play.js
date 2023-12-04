@@ -18,11 +18,11 @@ import ENEMIES from "../components/Enemy";
 import CHARACTERS from "../components/Character";
 
 const itemDictionary = {
-  A: "Axe",
-  B: "Bow",
+  A: "Throwing Axe",
+  B: "Bow and Arrow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Stamina Potion",
+  S: "Strength Potion",
 };
 
 let statelessEnemy;
@@ -106,6 +106,14 @@ export default function GameViewer({ className }) {
     setStrength(strength + amount);
   };
 
+  const lowerStrength = (amount) => {
+    setStrength(strength - amount);
+  };
+
+  const lowerSpeed = (amount) => {
+    setSpeed(speed - amount);
+  };
+
   const lowerEnemyStrength = (amount) => {
     setEnemy({ ...enemy, strength: Math.max(1, enemy.strength - amount) });
   };
@@ -172,6 +180,26 @@ export default function GameViewer({ className }) {
         lowerEnemyStrength(5);
         setTimeout(() => enemyAction(), 4000);
         break;
+      case "classWeapon":
+        fightPrompt(
+          `You use your ${classWeapon} on the ${enemy.name}`,
+          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
+        );
+        if (classWeapon === "Sword") {
+          damageEnemy(strength * 3);
+          lowerStrength(1);
+        } else if (classWeapon === "Staff") {
+          damageEnemy(intelligence * 3);
+          // maybe add stamina stat that can decrease here
+        } else if (classWeapon === "Knife") {
+          if (speed > enemy.speed) {
+            damageEnemy(strength * 3);
+          } else {
+            damageEnemy(strength * 2);
+          }
+          lowerSpeed(0.5);
+        }
+        break;
       default:
     }
   };
@@ -179,12 +207,21 @@ export default function GameViewer({ className }) {
   const itemAction = (action) => {
     switch (action) {
       case "A":
-        // 15 damage
-        fightPrompt(
-          `You used an axe on the ${enemy.name}`,
-          `I'm a fantasy character, I used an axe on a ${enemy.name}, describe what happens.`,
-        );
-        damageEnemy(15);
+        if (strength > 0) {
+          // 15 damage
+          fightPrompt(
+            `You threw an axe on the ${enemy.name}`,
+            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
+          );
+          damageEnemy(15);
+          lowerStrength(1);
+          reduceItem("A");
+        } else {
+          fightPrompt(
+            `You don't have enough strength!`,
+            `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`,
+          );
+        }
         break;
       case "B":
         // 10 damage twice, 50% chance to hit second shot
@@ -222,13 +259,6 @@ export default function GameViewer({ className }) {
         );
         raiseStrength(5);
         reduceItem("S");
-        break;
-      case classWeapon:
-        fightPrompt(
-          `You use your ${classWeapon} on the ${enemy.name}`,
-          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
-        );
-        damageEnemy(strength);
         break;
       default:
     }
@@ -344,12 +374,12 @@ export default function GameViewer({ className }) {
           <Stats
             health={enemy.health}
             strength={enemy.strength}
-            defense={defense}
-            intelligence={intelligence}
-            speed={speed}
-            rizz={rizz}
+            defense={enemy.defense}
+            intelligence={enemy.intelligence}
+            speed={enemy.speed}
+            rizz={enemy.rizz}
             maxHealth={getEnemy(enemy.name).health}
-            art={getEnemy(enemy.name).art}
+            art={enemy.art}
           />
         </div>
       )}
