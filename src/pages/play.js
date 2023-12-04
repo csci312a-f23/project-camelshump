@@ -67,6 +67,7 @@ export default function GameViewer({ className }) {
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
   const [inventoryList, setInventoryList] = useState([]);
+  const { data: session } = useSession();
 
   // Health and attack, future versions can vary by class
   const [health, setHealth] = useState(character.health);
@@ -317,6 +318,29 @@ export default function GameViewer({ className }) {
     setItem("");
   };
 
+  const handleSave = () => {
+    const userid = session.user.id;
+
+    const stats = { health, strength, intelligence, speed, defense };
+
+    const newGame = {
+      userid,
+      title: "My Game",
+      map: currentMap,
+      stats,
+      inventory: inventoryList,
+    };
+
+    fetch(`/api/games`, {
+      method: "POST",
+      body: JSON.stringify(newGame),
+      headers: new Headers({
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      }),
+    });
+  };
+
   useEffect(() => {
     function handleKeyPress(event) {
       if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
@@ -415,13 +439,22 @@ export default function GameViewer({ className }) {
           />
         )}
       </div>
-      <button
-        className="quitButton"
-        type="button"
-        onClick={() => router.push("/")}
-      >
-        Quit
-      </button>
+      <div>
+        <button
+          className="quitButton"
+          type="button"
+          onClick={() => router.push("/")}
+        >
+          Quit
+        </button>
+        <button
+          className="quitButton"
+          type="button"
+          onClick={() => handleSave()}
+        >
+          Save
+        </button>
+      </div>
     </main>
   );
 }
