@@ -114,8 +114,10 @@ export default function GameViewer({ className }) {
   };
 
   const healPlayer = (toHeal) => {
-    // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
-    setStats({ ...stats, health: Math.min(50, stats.health + toHeal) });
+    setStats({
+      ...stats,
+      health: Math.min(character.health, stats.health + toHeal),
+    });
   };
 
   const damagePlayer = (damage) => {
@@ -132,9 +134,6 @@ export default function GameViewer({ className }) {
       setEnemy({ ...enemy, health: enemy.health - damage });
     }
   };
-
-  // IDK what this is for?
-  // const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -182,8 +181,15 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
         if (classWeapon === "Sword") {
-          damageEnemy(stats.strength * 3);
-          lowerStrength(1);
+          if (stats.strength >= 1) {
+            damageEnemy(stats.strength * 3);
+            lowerStrength(1);
+          } else {
+            fightPrompt(
+              `You don't have enough strength!`,
+              `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`,
+            );
+          }
         } else if (classWeapon === "Staff") {
           damageEnemy(stats.intelligence * 3);
           // maybe add stamina stat that can decrease here
@@ -195,6 +201,7 @@ export default function GameViewer({ className }) {
           }
           lowerSpeed(0.5);
         }
+        setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
