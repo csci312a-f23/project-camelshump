@@ -102,10 +102,6 @@ export default function GameViewer({ className }) {
   //   setDefense(defense + amount);
   // }
 
-  const raiseStrength = (amount) => {
-    setStrength(strength + amount);
-  };
-
   const lowerStrength = (amount) => {
     setStrength(strength - amount);
   };
@@ -252,12 +248,12 @@ export default function GameViewer({ className }) {
         reduceItem("H");
         break;
       case "S":
-        // Buff strength for now
         fightPrompt(
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
-        raiseStrength(5);
+        setStrength(character.strength);
+        setSpeed(character.speed);
         reduceItem("S");
         break;
       default:
