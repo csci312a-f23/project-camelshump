@@ -95,12 +95,10 @@ export default function GameViewer({ className }) {
   useEffect(() => {
     if (stats.health <= 0) {
       // then the player died :(
+      setGeneratedText("Game Over");
 
-      setTextPrompt(
-        `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
-      );
       // send player back to main menu
-      router.push("/");
+      setTimeout(() => router.push("/"), 4000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setStats, stats.health]);
