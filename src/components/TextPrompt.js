@@ -14,6 +14,7 @@ export default function TextPrompt({
       setInvisiblePrompt("");
       setQuestion("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invisiblePrompt]);
 
   return (

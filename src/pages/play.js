@@ -22,7 +22,7 @@ const itemDictionary = {
   B: "Bow and Arrow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Strength Potion",
+  S: "Stamina Potion",
 };
 
 let statelessEnemy;
@@ -92,11 +92,18 @@ export default function GameViewer({ className }) {
     }
   };
 
-  const deathPrompt = () => {
-    setTextPrompt(
-      `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
-    );
-  };
+  useEffect(() => {
+    if (stats.health <= 0) {
+      // then the player died :(
+
+      setTextPrompt(
+        `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
+      );
+      // send player back to main menu
+      router.push("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setStats, stats.health]);
 
   const lowerEnemyStrength = (amount) => {
     setEnemy({ ...enemy, strength: Math.max(1, enemy.strength - amount) });
@@ -111,8 +118,6 @@ export default function GameViewer({ className }) {
 
   const damagePlayer = (damage) => {
     setStats({ ...stats, health: stats.health - damage });
-
-    if (stats.health <= 0) deathPrompt();
   };
 
   const damageEnemy = (damage) => {
