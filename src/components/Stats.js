@@ -1,10 +1,11 @@
 // Stats.js
 
+import PropTypes from "prop-types";
 import StatBar from "./Statbar";
 import styles from "../styles/Stats.module.css";
 import StatsShape from "./StatsShape";
 
-export default function Stats({ stats }) {
+export default function Stats({ stats, stamina }) {
   return (
     <div>
       <div className={styles.stats}>
@@ -18,6 +19,8 @@ export default function Stats({ stats }) {
         <StatBar label="Speed" value={stats.speed} />
         <StatBar label="Intelligence" value={stats.intelligence} />
         <StatBar label="Rizz" value={stats.rizz} />
+        {/* conditionally render stamina if provided */}
+        {stamina && <StatBar label="Stamina" value={stamina} />}
       </div>
       <div className={styles.art}>
         <pre>{stats.art}</pre>
@@ -28,4 +31,6 @@ export default function Stats({ stats }) {
 
 Stats.propTypes = {
   stats: StatsShape.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  stamina: PropTypes.number,
 };
