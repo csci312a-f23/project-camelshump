@@ -5,8 +5,8 @@ export default function MapJSON({ sectionLength, numSections }) {
   function generateSection() {
     const initArray = new Array(sectionLength);
     initArray.fill(null);
-    const enemyProb = 1;
-    const itemProb = 5;
+    const enemyProb = 3;
+    const itemProb = 2;
     // add more items to collect and fill inventory
     const items = ["A", "B", "G", "H", "S"];
 

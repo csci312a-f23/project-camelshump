@@ -21,8 +21,8 @@ export default function Stats({
         <StatBar label="Strength" value={strength} />
         <StatBar label="Defense" value={defense} />
         <StatBar label="Speed" value={speed} />
-        <StatBar label="Defense" value={intelligence} />
-        <StatBar label="Defense" value={rizz} />
+        <StatBar label="Intelligence" value={intelligence} />
+        <StatBar label="Rizz" value={rizz} />
       </div>
       <div className={styles.art}>
         <pre>{art}</pre>
