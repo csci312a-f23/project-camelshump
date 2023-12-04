@@ -272,8 +272,6 @@ export default function GameViewer({ className }) {
       setEnemy(null);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
-      // Will change to include a description of the enemy/the fight
-      // setGeneratedText("YOU WON!");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemyKilled]);
@@ -281,7 +279,7 @@ export default function GameViewer({ className }) {
   const updateItem = (itemPressed) => {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
-      setEnemy(statelessEnemy);
+      setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
 
       setGeneratedText(`You encountered a ${statelessEnemy.name}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
