@@ -16,9 +16,7 @@ export default function StatBar({ label, value, maxValue }) {
       <div className={styles.statBar}>
         <div className={styles.barFill} style={{ width: `${percentage}%` }} />
         {label === "Health" ? (
-          <span className={styles.percentageText}>
-            {value}/{maxValue}
-          </span>
+          <span className={styles.percentageText}>{value}</span>
         ) : (
           <span className={styles.percentageText}>{value}</span>
         )}

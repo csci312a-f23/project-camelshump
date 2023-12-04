@@ -19,11 +19,11 @@ import ENEMIES from "../components/Enemy";
 import CHARACTERS from "../components/Character";
 
 const itemDictionary = {
-  A: "Axe",
-  B: "Bow",
+  A: "Throwing Axe",
+  B: "Bow and Arrow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Stamina Potion",
+  S: "Strength Potion",
 };
 
 let statelessEnemy;
@@ -35,22 +35,16 @@ export function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-/*
-
-TODO: bugs
-  - wrong prompt showing for certain items
-  - initial prompt should not be visible when responding to the text prompt box
-
-*/
-
-export default function GameViewer({ className }) {
+export default function GameViewer({ className, currentId }) {
   const router = useRouter();
   useSession({ required: true });
 
+  // Create a new map with 9 sections and each map is 16x16 characters
   const sectionLength = 16;
   const numSections = 9;
-  // Create a new map with 9 sections and each map is 16x16 characters
+
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
+
   character = CHARACTERS.find((elem) => elem.name === className);
   if (!character) {
     // eslint-disable-next-line prefer-destructuring
@@ -69,27 +63,41 @@ export default function GameViewer({ className }) {
   const [inventoryList, setInventoryList] = useState([]);
   const { data: session } = useSession();
 
-  // Health and attack, future versions can vary by class
-  const [health, setHealth] = useState(character.health);
-  const [strength, setStrength] = useState(character.strength);
-  // eslint-disable-next-line no-unused-vars
-  const [intelligence, setIntelligence] = useState(character.intelligence);
-  // eslint-disable-next-line no-unused-vars
-  const [speed, setSpeed] = useState(character.speed);
-  // eslint-disable-next-line no-unused-vars
-  const [defense, setDefense] = useState(character.defense);
-  // eslint-disable-next-line no-unused-vars
-  const [rizz, setRizz] = useState(character.rizz);
+  const [stats, setStats] = useState({
+    health: character.health,
+    strength: character.strength,
+    defense: character.defense,
+    speed: character.speed,
+    intelligence: character.intelligence,
+    rizz: character.rizz,
+    maxHealth: character.health,
+  });
 
   const [enemy, setEnemy] = useState(null);
-  // Might be an extraneous piece of state
-  // const [additionalText, setAdditionalText] = useState("");
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
     Math.floor(currentMap[0].length / 2),
     5,
   ]);
+
+  useEffect(() => {
+    if (currentId) {
+      fetch(`/api/games/${currentId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          setCurrentMap(response.map);
+          setStats(response.stats);
+          setInventoryList(response.inventory);
+        })
+        .catch((err) => console.log(err)); // eslint-disable-line no-console
+    }
+  }, [currentId]);
 
   // Disable arrow scrolling
   const keys = { 38: 1, 40: 1 };
@@ -132,8 +140,12 @@ export default function GameViewer({ className }) {
   //   setDefense(defense + amount);
   // }
 
-  const raiseStrength = (amount) => {
-    setStrength(strength + amount);
+  const lowerStrength = (amount) => {
+    setStats({ ...stats, strength: stats.strength - amount });
+  };
+
+  const lowerSpeed = (amount) => {
+    setStats({ ...stats, speed: stats.strength - amount });
   };
 
   const lowerEnemyStrength = (amount) => {
@@ -142,12 +154,13 @@ export default function GameViewer({ className }) {
 
   const healPlayer = (toHeal) => {
     // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
-    setHealth(Math.min(50, health + toHeal));
+    setStats({ ...stats, health: Math.min(50, stats.health + toHeal) });
   };
 
   const damagePlayer = (damage) => {
-    setHealth(Math.max(health - damage, 0));
-    if (health === 0) deathPrompt();
+    setStats({ ...stats, health: Math.max(stats.health - damage, 0) });
+
+    if (stats.health <= 0) deathPrompt();
   };
 
   const damageEnemy = (damage) => {
@@ -159,8 +172,8 @@ export default function GameViewer({ className }) {
     }
   };
 
-  // Might be a better way to do this!
-  const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
+  // IDK what this is for?
+  // const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -191,7 +204,7 @@ export default function GameViewer({ className }) {
           `You punched the ${enemy.name}`,
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
-        damageEnemy(Math.floor(strength * 0.5));
+        damageEnemy(Math.floor(stats.strength * 0.5));
         setTimeout(() => enemyAction(), 4000);
         break;
       case "dance":
@@ -202,6 +215,26 @@ export default function GameViewer({ className }) {
         lowerEnemyStrength(5);
         setTimeout(() => enemyAction(), 4000);
         break;
+      case "classWeapon":
+        fightPrompt(
+          `You use your ${classWeapon} on the ${enemy.name}`,
+          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
+        );
+        if (classWeapon === "Sword") {
+          damageEnemy(stats.strength * 3);
+          lowerStrength(1);
+        } else if (classWeapon === "Staff") {
+          damageEnemy(stats.intelligence * 3);
+          // maybe add stamina stat that can decrease here
+        } else if (classWeapon === "Knife") {
+          if (stats.speed > enemy.speed) {
+            damageEnemy(stats.strength * 3);
+          } else {
+            damageEnemy(stats.strength * 2);
+          }
+          lowerSpeed(0.5);
+        }
+        break;
       default:
     }
   };
@@ -209,12 +242,21 @@ export default function GameViewer({ className }) {
   const itemAction = (action) => {
     switch (action) {
       case "A":
-        // 15 damage
-        fightPrompt(
-          `You used an axe on the ${enemy.name}`,
-          `I'm a fantasy character, I used an axe on a ${enemy.name}, describe what happens.`,
-        );
-        damageEnemy(15);
+        if (stats.strength > 0) {
+          // 15 damage
+          fightPrompt(
+            `You threw an axe on the ${enemy.name}`,
+            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
+          );
+          damageEnemy(15);
+          lowerStrength(1);
+          reduceItem("A");
+        } else {
+          fightPrompt(
+            `You don't have enough strength!`,
+            `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`,
+          );
+        }
         break;
       case "B":
         // 10 damage twice, 50% chance to hit second shot
@@ -245,20 +287,13 @@ export default function GameViewer({ className }) {
         reduceItem("H");
         break;
       case "S":
-        // Buff strength for now
         fightPrompt(
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
-        raiseStrength(5);
+        setStats({ ...stats, strength: character.strength });
+        setStats({ ...stats, speed: character.speed });
         reduceItem("S");
-        break;
-      case classWeapon:
-        fightPrompt(
-          `You use your ${classWeapon} on the ${enemy.name}`,
-          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
-        );
-        damageEnemy(strength);
         break;
       default:
     }
@@ -321,8 +356,6 @@ export default function GameViewer({ className }) {
   const handleSave = () => {
     const userid = session.user.id;
 
-    const stats = { health, strength, intelligence, speed, defense };
-
     const newGame = {
       userid,
       title: "My Game",
@@ -331,14 +364,25 @@ export default function GameViewer({ className }) {
       inventory: inventoryList,
     };
 
-    fetch(`/api/games`, {
-      method: "POST",
-      body: JSON.stringify(newGame),
-      headers: new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      }),
-    });
+    if (currentId) {
+      fetch(`/api/games/${currentId}`, {
+        method: "PUT",
+        body: JSON.stringify({ ...newGame, id: currentId }),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+    } else {
+      fetch(`/api/games`, {
+        method: "POST",
+        body: JSON.stringify(newGame),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+    }
   };
 
   useEffect(() => {
@@ -379,32 +423,13 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        {/* Hardcoding max health and strength values for now */}
-        <Stats
-          health={health}
-          strength={strength}
-          defense={defense}
-          intelligence={intelligence}
-          speed={speed}
-          rizz={rizz}
-          maxHealth={character.health}
-          art=""
-        />
+        <Stats stats={stats} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
         <div className="enemyContainer">
           <p>{enemy.name}</p>
-          <Stats
-            health={enemy.health}
-            strength={enemy.strength}
-            defense={defense}
-            intelligence={intelligence}
-            speed={speed}
-            rizz={rizz}
-            maxHealth={getEnemy(enemy.name).health}
-            art={getEnemy(enemy.name).art}
-          />
+          <Stats stats={enemy} />
         </div>
       )}
       <div className="textContainer">
@@ -461,4 +486,5 @@ export default function GameViewer({ className }) {
 
 GameViewer.propTypes = {
   className: PropTypes.string.isRequired,
+  currentId: PropTypes.number.isRequired,
 };

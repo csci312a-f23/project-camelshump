@@ -8,12 +8,15 @@ import LoginWidget from "../components/LoginWidget";
 
 export default function App({ session, Component, pageProps }) {
   const [className, setClassName] = useState("");
+  const [currentId, setCurrentId] = useState();
   const router = useRouter();
 
   const props = {
     ...pageProps,
     className,
     setClassName,
+    currentId,
+    setCurrentId,
   };
 
   return (

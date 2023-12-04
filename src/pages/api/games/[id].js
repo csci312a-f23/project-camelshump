@@ -11,10 +11,10 @@ router
     res.status(200).json(game);
   })
   .put(async (req, res) => {
-    const article = await Game.query()
-      .updateAndFetchById(req.query.id)
+    const game = await Game.query()
+      .updateAndFetchById(req.query.id, req.body)
       .throwIfNotFound();
-    res.status(200).json(article);
+    res.status(200).json(game);
   });
 
 export default router.handler({ onError });

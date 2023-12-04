@@ -5,20 +5,23 @@
  */
 // import MapJSON from "../components/MapJSON";
 
+import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styles from "../styles/Menu.module.css";
 
-export default function CamelsHump() {
+export default function CamelsHump({ setCurrentId }) {
   const router = useRouter();
   const { data: session } = useSession();
   const handleClick = (condition) => {
     switch (condition) {
       case "new":
+        setCurrentId();
         router.push("/classSelect");
         break;
 
       case "load":
+        setCurrentId(2);
         router.push("/play"); // obviously change routes as things develop
         break;
 
@@ -65,3 +68,7 @@ export default function CamelsHump() {
     </main>
   );
 }
+
+CamelsHump.propTypes = {
+  setCurrentId: PropTypes.func.isRequired,
+};
