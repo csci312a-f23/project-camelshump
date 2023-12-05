@@ -22,7 +22,7 @@ const itemDictionary = {
   B: "Bow and Arrow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Strength Potion",
+  S: "Stamina Potion",
 };
 
 let statelessEnemy;
@@ -68,6 +68,7 @@ export default function GameViewer({ className }) {
   });
 
   const [enemy, setEnemy] = useState(null);
+  const [stamina, setStamina] = useState(10);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -91,37 +92,30 @@ export default function GameViewer({ className }) {
     }
   };
 
-  const deathPrompt = () => {
-    setTextPrompt(
-      `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
-    );
-  };
+  useEffect(() => {
+    if (stats.health <= 0) {
+      // then the player died :(
+      setGeneratedText("Game Over");
 
-  // const raiseDefense = (amount) => {
-  //   setDefense(defense + amount);
-  // }
-
-  const lowerStrength = (amount) => {
-    setStats({ ...stats, strength: stats.strength - amount });
-  };
-
-  const lowerSpeed = (amount) => {
-    setStats({ ...stats, speed: stats.strength - amount });
-  };
+      // send player back to main menu
+      setTimeout(() => router.push("/"), 4000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setStats, stats.health]);
 
   const lowerEnemyStrength = (amount) => {
     setEnemy({ ...enemy, strength: Math.max(1, enemy.strength - amount) });
   };
 
   const healPlayer = (toHeal) => {
-    // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
-    setStats({ ...stats, health: Math.min(50, stats.health + toHeal) });
+    setStats({
+      ...stats,
+      health: Math.min(character.health, stats.health + toHeal),
+    });
   };
 
   const damagePlayer = (damage) => {
-    setStats({ ...stats, health: Math.max(stats.health - damage, 0) });
-
-    if (stats.health <= 0) deathPrompt();
+    setStats({ ...stats, health: stats.health - damage });
   };
 
   const damageEnemy = (damage) => {
@@ -132,9 +126,6 @@ export default function GameViewer({ className }) {
       setEnemy({ ...enemy, health: enemy.health - damage });
     }
   };
-
-  // IDK what this is for?
-  // const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -182,19 +173,27 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
         if (classWeapon === "Sword") {
-          damageEnemy(stats.strength * 3);
-          lowerStrength(1);
+          if (stats.strength >= 1) {
+            damageEnemy(stats.strength * 3);
+            setStamina(stamina - 1);
+          } else {
+            fightPrompt(
+              `You don't have enough stamina!`,
+              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
+            );
+          }
         } else if (classWeapon === "Staff") {
           damageEnemy(stats.intelligence * 3);
-          // maybe add stamina stat that can decrease here
+          setStamina(stamina - 0.25);
         } else if (classWeapon === "Knife") {
           if (stats.speed > enemy.speed) {
             damageEnemy(stats.strength * 3);
           } else {
             damageEnemy(stats.strength * 2);
           }
-          lowerSpeed(0.5);
+          setStamina(stamina - 0.5);
         }
+        setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
@@ -210,7 +209,7 @@ export default function GameViewer({ className }) {
             `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
           );
           damageEnemy(15);
-          lowerStrength(1);
+          setStamina(stamina - 1);
           reduceItem("A");
         } else {
           fightPrompt(
@@ -252,8 +251,7 @@ export default function GameViewer({ className }) {
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
-        setStats({ ...stats, strength: character.strength });
-        setStats({ ...stats, speed: character.speed });
+        setStamina(10);
         reduceItem("S");
         break;
       default:
@@ -272,8 +270,6 @@ export default function GameViewer({ className }) {
       setEnemy(null);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
-      // Will change to include a description of the enemy/the fight
-      // setGeneratedText("YOU WON!");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemyKilled]);
@@ -281,7 +277,7 @@ export default function GameViewer({ className }) {
   const updateItem = (itemPressed) => {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
-      setEnemy(statelessEnemy);
+      setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
 
       setGeneratedText(`You encountered a ${statelessEnemy.name}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
@@ -352,7 +348,7 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} />
+        <Stats stats={stats} stamina={stamina} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
