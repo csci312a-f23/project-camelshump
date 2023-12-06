@@ -13,7 +13,11 @@ const StatsShape = PropTypes.shape({
   rizz: PropTypes.number.isRequired,
   maxHealth: PropTypes.number.isRequired,
   // eslint-disable-next-line react/require-default-props
-  art: PropTypes.string.isRequired,
+  art: PropTypes.string,
 });
+
+StatsShape.defaultProps = {
+  art: "",
+};
 
 export default StatsShape;
