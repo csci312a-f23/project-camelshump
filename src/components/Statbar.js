@@ -28,5 +28,9 @@ export default function StatBar({ label, value, maxValue }) {
 StatBar.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
-  maxValue: PropTypes.number.isRequired,
+  maxValue: PropTypes.number,
+};
+
+StatBar.defaultProps = {
+  maxValue: null,
 };
