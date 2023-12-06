@@ -63,22 +63,24 @@ export default function GameViewer({ className }) {
   // Function to play audio based on mute status
   // not using an API as we have specific sound effect from different sources
   const playAudio = (audioFile) => {
-    if (!mute) {
-      if (currentAudio) {
-        // Stop the currently playing audio
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
-      const audio = new Audio(audioFile);
-      audio.play().catch((error) =>
+    if (audioFile) {
+      try {
+        const audio = new Audio(audioFile);
+        const playPromise = audio.play();
+  
+        // Check if playPromise is defined and has a 'catch' method
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error(`Error playing audio: ${error.message}`);
+          });
+        }
+      } catch (error) {
         // eslint-disable-next-line no-console
-        console.error(`Error playing audio: ${error.message}`)
-      );
-
-      // Set the new audio as the currently playing audio
-      setCurrentAudio(audio);
+        console.error(`Error playing audio: ${error.message}`);
+      }
     }
-  };
+  };  
 
   const toggleMute = () => {
     setMute(!mute);
