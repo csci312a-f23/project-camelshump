@@ -137,7 +137,7 @@ export default function GameViewer({ className }) {
   };
 
   const fightPrompt = (preGeneratedString, promptToGenerate) => {
-    setGeneratedText(preGeneratedString);
+    setGeneratedText(`${generatedText + preGeneratedString}\n`);
     setTimeout(() => setTextPrompt(promptToGenerate), 1000);
   };
 
@@ -279,7 +279,9 @@ export default function GameViewer({ className }) {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
       setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
 
-      setGeneratedText(`You encountered a ${statelessEnemy.name}`);
+      setGeneratedText(
+        `${generatedText}\nYou encountered a ${statelessEnemy.name}`,
+      );
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
       setTimeout(
         () =>
@@ -292,7 +294,7 @@ export default function GameViewer({ className }) {
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
       setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
-      setGeneratedText(`You picked up a ${pickup}`);
+      setGeneratedText(`${generatedText}\nYou picked up a ${pickup}`);
       setTimeout(
         () =>
           setTextPrompt(
@@ -341,6 +343,7 @@ export default function GameViewer({ className }) {
             closePopup={closePopup}
             fightAction={fightAction}
             itemAction={itemAction}
+            generatedText={generatedText}
             setGeneratedText={setGeneratedText}
             setTextPrompt={setTextPrompt}
             classWeapon={classWeapon}

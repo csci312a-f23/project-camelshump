@@ -6,9 +6,6 @@ import styles from "../styles/TextBox.module.css";
 
 const hf = new HfInference("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");
 
-// NOTE ABOUT ENEMY DESCRIPTIONs
-// Pass hard-coded questions when we go over enemies or items on map
-
 export default function TextBox({
   generatedText,
   setGeneratedText,
@@ -24,8 +21,13 @@ export default function TextBox({
     stopSequences: ["\nUser:", "<|endoftext|>", "</s>"],
   };
 
+  const scrollToBottom = () => {
+    const log = document.getElementById("textBox");
+    log.scrollTop = log.scrollHeight;
+  };
+
   async function getText(question) {
-    setGeneratedText();
+    setGeneratedText(`${generatedText}\n`);
     let textStream = "";
     const stream = await hf.textGenerationStream({
       model: "tiiuae/falcon-7b-instruct",
@@ -43,11 +45,9 @@ export default function TextBox({
         break;
       }
       textStream += r.token.text;
-      setGeneratedText(textStream);
+      setGeneratedText(`${generatedText + textStream}\n`);
+      scrollToBottom();
     }
-    // I don't think we need an additional text element as we can update the text box through generatedText
-    // const text = `${additionalText}\n${textStream}`;
-    // setGeneratedText(text);
   }
 
   return (
@@ -58,7 +58,8 @@ export default function TextBox({
         setInvisiblePrompt={setInvisiblePrompt}
       />
       <div className={styles.textBox}>
-        <p>{generatedText}</p>
+        <p id="textBox">{generatedText}</p>
+        {document.getElementById("textBox") ? scrollToBottom() : <div />}
       </div>
     </div>
   );
