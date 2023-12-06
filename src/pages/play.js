@@ -70,6 +70,11 @@ export default function GameViewer({ className }) {
         currentAudio.currentTime = 0;
       }
       const audio = new Audio(audioFile);
+      audio.play().catch((error) =>
+        // eslint-disable-next-line no-console
+        console.error(`Error playing audio: ${error.message}`)
+      );
+
       // Set the new audio as the currently playing audio
       setCurrentAudio(audio);
     }
