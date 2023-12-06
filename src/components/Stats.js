@@ -5,9 +5,14 @@ import StatBar from "./Statbar";
 import styles from "../styles/Stats.module.css";
 import StatsShape from "./StatsShape";
 
-export default function Stats({ stats, stamina }) {
+export default function Stats({ stats, stamina, score }) {
   return (
     <div>
+      {score > 0 && (
+        <div className={styles.score}>
+          <p>Score: {score}</p>
+        </div>
+      )}
       <div className={styles.stats}>
         <StatBar
           label="Health"
@@ -33,4 +38,9 @@ Stats.propTypes = {
   stats: StatsShape.isRequired,
   // eslint-disable-next-line react/require-default-props
   stamina: PropTypes.number,
+  score: PropTypes.number,
+};
+
+Stats.defaultProps = {
+  score: 0,
 };
