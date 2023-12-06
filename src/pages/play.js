@@ -76,6 +76,20 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  const stopScroll = (e) => {
+    if (
+      e.keyCode === 37 ||
+      e.keyCode === 38 ||
+      e.keyCode === 39 ||
+      e.keyCode === 40
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  if (typeof window !== "undefined")
+    window.addEventListener("keydown", stopScroll);
+
   const reduceItem = (newItem) => {
     const itemExists = inventoryList.find(
       (inventoryItem) => inventoryItem.name === newItem,
