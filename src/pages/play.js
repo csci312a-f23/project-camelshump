@@ -63,24 +63,26 @@ export default function GameViewer({ className }) {
   // Function to play audio based on mute status
   // not using an API as we have specific sound effect from different sources
   const playAudio = (audioFile) => {
-    if (audioFile) {
-      try {
-        const audio = new Audio(audioFile);
-        const playPromise = audio.play();
-  
-        // Check if playPromise is defined and has a 'catch' method
-        if (playPromise && typeof playPromise.catch === 'function') {
-          playPromise.catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error(`Error playing audio: ${error.message}`);
-          });
+    if (!mute) {
+      if (audioFile) {
+        try {
+          const audio = new Audio(audioFile);
+          const playPromise = audio.play();
+
+          // Check if playPromise is defined and has a 'catch' method
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch((error) => {
+              // eslint-disable-next-line no-console
+              console.error(`Error playing audio: ${error.message}`);
+            });
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`Error playing audio: ${error.message}`);
         }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(`Error playing audio: ${error.message}`);
       }
     }
-  };  
+  };
 
   const toggleMute = () => {
     setMute(!mute);
@@ -384,11 +386,10 @@ export default function GameViewer({ className }) {
       }
     };
 
-    
     function handleKeyPress(event) {
       if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
       // Stop the currently playing audio
-      stopAudio(); 
+      stopAudio();
     }
 
     document.addEventListener("keydown", handleKeyPress);
