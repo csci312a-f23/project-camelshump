@@ -5,7 +5,7 @@ import StatBar from "./Statbar";
 import styles from "../styles/Stats.module.css";
 import StatsShape from "./StatsShape";
 
-export default function Stats({ stats, stamina, score }) {
+export default function Stats({ stats, score }) {
   return (
     <div>
       {score > 0 && (
@@ -21,11 +21,10 @@ export default function Stats({ stats, stamina, score }) {
         />
         <StatBar label="Strength" value={stats.strength} />
         <StatBar label="Defense" value={stats.defense} />
+        <StatBar label="Stamina" value={stats.stamina} />
         <StatBar label="Speed" value={stats.speed} />
         <StatBar label="Intelligence" value={stats.intelligence} />
         <StatBar label="Rizz" value={stats.rizz} />
-        {/* conditionally render stamina if provided */}
-        {stamina && <StatBar label="Stamina" value={stamina} />}
       </div>
       <div className={styles.art}>
         <pre>{stats.art}</pre>
@@ -36,8 +35,6 @@ export default function Stats({ stats, stamina, score }) {
 
 Stats.propTypes = {
   stats: StatsShape.isRequired,
-  // eslint-disable-next-line react/require-default-props
-  stamina: PropTypes.number,
   score: PropTypes.number,
 };
 
