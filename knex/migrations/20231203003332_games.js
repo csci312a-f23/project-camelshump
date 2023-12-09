@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.increments("id").primary();
     table.integer("userid");
     table.string("title");
+    table.json("position");
     table.json("map");
     table.json("stats");
     table.json("inventory");

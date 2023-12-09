@@ -91,6 +91,7 @@ export default function GameViewer({ className, currentId }) {
           return response.json();
         })
         .then((response) => {
+          setPosition(response.position);
           setCurrentMap(response.map);
           setStats(response.stats);
           setInventoryList(response.inventory);
@@ -359,6 +360,7 @@ export default function GameViewer({ className, currentId }) {
     const newGame = {
       userid,
       title: "My Game",
+      position,
       map: currentMap,
       stats,
       inventory: inventoryList,

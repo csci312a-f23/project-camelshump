@@ -21,8 +21,7 @@ export default function CamelsHump({ setCurrentId }) {
         break;
 
       case "load":
-        setCurrentId(2);
-        router.push("/play"); // obviously change routes as things develop
+        router.push("/load");
         break;
 
       default:

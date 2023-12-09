@@ -17,6 +17,7 @@ export default class Game extends BaseModel {
         id: { type: "integer" },
         userid: { type: "integer" },
         title: { type: "string" },
+        position: { type: "array" },
         map: { type: "array" },
         stats: { type: "object" },
         inventory: { type: "array" },
