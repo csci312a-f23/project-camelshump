@@ -37,7 +37,7 @@ export function getRandom(max) {
 
 export default function GameViewer({ className, currentId }) {
   const router = useRouter();
-  useSession({ required: true });
+  const { data: session } = useSession({ required: true });
 
   // Create a new map with 9 sections and each map is 16x16 characters
   const sectionLength = 16;
@@ -61,7 +61,6 @@ export default function GameViewer({ className, currentId }) {
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
   const [inventoryList, setInventoryList] = useState([]);
-  const { data: session } = useSession();
 
   const [stats, setStats] = useState({
     health: character.health,
