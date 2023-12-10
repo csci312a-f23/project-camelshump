@@ -5,7 +5,7 @@ import StatBar from "./Statbar";
 import styles from "../styles/Stats.module.css";
 import StatsShape from "./StatsShape";
 
-export default function Stats({ stats, score }) {
+export default function Stats({ stats, isEnemy, score }) {
   return (
     <div>
       {score > 0 && (
@@ -21,7 +21,7 @@ export default function Stats({ stats, score }) {
         />
         <StatBar label="Strength" value={stats.strength} />
         <StatBar label="Defense" value={stats.defense} />
-        <StatBar label="Stamina" value={stats.stamina} />
+        {!isEnemy && <StatBar label="Stamina" value={stats.stamina} />}
         <StatBar label="Speed" value={stats.speed} />
         <StatBar label="Intelligence" value={stats.intelligence} />
         <StatBar label="Rizz" value={stats.rizz} />
@@ -35,6 +35,7 @@ export default function Stats({ stats, score }) {
 
 Stats.propTypes = {
   stats: StatsShape.isRequired,
+  isEnemy: PropTypes.bool.isRequired,
   score: PropTypes.number,
 };
 

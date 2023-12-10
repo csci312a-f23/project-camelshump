@@ -92,7 +92,7 @@ export default function GameViewer({ className }) {
     health: character.health,
     strength: character.strength,
     defense: character.defense,
-    stamina: character.stamina,
+    stamina: 10,
     speed: character.speed,
     intelligence: character.intelligence,
     rizz: character.rizz,
@@ -445,13 +445,13 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} score={score} />
+        <Stats stats={stats} isEnemy={false} score={score} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
         <div className="enemyContainer">
           <p>{enemy.name}</p>
-          <Stats stats={enemy} />
+          <Stats stats={enemy} isEnemy />
         </div>
       )}
       <div className="textContainer">
