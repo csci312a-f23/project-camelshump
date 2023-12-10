@@ -25,6 +25,5 @@ export default function Dictionary({ onClose, itemDictionary }) {
 
 Dictionary.propTypes = {
   onClose: PropTypes.func.isRequired,
-  itemDictionary: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
-    .isRequired,
+  itemDictionary: PropTypes.objectOf(PropTypes.string).isRequired,
 };

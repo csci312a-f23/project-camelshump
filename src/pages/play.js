@@ -23,7 +23,7 @@ const itemDictionary = {
   B: "Bow and Arrow",
   G: "Grenade",
   H: "Health Potion",
-  S: "Strength Potion",
+  S: "Stamina Potion",
 };
 
 let statelessEnemy;
@@ -61,6 +61,37 @@ export default function GameViewer({ className, currentId }) {
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
   const [inventoryList, setInventoryList] = useState([]);
+  const [score, setScore] = useState(0);
+  const [mute, setMute] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState(null);
+
+  // Function to play audio based on mute status
+  // not using an API as we have specific sound effect from different sources
+  const playAudio = (audioFile) => {
+    if (!mute) {
+      if (audioFile) {
+        try {
+          const audio = new Audio(audioFile);
+          const playPromise = audio.play();
+
+          // Check if playPromise is defined and has a 'catch' method
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch((error) => {
+              // eslint-disable-next-line no-console
+              console.error(`Error playing audio: ${error.message}`);
+            });
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`Error playing audio: ${error.message}`);
+        }
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    setMute(!mute);
+  };
 
   const [stats, setStats] = useState({
     health: character.health,
@@ -73,6 +104,7 @@ export default function GameViewer({ className, currentId }) {
   });
 
   const [enemy, setEnemy] = useState(null);
+  const [stamina, setStamina] = useState(10);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -123,44 +155,40 @@ export default function GameViewer({ className, currentId }) {
       // If the item exists, update the inventory by mapping through and modifying the target item
       const updatedInventory = inventoryList.map((inventoryItem) =>
         inventoryItem.name === newItem
-          ? { ...inventoryItem, quantity: inventoryItem.quantity - 1 }
+          ? {
+              ...inventoryItem,
+              quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
+            }
           : inventoryItem,
       );
       setInventoryList(updatedInventory);
     }
   };
 
-  const deathPrompt = () => {
-    setTextPrompt(
-      `I'm a fantasy character, I died to a ${enemy}, describe what happened.`,
-    );
-  };
+  useEffect(() => {
+    if (stats.health <= 0) {
+      // then the player died :(
+      setGeneratedText("Game Over");
 
-  // const raiseDefense = (amount) => {
-  //   setDefense(defense + amount);
-  // }
-
-  const lowerStrength = (amount) => {
-    setStats({ ...stats, strength: stats.strength - amount });
-  };
-
-  const lowerSpeed = (amount) => {
-    setStats({ ...stats, speed: stats.strength - amount });
-  };
+      // send player back to main menu
+      setTimeout(() => router.push("/"), 4000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setStats, stats.health]);
 
   const lowerEnemyStrength = (amount) => {
     setEnemy({ ...enemy, strength: Math.max(1, enemy.strength - amount) });
   };
 
   const healPlayer = (toHeal) => {
-    // TODO: Right now we have hard-coded max healths, we can add max healths by class to dict
-    setStats({ ...stats, health: Math.min(50, stats.health + toHeal) });
+    setStats({
+      ...stats,
+      health: Math.min(character.health, stats.health + toHeal),
+    });
   };
 
   const damagePlayer = (damage) => {
-    setStats({ ...stats, health: Math.max(stats.health - damage, 0) });
-
-    if (stats.health <= 0) deathPrompt();
+    setStats({ ...stats, health: stats.health - damage });
   };
 
   const damageEnemy = (damage) => {
@@ -171,9 +199,6 @@ export default function GameViewer({ className, currentId }) {
       setEnemy({ ...enemy, health: enemy.health - damage });
     }
   };
-
-  // IDK what this is for?
-  // const getEnemy = (name) => ENEMIES.find((elem) => elem.name === name);
 
   const togglePopup = () => {
     setEnemyPopup(true);
@@ -200,6 +225,7 @@ export default function GameViewer({ className, currentId }) {
   const fightAction = (action) => {
     switch (action) {
       case "punch":
+        playAudio("/audio/punch.mp3");
         fightPrompt(
           `You punched the ${enemy.name}`,
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
@@ -221,19 +247,28 @@ export default function GameViewer({ className, currentId }) {
           `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
         if (classWeapon === "Sword") {
-          damageEnemy(stats.strength * 3);
-          lowerStrength(1);
+          playAudio("/audio/sword.mp3");
+          if (stats.strength >= 1) {
+            damageEnemy(stats.strength * 3);
+            setStamina(stamina - 1);
+          } else {
+            fightPrompt(
+              `You don't have enough stamina!`,
+              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
+            );
+          }
         } else if (classWeapon === "Staff") {
           damageEnemy(stats.intelligence * 3);
-          // maybe add stamina stat that can decrease here
+          setStamina(stamina - 0.25);
         } else if (classWeapon === "Knife") {
           if (stats.speed > enemy.speed) {
             damageEnemy(stats.strength * 3);
           } else {
             damageEnemy(stats.strength * 2);
           }
-          lowerSpeed(0.5);
+          setStamina(stamina - 0.5);
         }
+        setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
@@ -242,6 +277,7 @@ export default function GameViewer({ className, currentId }) {
   const itemAction = (action) => {
     switch (action) {
       case "A":
+        playAudio("/audio/axe.mp3");
         if (stats.strength > 0) {
           // 15 damage
           fightPrompt(
@@ -249,7 +285,7 @@ export default function GameViewer({ className, currentId }) {
             `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
           );
           damageEnemy(15);
-          lowerStrength(1);
+          setStamina(stamina - 1);
           reduceItem("A");
         } else {
           fightPrompt(
@@ -259,6 +295,7 @@ export default function GameViewer({ className, currentId }) {
         }
         break;
       case "B":
+        playAudio("/audio/bow.mp3");
         // 10 damage twice, 50% chance to hit second shot
         fightPrompt(
           `You shot the ${enemy.name} with a bow`,
@@ -268,6 +305,7 @@ export default function GameViewer({ className, currentId }) {
         if (Math.random() >= 0.5) damageEnemy(10);
         break;
       case "G":
+        playAudio("/audio/grenade.mp3");
         // 20 damage, 5 to self
         fightPrompt(
           `You throw a grenade at the ${enemy.name}`,
@@ -278,6 +316,7 @@ export default function GameViewer({ className, currentId }) {
         reduceItem("G");
         break;
       case "H":
+        playAudio("/audio/health.mp3");
         // Heal 10
         fightPrompt(
           `You used a healing potion`,
@@ -291,8 +330,7 @@ export default function GameViewer({ className, currentId }) {
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
-        setStats({ ...stats, strength: character.strength });
-        setStats({ ...stats, speed: character.speed });
+        setStamina(10);
         reduceItem("S");
         break;
       default:
@@ -303,16 +341,25 @@ export default function GameViewer({ className, currentId }) {
     setShowDictionary((prevShowDictionary) => !prevShowDictionary);
   };
 
+  const updateScoreOnEnemyKill = (killedEnemy) => {
+    const averageStats =
+      (killedEnemy.strength + killedEnemy.health + killedEnemy.intelligence) /
+      3;
+    const newScore = score + Math.round(averageStats / 3);
+    setScore(newScore);
+  };
+
   useEffect(() => {
     if (enemyKilled) {
       const newMap = [...currentMap];
       newMap[position[2]][position[0]][position[1]] = "-";
       setCurrentMap(newMap);
+      ENEMIES.forEach((killedEnemy) => {
+        updateScoreOnEnemyKill(killedEnemy);
+      });
       setEnemy(null);
       setEnemyKilled(false);
       closePopup(); // close popup if enemy killed...
-      // Will change to include a description of the enemy/the fight
-      // setGeneratedText("YOU WON!");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemyKilled]);
@@ -320,7 +367,7 @@ export default function GameViewer({ className, currentId }) {
   const updateItem = (itemPressed) => {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
-      setEnemy(statelessEnemy);
+      setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
 
       setGeneratedText(`You encountered a ${statelessEnemy.name}`);
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
@@ -333,6 +380,7 @@ export default function GameViewer({ className, currentId }) {
       );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
+      playAudio("/audio/collect.mp3");
       const pickup = itemDictionary[itemPressed];
       setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
       setGeneratedText(`You picked up a ${pickup}`);
@@ -387,8 +435,19 @@ export default function GameViewer({ className, currentId }) {
   };
 
   useEffect(() => {
+    const stopAudio = () => {
+      // Stop the currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        setCurrentAudio(null); // Reset the currentAudio state
+      }
+    };
+
     function handleKeyPress(event) {
       if (!enemyPopup) setPosition(Traversal(currentMap, event.key, position));
+      // Stop the currently playing audio
+      stopAudio();
     }
 
     document.addEventListener("keydown", handleKeyPress);
@@ -396,7 +455,7 @@ export default function GameViewer({ className, currentId }) {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [enemyPopup, currentMap, position]);
+  }, [enemyPopup, currentMap, position, currentAudio]);
 
   return (
     <main className="gridContainer">
@@ -406,6 +465,11 @@ export default function GameViewer({ className, currentId }) {
           position={position}
           updateItem={updateItem}
         />
+      </div>
+      <div className={styles.muteButton}>
+        <button type="button" onClick={toggleMute}>
+          {mute ? "Unmute" : "Mute"}
+        </button>
       </div>
       <div
         className="enemyPopup"
@@ -424,7 +488,7 @@ export default function GameViewer({ className, currentId }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} />
+        <Stats stats={stats} stamina={stamina} score={score} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
