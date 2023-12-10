@@ -132,7 +132,7 @@ export default function GameViewer({ className, currentId }) {
   }, [currentId]);
 
   // Disable arrow scrolling
-  const keys = { 38: 1, 40: 1 };
+  const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
   function preventDefaultForScrollKeys(e) {
     if (keys[e.keyCode]) {
