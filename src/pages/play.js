@@ -64,6 +64,8 @@ export default function GameViewer({ className, currentId }) {
   const [score, setScore] = useState(0);
   const [mute, setMute] = useState(false);
   const [currentAudio, setCurrentAudio] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [showTextInput, setShowTextInput] = useState(false);
 
   // Function to play audio based on mute status
   // not using an API as we have specific sound effect from different sources
@@ -122,6 +124,7 @@ export default function GameViewer({ className, currentId }) {
           return response.json();
         })
         .then((response) => {
+          setTitle(response.title);
           setPosition(response.position);
           setCurrentMap(response.map);
           setStats(response.stats);
@@ -404,9 +407,14 @@ export default function GameViewer({ className, currentId }) {
   const handleSave = () => {
     const userid = session.user.id;
 
+    if (!currentId && showTextInput === false) {
+      setShowTextInput(true);
+      return;
+    }
+
     const newGame = {
       userid,
-      title: "My Game",
+      title: currentId ? title : document.getElementById("title_box").value,
       position,
       map: currentMap,
       stats,
@@ -422,7 +430,7 @@ export default function GameViewer({ className, currentId }) {
           "Content-Type": "application/json",
         }),
       });
-    } else {
+    } else if (showTextInput === true) {
       fetch(`/api/games`, {
         method: "POST",
         body: JSON.stringify(newGame),
@@ -431,6 +439,7 @@ export default function GameViewer({ className, currentId }) {
           "Content-Type": "application/json",
         }),
       });
+      setShowTextInput(false);
     }
   };
 
@@ -544,6 +553,7 @@ export default function GameViewer({ className, currentId }) {
         >
           Save
         </button>
+        {showTextInput && <input type="text" id="title_box" />}
       </div>
     </main>
   );
