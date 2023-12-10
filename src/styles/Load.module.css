@@ -5,4 +5,13 @@
 .button_list {
   list-style-type: none;
   padding: 0;
+  text-align: center;
+}
+
+.button_list li {
+  margin-bottom: 5px;
+}
+
+.button_list li button {
+  width: 200px;
 }

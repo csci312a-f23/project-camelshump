@@ -72,7 +72,7 @@ body {
   max-width: 42vh;
 }
 
-.quitButton {
+.quitSaveDiv {
   margin: auto;
   grid-column-start: 1;
   grid-column-end: 2;

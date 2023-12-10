@@ -538,19 +538,11 @@ export default function GameViewer({ className, currentId }) {
           />
         )}
       </div>
-      <div>
-        <button
-          className="quitButton"
-          type="button"
-          onClick={() => router.push("/")}
-        >
+      <div className="quitSaveDiv">
+        <button type="button" onClick={() => router.push("/")}>
           Quit
         </button>
-        <button
-          className="quitButton"
-          type="button"
-          onClick={() => handleSave()}
-        >
+        <button type="button" onClick={() => handleSave()}>
           Save
         </button>
         {showTextInput && <input type="text" id="title_box" />}

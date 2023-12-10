@@ -22,7 +22,7 @@ export default function LoadGame({ setCurrentId }) {
         setGames(response);
       })
       .catch((err) => console.log(err)); // eslint-disable-line no-console
-  }, []);
+  }, [session.user.id]);
 
   const handleGameClick = (gameId) => {
     setCurrentId(gameId);
