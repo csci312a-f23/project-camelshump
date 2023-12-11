@@ -192,11 +192,11 @@ export default function GameViewer({ className }) {
   };
 
   const enemyAction = () => {
-    // damagePlayer(enemy.strength);
-    fightPrompt(
-      `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
-    );
+      damagePlayer(enemy.strength);
+      fightPrompt(
+        `${enemy.name} attacks and deals ${enemy.strength} damage.`,
+        `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
+      );
   };
 
   const fightAction = (action) => {
@@ -208,7 +208,8 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
-        setTimeout(() => enemyAction(), 4000);
+        // setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       case "dance":
         fightPrompt(
@@ -216,7 +217,8 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`
         );
         lowerEnemyStrength(5);
-        setTimeout(() => enemyAction(), 4000);
+        // setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       case "classWeapon":
         fightPrompt(
@@ -245,7 +247,8 @@ export default function GameViewer({ className }) {
           }
           setStamina(stamina - 0.5);
         }
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
+        // setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
@@ -473,13 +476,13 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} stamina={stamina} score={score} />
+        <Stats stats={stats} stamina={stamina} score={score} isCharacter={true}/>
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
         <div className="enemyContainer">
           <p>{enemy.name}</p>
-          <Stats stats={enemy} />
+          <Stats stats={enemy} isCharacter={false}/>
         </div>
       )}
       <div className="textContainer">
