@@ -3,17 +3,14 @@ import mockRouter from "next-router-mock";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import CamelsHump from "@/pages/index";
 import GameViewer from "@/pages/play";
+import { getServerSession } from "next-auth/next";
 
 // eslint-disable-next-line global-require
 jest.mock("next/router", () => require("next-router-mock"));
+jest.mock("next-auth/next");
 
 mockRouter.useParser(
-  createDynamicRouteParser([
-    // These paths should match those found in the `/pages` folder:
-    "/",
-    "/play",
-    "/classSelect",
-  ]),
+  createDynamicRouteParser(["/", "/play", "/classSelect", "/load"]),
 );
 describe("End-to-end testing", () => {
   test("Render Main Menu component", () => {
@@ -27,6 +24,14 @@ describe("End-to-end testing", () => {
 describe("Menu: Button tests", () => {
   beforeEach(() => {
     mockRouter.setCurrentUrl("/");
+    getServerSession.mockResolvedValue({
+      user: {
+        id: 1,
+      },
+    });
+  });
+  afterEach(() => {
+    getServerSession.mockReset();
   });
   test("Menu: New and load game buttons are visible", () => {
     render(<CamelsHump />);
@@ -54,6 +59,14 @@ describe("Menu: Button tests", () => {
 describe("Play: Button tests", () => {
   beforeEach(() => {
     mockRouter.setCurrentUrl("/play");
+    getServerSession.mockResolvedValue({
+      user: {
+        id: 1,
+      },
+    });
+  });
+  afterEach(() => {
+    getServerSession.mockReset();
   });
   test("Play: Quit button is visible", () => {
     render(<GameViewer className="mage" />);
