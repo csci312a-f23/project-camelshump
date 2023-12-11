@@ -193,10 +193,12 @@ export default function GameViewer({ className }) {
 
   const enemyAction = () => {
       damagePlayer(enemy.strength);
-      fightPrompt(
-        `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-        `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
-      );
+      setTimeout(() => {
+        fightPrompt(
+          `${enemy.name} attacks and deals ${enemy.strength} damage.`,
+          `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
+        );
+      }, 4000);
   };
 
   const fightAction = (action) => {
@@ -208,7 +210,6 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
-        // setTimeout(() => enemyAction(), 4000);
         enemyAction();
         break;
       case "dance":
@@ -217,7 +218,6 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`
         );
         lowerEnemyStrength(5);
-        // setTimeout(() => enemyAction(), 4000);
         enemyAction();
         break;
       case "classWeapon":
@@ -248,7 +248,6 @@ export default function GameViewer({ className }) {
           setStamina(stamina - 0.5);
         }
         enemyAction();
-        // setTimeout(() => enemyAction(), 4000);
         break;
       default:
     }
