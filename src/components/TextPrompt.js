@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import styles from "../styles/TextPrompt.module.css";
 
 export default function TextPrompt({
   getText,
@@ -18,7 +19,7 @@ export default function TextPrompt({
   }, [invisiblePrompt]);
 
   return (
-    <div>
+    <div className={styles.textPrompt}>
       <label> Text Input </label>
       <input
         type="text"
