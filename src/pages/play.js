@@ -335,12 +335,12 @@ export default function GameViewer({ className }) {
 
   const levelUp = (newXp) => {
     const newLevel = stats.level + 1;
-    const newStrength = giveStatBuff("warrior"); 
-    const newDefense = giveStatBuff("warrior"); 
-    const newSpeed = giveStatBuff("rogue"); 
-    const newInt = giveStatBuff("mage"); 
-    const newRizz = giveStatBuff("rogue"); 
-    const newMaxHealth = giveStatBuff("mage"); 
+    const newStrength = stats.strength + giveStatBuff("warrior"); 
+    const newDefense = stats.defense + giveStatBuff("warrior"); 
+    const newSpeed = stats.speed + giveStatBuff("rogue"); 
+    const newInt = stats.intelligence + giveStatBuff("mage"); 
+    const newRizz = stats.rizz + giveStatBuff("rogue"); 
+    const newMaxHealth = stats.maxHealth + giveStatBuff("mage"); 
 
     return {
       health: stats.health,
