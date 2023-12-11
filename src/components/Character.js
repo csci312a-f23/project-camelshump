@@ -8,6 +8,8 @@ const CHARACTERS = [
     defense: 10,
     intelligence: 4,
     rizz: 7,
+    xp: 0,
+    level: 1,
     art: `
       _,. \n
     ,' -.) \n
@@ -46,6 +48,8 @@ const CHARACTERS = [
     defense: 7,
     intelligence: 10,
     rizz: 9,
+    xp: 0,
+    level: 1,
     art: `
               _,-'| \n
            ,-'._  | \n
@@ -84,6 +88,8 @@ const CHARACTERS = [
     defense: 6,
     intelligence: 8,
     rizz: 5,
+    xp: 0,
+    level: 1,
     art: `
                  /| \n
   _______________)|.. \n
