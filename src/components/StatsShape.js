@@ -8,6 +8,7 @@ const StatsShape = PropTypes.shape({
   health: PropTypes.number.isRequired,
   strength: PropTypes.number.isRequired,
   defense: PropTypes.number.isRequired,
+  stamina: PropTypes.number.isRequired,
   speed: PropTypes.number.isRequired,
   intelligence: PropTypes.number.isRequired,
   rizz: PropTypes.number.isRequired,
