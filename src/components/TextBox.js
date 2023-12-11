@@ -11,6 +11,10 @@ export default function TextBox({
   setGeneratedText,
   invisiblePrompt,
   setInvisiblePrompt,
+  // setTextList,
+  // textList,
+  // textListIndex,
+  // setTextListIndex,
 }) {
   const genKwargs = {
     max_new_tokens: 128,
@@ -48,7 +52,16 @@ export default function TextBox({
       setGeneratedText(`${generatedText + textStream}\n`);
       scrollToBottom();
     }
+    scrollToBottom();
   }
+
+  // const handleNext = () => {
+  //   setTextListIndex(textListIndex+1);
+  //   setGeneratedText(textList[textListIndex]);
+  // }
+
+  // if there is more to go in list of text to show then display some sort of arrow or something
+  // should just add next and last button at the bottom of the textbox div
 
   return (
     <div>
@@ -60,18 +73,21 @@ export default function TextBox({
       <div className={styles.textBox}>
         <p id="textBox">{generatedText}</p>
         {document.getElementById("textBox") ? scrollToBottom() : <div />}
+        <button className={styles.button} type="button">
+          Next
+        </button>
       </div>
     </div>
   );
 }
 
 TextBox.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  generatedText: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  setGeneratedText: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  invisiblePrompt: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  setInvisiblePrompt: PropTypes.func,
+  generatedText: PropTypes.string.isRequired,
+  setGeneratedText: PropTypes.func.isRequired,
+  invisiblePrompt: PropTypes.string.isRequired,
+  setInvisiblePrompt: PropTypes.func.isRequired,
+  // setTextList: PropTypes.func.isRequired,
+  // textList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // setTextListIndex: PropTypes.func.isRequired,
+  // textListIndex: PropTypes.number.isRequired,
 };

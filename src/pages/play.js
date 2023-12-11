@@ -3,6 +3,7 @@
  */
 // eslint-disable-next-line no-unused-vars
 import PropTypes, { element } from "prop-types";
+import { HfInference } from "@huggingface/inference";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
@@ -16,6 +17,8 @@ import TextBox from "../components/TextBox";
 import styles from "../styles/Dictionary.module.css";
 import ENEMIES from "../components/Enemy";
 import CHARACTERS from "../components/Character";
+
+const hf = new HfInference("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");
 
 const itemDictionary = {
   A: "Throwing Axe",
@@ -56,6 +59,8 @@ export default function GameViewer({ className }) {
   const [showDictionary, setShowDictionary] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
   const [inventoryList, setInventoryList] = useState([]);
+  // const [textList, setTextList] = useState([]);
+  // const [textListIndex, setTextListIndex] = useState(0);
 
   const [stats, setStats] = useState({
     health: character.health,
@@ -75,6 +80,49 @@ export default function GameViewer({ className }) {
     Math.floor(currentMap[0].length / 2),
     5,
   ]);
+
+  const genKwargs = {
+    max_new_tokens: 128,
+    top_k: 30,
+    top_p: 0.9,
+    temperature: 0.2,
+    repetition_penalty: 1.02,
+    stopSequences: ["\nUser:", "<|endoftext|>", "</s>"],
+  };
+
+  const scrollToBottom = () => {
+    const log = document.getElementById("textBox");
+    log.scrollTop = log.scrollHeight;
+  };
+
+  const getText = async (question) => {
+    // setGeneratedText(`${generatedText}\n`);
+    const textStream = [];
+    const stream = await hf.textGenerationStream({
+      model: "tiiuae/falcon-7b-instruct",
+      inputs: question,
+      parameters: genKwargs,
+    });
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const r of stream) {
+      if (r.token.special) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      // stop if we encounter a stop sequence
+      if (genKwargs.stopSequences.includes(r.token.text)) {
+        break;
+      }
+      textStream.push(r.token.text); // could set this to a list
+      // setGeneratedText((currText) => `${currText + textStream}\n`);
+      scrollToBottom();
+    }
+    textStream.forEach((token) =>
+      setGeneratedText((currText) => `${currText + token}`),
+    );
+    setGeneratedText((currText) => `${currText}\n`);
+    scrollToBottom();
+  };
 
   const stopScroll = (e) => {
     if (
@@ -150,9 +198,11 @@ export default function GameViewer({ className }) {
     setEnemyPopup(false);
   };
 
-  const fightPrompt = (preGeneratedString, promptToGenerate) => {
-    setGeneratedText(`${generatedText + preGeneratedString}\n`);
-    setTimeout(() => setTextPrompt(promptToGenerate), 1000);
+  const fightPrompt = async (preGeneratedString, promptToGenerate) => {
+    // pass a function that does the concatenation instead of this
+    setGeneratedText((currText) => `${currText + preGeneratedString}`);
+    await getText(promptToGenerate);
+    return 0;
   };
 
   const enemyAction = () => {
@@ -163,26 +213,29 @@ export default function GameViewer({ className }) {
     );
   };
 
-  const fightAction = (action) => {
+  const fightAction = async (action) => {
     switch (action) {
       case "punch":
-        fightPrompt(
-          `You punched the ${enemy.name}`,
+        // eslint-disable-next-line no-case-declarations
+        await fightPrompt(
+          `You punched the ${enemy.name}\n`,
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
+        scrollToBottom();
         break;
       case "dance":
-        fightPrompt(
+        await fightPrompt(
           `You dance with the ${enemy.name}`,
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
         );
         lowerEnemyStrength(5);
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
+        scrollToBottom();
         break;
       case "classWeapon":
-        fightPrompt(
+        await fightPrompt(
           `You use your ${classWeapon} on the ${enemy.name}`,
           `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
@@ -191,7 +244,7 @@ export default function GameViewer({ className }) {
             damageEnemy(stats.strength * 3);
             setStamina(stamina - 1);
           } else {
-            fightPrompt(
+            await fightPrompt(
               `You don't have enough stamina!`,
               `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
             );
@@ -207,18 +260,18 @@ export default function GameViewer({ className }) {
           }
           setStamina(stamina - 0.5);
         }
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       default:
     }
   };
 
-  const itemAction = (action) => {
+  const itemAction = async (action) => {
     switch (action) {
       case "A":
         if (stats.strength > 0) {
           // 15 damage
-          fightPrompt(
+          await fightPrompt(
             `You threw an axe on the ${enemy.name}`,
             `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
           );
@@ -226,7 +279,7 @@ export default function GameViewer({ className }) {
           setStamina(stamina - 1);
           reduceItem("A");
         } else {
-          fightPrompt(
+          await fightPrompt(
             `You don't have enough strength!`,
             `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`,
           );
@@ -234,7 +287,7 @@ export default function GameViewer({ className }) {
         break;
       case "B":
         // 10 damage twice, 50% chance to hit second shot
-        fightPrompt(
+        await fightPrompt(
           `You shot the ${enemy.name} with a bow`,
           `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`,
         );
@@ -243,7 +296,7 @@ export default function GameViewer({ className }) {
         break;
       case "G":
         // 20 damage, 5 to self
-        fightPrompt(
+        await fightPrompt(
           `You throw a grenade at the ${enemy.name}`,
           `I'm a fantasy character, I threw a grenade at a ${enemy.name}, describe what happens.`,
         );
@@ -253,7 +306,7 @@ export default function GameViewer({ className }) {
         break;
       case "H":
         // Heal 10
-        fightPrompt(
+        await fightPrompt(
           `You used a healing potion`,
           "I'm a fantasy character, I used a healing potion, describe what happens.",
         );
@@ -261,7 +314,7 @@ export default function GameViewer({ className }) {
         reduceItem("H");
         break;
       case "S":
-        fightPrompt(
+        await fightPrompt(
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
@@ -288,33 +341,24 @@ export default function GameViewer({ className }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enemyKilled]);
 
-  const updateItem = (itemPressed) => {
+  const updateItem = async (itemPressed) => {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
       setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
-
       setGeneratedText(
-        `${generatedText}\nYou encountered a ${statelessEnemy.name}`,
+        (currText) => `${currText}\nYou encountered a ${statelessEnemy.name}`,
       );
       // Sends an invisible prompt to TextBox, which sends to TextPrompt, choosing from a list of enemies
-      setTimeout(
-        () =>
-          setTextPrompt(
-            `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
-          ),
-        2000,
+      await getText(
+        `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
       );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       const pickup = itemDictionary[itemPressed];
       setItem(itemPressed); // Passes this to add the new item to the inventory, and call pop-up if item is E
-      setGeneratedText(`${generatedText}\nYou picked up a ${pickup}`);
-      setTimeout(
-        () =>
-          setTextPrompt(
-            `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
-          ),
-        2000,
+      setGeneratedText((currText) => `${currText}\nYou picked up a ${pickup}`);
+      await getText(
+        `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
       );
       setCurrentMap(currentMap);
       currentMap[position[2]][position[0]][position[1]] = "-";
