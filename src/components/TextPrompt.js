@@ -19,7 +19,7 @@ export default function TextPrompt({
 
   return (
     <div>
-      <label>Text Input</label>
+      <label> Text Input </label>
       <input
         type="text"
         value={question}

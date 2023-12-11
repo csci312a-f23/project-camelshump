@@ -1,8 +1,6 @@
 /* styles for text box */
 .textBox p {
-  display: "inline-flex";
-  height: 16vh;
-  max-width: 77vh;
-  border: 1px solid #000;
+  display: inline-flex;
   font-size: 1.6vh;
+  padding: 0 4rem;
 }

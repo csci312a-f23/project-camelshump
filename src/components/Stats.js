@@ -5,14 +5,9 @@ import StatBar from "./Statbar";
 import styles from "../styles/Stats.module.css";
 import StatsShape from "./StatsShape";
 
-export default function Stats({ stats, isEnemy, score }) {
+export default function Stats({ stats, isEnemy }) {
   return (
     <div>
-      {score > 0 && (
-        <div className={styles.score}>
-          <p>Score: {score}</p>
-        </div>
-      )}
       <div className={styles.stats}>
         <StatBar
           label="Health"
@@ -28,9 +23,6 @@ export default function Stats({ stats, isEnemy, score }) {
         {/* conditionally render level if provided */}
         {!isEnemy && <p>Level: {stats.level}</p>}
       </div>
-      <div className={styles.art}>
-        <pre>{stats.art}</pre>
-      </div>
     </div>
   );
 }
@@ -38,9 +30,4 @@ export default function Stats({ stats, isEnemy, score }) {
 Stats.propTypes = {
   stats: StatsShape.isRequired,
   isEnemy: PropTypes.bool.isRequired,
-  score: PropTypes.number,
-};
-
-Stats.defaultProps = {
-  score: 0,
 };

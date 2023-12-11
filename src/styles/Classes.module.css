@@ -4,6 +4,7 @@
   display: grid;
   gap: 1.5vh;
   grid-template-rows: 15% 20% 5% 20% 5% 20% 15%;
+  padding: 0 2rem;
 }
 
 #class {
@@ -34,9 +35,11 @@
 .art {
   line-height: 0.5;
   font-size: 1.2vh;
+  text-align: center;
 }
 
 .stats {
   line-height: 0.075;
   font-size: 1.2vh;
+  padding: 0 1rem;
 }

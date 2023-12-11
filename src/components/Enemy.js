@@ -201,7 +201,7 @@ const ENEMIES = [
   `,
   },
   {
-    name: "An Evil Ampersand",
+    name: "Evil Ampersand",
     health: 70,
     strength: 10,
     defense: 8,

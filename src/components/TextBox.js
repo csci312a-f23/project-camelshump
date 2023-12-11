@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
+import React, { useEffect } from "react";
 import { HfInference } from "@huggingface/inference";
 import PropTypes from "prop-types";
 import TextPrompt from "./TextPrompt";
@@ -23,6 +24,13 @@ export default function TextBox({
     repetition_penalty: 1.02,
     stopSequences: ["\nUser:", "<|endoftext|>", "</s>"],
   };
+
+  // Set initial message when the component mounts
+  useEffect(() => {
+    setGeneratedText(
+      "Hello and welcome to Camels Hump. Please press the arrow keys to move around the map. Stay alive by collecting health and beefing up your inventory. Look at the dictionary to understand you special finds. Avoid the evil Ampersand at all costs.",
+    );
+  }, [setGeneratedText]);
 
   async function getText(question) {
     setGeneratedText();

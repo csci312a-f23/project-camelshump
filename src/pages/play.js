@@ -243,12 +243,14 @@ export default function GameViewer({ className }) {
             );
           }
         } else if (classWeapon === "Staff") {
+          playAudio("/audio/staff.mp3");
           damageEnemy(stats.intelligence * 3);
           setStats((currStats) => ({
             ...currStats,
             stamina: currStats.stamina - 0.25,
           }));
         } else if (classWeapon === "Knife") {
+          playAudio("/audio/knife.mp3");
           if (stats.speed > enemy.speed) {
             damageEnemy(stats.strength * 3);
           } else {
@@ -320,6 +322,7 @@ export default function GameViewer({ className }) {
         reduceItem("H");
         break;
       case "S":
+        playAudio("/audio/stamina.mp3");
         fightPrompt(
           `You used a Stamina potion`,
           "I'm a fantasy character, I used a stamina potion, describe what happens.",
@@ -460,6 +463,19 @@ export default function GameViewer({ className }) {
 
   return (
     <main className="gridContainer">
+      <div className="textContainer">
+        <TextBox
+          generatedText={generatedText}
+          setGeneratedText={setGeneratedText}
+          invisiblePrompt={textPrompt}
+          setInvisiblePrompt={setTextPrompt}
+        />
+      </div>
+      {score > 0 && (
+        <div className={styles.score}>
+          <p>Score: {score}</p>
+        </div>
+      )}
       <div className="mapContainer">
         <MapDisplay
           currentMap={currentMap}
@@ -485,11 +501,13 @@ export default function GameViewer({ className }) {
             setGeneratedText={setGeneratedText}
             setTextPrompt={setTextPrompt}
             classWeapon={classWeapon}
+            enemy={enemy}
           />
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} isEnemy={false} score={score} />
+        <p> My Stats</p>
+        <Stats stats={stats} isEnemy={false} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
@@ -498,14 +516,6 @@ export default function GameViewer({ className }) {
           <Stats stats={enemy} isEnemy />
         </div>
       )}
-      <div className="textContainer">
-        <TextBox
-          generatedText={generatedText}
-          setGeneratedText={setGeneratedText}
-          invisiblePrompt={textPrompt}
-          setInvisiblePrompt={setTextPrompt}
-        />
-      </div>
       <div className="inventoryContainer">
         <p style={{ fontWeight: "bold", paddingLeft: "10px" }}>Inventory</p>
         <Inventory
