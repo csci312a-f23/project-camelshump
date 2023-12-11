@@ -24,9 +24,10 @@ export default function Stats({ stats, stamina, score }) {
         <StatBar label="Speed" value={stats.speed} />
         <StatBar label="Intelligence" value={stats.intelligence} />
         <StatBar label="Rizz" value={stats.rizz} />
-        <p>Level: {stats.level}</p>
         {/* conditionally render stamina if provided */}
         {stamina && <StatBar label="Stamina" value={stamina} />}
+        <p>Level: {stats.level}</p>
+        <p>XP: {stats.xp} </p>
       </div>
       <div className={styles.art}>
         <pre>{stats.art}</pre>

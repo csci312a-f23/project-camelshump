@@ -192,7 +192,7 @@ export default function GameViewer({ className }) {
   };
 
   const enemyAction = () => {
-    damagePlayer(enemy.strength);
+    // damagePlayer(enemy.strength);
     fightPrompt(
       `${enemy.name} attacks and deals ${enemy.strength} damage.`,
       `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
@@ -356,7 +356,7 @@ export default function GameViewer({ className }) {
     const newXp = stats.xp + xpToGain;
     let newStats;
     
-    newLevelThreshold = stats.level * 10 + stats.level;
+    const newLevelThreshold = stats.level * 10 + stats.level;
     if (newXp >= newLevelThreshold)
       newStats = levelUp(newXp - newLevelThreshold);
     else {
