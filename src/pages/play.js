@@ -324,11 +324,52 @@ export default function GameViewer({ className }) {
     setScore(newScore);
   };
 
+  const giveStatBuff = (CLASS) => {
+    return (className == CLASS) + 1;
+  } 
+
+  const levelUp = (newXp) => {
+    const newLevel = stats.level + 1;
+    const newStrength = giveStatBuff("warrior"); 
+    const newDefense = giveStatBuff("warrior"); 
+    const newSpeed = giveStatBuff("rogue"); 
+    const newInt = giveStatBuff("mage"); 
+    const newRizz = giveStatBuff("rogue"); 
+    const newMaxHealth = giveStatBuff("mage"); 
+
+    return {
+      health: stats.health,
+      strength: newStrength,
+      defense: newDefense,
+      speed: newSpeed,
+      intelligence: newInt,
+      rizz: newRizz,
+      level: newLevel,
+      xp: newXp,
+      maxHealth: newMaxHealth,
+    }
+  }
+
+  const updateXp = (xpToGain) => {
+    const newXp = stats.xp + xpToGain;
+    let newStats;
+    
+    newLevelThreshold = stats.level * 10 + stats.level;
+    if (newXp >= newLevelThreshold)
+      newStats = levelUp(newXp - newLevelThreshold);
+    else {
+      newStats = {...stats, xp: newXp};
+    }
+    setStats(newStats);
+  }
+
   useEffect(() => {
     if (enemyKilled) {
       const newMap = [...currentMap];
       newMap[position[2]][position[0]][position[1]] = "-";
       setCurrentMap(newMap);
+      updateXp(enemy.xp)
+
       ENEMIES.forEach((killedEnemy) => {
         updateScoreOnEnemyKill(killedEnemy);
       });

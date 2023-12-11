@@ -11,6 +11,8 @@ const StatsShape = PropTypes.shape({
   speed: PropTypes.number.isRequired,
   intelligence: PropTypes.number.isRequired,
   rizz: PropTypes.number.isRequired,
+  level: PropTypes.number,
+  xp: PropTypes.number,
   maxHealth: PropTypes.number.isRequired,
   // eslint-disable-next-line react/require-default-props
   art: PropTypes.string,
@@ -18,6 +20,8 @@ const StatsShape = PropTypes.shape({
 
 StatsShape.defaultProps = {
   art: "",
+  level: 1,
+  xp: 0,
 };
 
 export default StatsShape;
