@@ -12,11 +12,11 @@
 .cell ul {
   padding: var(--gap);
   display: inline;
-  letter-spacing: 0.9vh;
+  letter-spacing: 2.5vh;
   font-family: "Courier New", monospace;
+  font-size: 3.24vh;
 }
 
 .highlightedX {
   font-weight: bold;
-  letter-spacing: 0.5vh !important;
 }

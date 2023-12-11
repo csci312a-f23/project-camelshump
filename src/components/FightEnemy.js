@@ -4,6 +4,7 @@ import styles from "../styles/FightEnemy.module.css";
 
 import FightBox from "./FightBox";
 import ItemBox from "./ItemBox";
+import StatsShape from "./StatsShape";
 
 export default function FightEnemy({
   inventory,
@@ -14,6 +15,7 @@ export default function FightEnemy({
   setGeneratedText,
   setTextPrompt,
   classWeapon,
+  enemy,
 }) {
   const [fightOptions, setFightOptions] = useState(false);
   const [itemOptions, setItemOptions] = useState(false);
@@ -66,6 +68,9 @@ export default function FightEnemy({
           {" "}
           Run{" "}
         </button>
+        <div className={styles.art}>
+          <pre>{enemy.art}</pre>
+        </div>
         {fightOptions && (
           <FightBox
             closeFightBox={() => setFightOptions(false)}
@@ -90,9 +95,11 @@ FightEnemy.propTypes = {
   closePopup: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
   itemAction: PropTypes.func.isRequired,
-  generatedText: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  generatedText: PropTypes.string,
   setGeneratedText: PropTypes.func.isRequired,
   setTextPrompt: PropTypes.func.isRequired,
   // eslint-disable-next-line react/require-default-props
   classWeapon: PropTypes.string,
+  enemy: StatsShape.isRequired,
 };
