@@ -11,6 +11,7 @@ export default function FightEnemy({
   closePopup,
   fightAction,
   itemAction,
+  generatedText,
   setGeneratedText,
   setTextPrompt,
   classWeapon,
@@ -20,7 +21,7 @@ export default function FightEnemy({
   const [itemOptions, setItemOptions] = useState(false);
 
   const handleClose = () => {
-    setGeneratedText(`You run away`);
+    setGeneratedText(`${generatedText}\nYou run away`);
     setTimeout(
       () =>
         setTextPrompt(
@@ -94,6 +95,7 @@ FightEnemy.propTypes = {
   closePopup: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
   itemAction: PropTypes.func.isRequired,
+  generatedText: PropTypes.string.isRequired,
   setGeneratedText: PropTypes.func.isRequired,
   setTextPrompt: PropTypes.func.isRequired,
   // eslint-disable-next-line react/require-default-props
