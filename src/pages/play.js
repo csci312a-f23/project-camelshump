@@ -95,6 +95,8 @@ export default function GameViewer({ className }) {
     speed: character.speed,
     intelligence: character.intelligence,
     rizz: character.rizz,
+    xp: character.xp,
+    level: character.level,
     maxHealth: character.health,
   });
 
