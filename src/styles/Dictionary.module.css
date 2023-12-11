@@ -65,3 +65,12 @@
 .closeIcon {
   font-size: 2vh;
 }
+
+.muteButton {
+  position: absolute;
+  top: 2vh;
+  right: 2vh;
+  background: none;
+  transform: scale(1.4);
+  z-index: 999;
+}

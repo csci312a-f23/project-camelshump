@@ -7,6 +7,7 @@ const ENEMIES = [
     intelligence: 2,
     speed: 9,
     rizz: 1,
+    xp: 7,
     art: `           
              ____                      , \n
             /---.'.__             ____// \n
@@ -36,6 +37,7 @@ const ENEMIES = [
     intelligence: 8,
     speed: 4,
     rizz: 6,
+    xp: 6,
     art: `
              /                            ) \n
             (                             |\\ \n
@@ -84,6 +86,7 @@ const ENEMIES = [
     intelligence: 7,
     speed: 10,
     rizz: 8,
+    xp: 3,
     art: `
         /\\             , \n
         ||           _,''/ \n
@@ -117,6 +120,7 @@ const ENEMIES = [
     intelligence: 9,
     speed: 8,
     rizz: 10,
+    xp: 2,
     art: `
                 .7 \n
               .'/ \n
@@ -160,6 +164,7 @@ const ENEMIES = [
     intelligence: 10,
     speed: 4,
     rizz: 10,
+    xp: 4,
     art: `                            
                                       .... \n
                                   .'' .''' \n
@@ -203,6 +208,7 @@ const ENEMIES = [
     intelligence: 2,
     speed: 1,
     rizz: 0,
+    xp: 10,
     art: ` 
                               ,-.                               \n
          ___,---.__          /'|'\\          __,---,___          \n
