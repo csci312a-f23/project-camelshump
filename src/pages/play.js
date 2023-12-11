@@ -242,25 +242,23 @@ export default function GameViewer({ className }) {
     return 0;
   };
 
-  const enemyAction = () => {
+  const enemyAction = async () => {
     damagePlayer(enemy.strength);
-    setTimeout(() => {
-      fightPrompt(
-        `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-        `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
-      );
-    }, 4000);
+    await fightPrompt(
+      `${enemy.name} attacks and deals ${enemy.strength} damage.`,
+      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
+    );
   };
 
   const fightAction = async (action) => {
     switch (action) {
       case "punch":
-        fightPrompt(
+        await fightPrompt(
           `You punched the ${enemy.name}`,
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
-        setTimeout(() => enemyAction(), 4000);
+        await enemyAction();
         break;
       case "dance":
         await fightPrompt(
@@ -268,7 +266,7 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
         );
         lowerEnemyStrength(5);
-        setTimeout(() => enemyAction(), 4000);
+        await enemyAction();
         break;
       case "classWeapon":
         await fightPrompt(
@@ -306,7 +304,7 @@ export default function GameViewer({ className }) {
             stamina: currStats.stamina - 0.5,
           }));
         }
-        setTimeout(() => enemyAction(), 4000);
+        await enemyAction();
         break;
       default:
     }
