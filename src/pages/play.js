@@ -122,8 +122,10 @@ export default function GameViewer({ className }) {
   };
 
   const scrollToBottom = () => {
-    const log = document.getElementById("textBox");
-    log.scrollTop = log.scrollHeight;
+    if (document) {
+      const log = document.getElementById("textBox");
+      log.scrollTop = log.scrollHeight;
+    }
   };
 
   const getText = async (question) => {
@@ -152,7 +154,6 @@ export default function GameViewer({ className }) {
       setGeneratedText((currText) => `${currText + token}`),
     );
     setGeneratedText((currText) => `${currText}\n`);
-    scrollToBottom();
   };
 
   const stopScroll = (e) => {

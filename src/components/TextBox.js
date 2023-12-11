@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { HfInference } from "@huggingface/inference";
 import PropTypes from "prop-types";
+import { useRef, useEffect } from "react";
 import TextPrompt from "./TextPrompt";
 import styles from "../styles/TextBox.module.css";
 
@@ -16,6 +17,7 @@ export default function TextBox({
   // textListIndex,
   // setTextListIndex,
 }) {
+  const textBox = useRef();
   const genKwargs = {
     max_new_tokens: 128,
     top_k: 30,
@@ -55,10 +57,10 @@ export default function TextBox({
     scrollToBottom();
   }
 
-  // const handleNext = () => {
-  //   setTextListIndex(textListIndex+1);
-  //   setGeneratedText(textList[textListIndex]);
-  // }
+  useEffect(() => {
+    const area = textBox.current;
+    area.scrollTop = area.scrollHeight;
+  }, [generatedText]);
 
   // if there is more to go in list of text to show then display some sort of arrow or something
   // should just add next and last button at the bottom of the textbox div
@@ -71,8 +73,9 @@ export default function TextBox({
         setInvisiblePrompt={setInvisiblePrompt}
       />
       <div className={styles.textBox}>
-        <p id="textBox">{generatedText}</p>
-        {document.getElementById("textBox") ? scrollToBottom() : <div />}
+        <p id="textBox" ref={textBox}>
+          {generatedText}
+        </p>
         <button className={styles.button} type="button">
           Next
         </button>
