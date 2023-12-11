@@ -40,10 +40,7 @@ export default function TextPrompt({
 }
 
 TextPrompt.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  getText: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  invisiblePrompt: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  setInvisiblePrompt: PropTypes.func,
+  getText: PropTypes.func.isRequired,
+  invisiblePrompt: PropTypes.string.isRequired,
+  setInvisiblePrompt: PropTypes.func.isRequired,
 };

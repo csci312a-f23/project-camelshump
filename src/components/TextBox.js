@@ -1,20 +1,23 @@
 /* eslint-disable react/jsx-no-bind */
 import { HfInference } from "@huggingface/inference";
 import PropTypes from "prop-types";
+import { useRef, useEffect } from "react";
 import TextPrompt from "./TextPrompt";
 import styles from "../styles/TextBox.module.css";
 
 const hf = new HfInference("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");
-
-// NOTE ABOUT ENEMY DESCRIPTIONs
-// Pass hard-coded questions when we go over enemies or items on map
 
 export default function TextBox({
   generatedText,
   setGeneratedText,
   invisiblePrompt,
   setInvisiblePrompt,
+  // setTextList,
+  // textList,
+  // textListIndex,
+  // setTextListIndex,
 }) {
+  const textBox = useRef();
   const genKwargs = {
     max_new_tokens: 128,
     top_k: 30,
@@ -24,8 +27,13 @@ export default function TextBox({
     stopSequences: ["\nUser:", "<|endoftext|>", "</s>"],
   };
 
+  const scrollToBottom = () => {
+    const log = document.getElementById("textBox");
+    log.scrollTop = log.scrollHeight;
+  };
+
   async function getText(question) {
-    setGeneratedText();
+    setGeneratedText(`${generatedText}\n`);
     let textStream = "";
     const stream = await hf.textGenerationStream({
       model: "tiiuae/falcon-7b-instruct",
@@ -43,12 +51,19 @@ export default function TextBox({
         break;
       }
       textStream += r.token.text;
-      setGeneratedText(textStream);
+      setGeneratedText(`${generatedText + textStream}\n`);
+      scrollToBottom();
     }
-    // I don't think we need an additional text element as we can update the text box through generatedText
-    // const text = `${additionalText}\n${textStream}`;
-    // setGeneratedText(text);
+    scrollToBottom();
   }
+
+  useEffect(() => {
+    const area = textBox.current;
+    area.scrollTop = area.scrollHeight;
+  }, [generatedText]);
+
+  // if there is more to go in list of text to show then display some sort of arrow or something
+  // should just add next and last button at the bottom of the textbox div
 
   return (
     <div>
@@ -58,19 +73,24 @@ export default function TextBox({
         setInvisiblePrompt={setInvisiblePrompt}
       />
       <div className={styles.textBox}>
-        <p>{generatedText}</p>
+        <p id="textBox" ref={textBox}>
+          {generatedText}
+        </p>
+        <button className={styles.button} type="button">
+          Next
+        </button>
       </div>
     </div>
   );
 }
 
 TextBox.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  generatedText: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  setGeneratedText: PropTypes.func,
-  // eslint-disable-next-line react/require-default-props
-  invisiblePrompt: PropTypes.string,
-  // eslint-disable-next-line react/require-default-props
-  setInvisiblePrompt: PropTypes.func,
+  generatedText: PropTypes.string.isRequired,
+  setGeneratedText: PropTypes.func.isRequired,
+  invisiblePrompt: PropTypes.string.isRequired,
+  setInvisiblePrompt: PropTypes.func.isRequired,
+  // setTextList: PropTypes.func.isRequired,
+  // textList: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // setTextListIndex: PropTypes.func.isRequired,
+  // textListIndex: PropTypes.number.isRequired,
 };
