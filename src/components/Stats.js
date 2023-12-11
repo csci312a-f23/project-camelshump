@@ -25,6 +25,8 @@ export default function Stats({ stats, isEnemy, score }) {
         <StatBar label="Speed" value={stats.speed} />
         <StatBar label="Intelligence" value={stats.intelligence} />
         <StatBar label="Rizz" value={stats.rizz} />
+        {/* conditionally render level if provided */}
+        {!isEnemy && <p>Level: {stats.level}</p>}
       </div>
       <div className={styles.art}>
         <pre>{stats.art}</pre>

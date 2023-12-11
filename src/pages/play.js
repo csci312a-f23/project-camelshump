@@ -96,6 +96,8 @@ export default function GameViewer({ className }) {
     speed: character.speed,
     intelligence: character.intelligence,
     rizz: character.rizz,
+    xp: character.xp,
+    level: character.level,
     maxHealth: character.health,
   });
 
@@ -194,10 +196,12 @@ export default function GameViewer({ className }) {
 
   const enemyAction = () => {
     damagePlayer(enemy.strength);
-    fightPrompt(
-      `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
-    );
+    setTimeout(() => {
+      fightPrompt(
+        `${enemy.name} attacks and deals ${enemy.strength} damage.`,
+        `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
+      );
+    }, 4000);
   };
 
   const fightAction = (action) => {
@@ -209,7 +213,7 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       case "dance":
         fightPrompt(
@@ -217,7 +221,7 @@ export default function GameViewer({ className }) {
           `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
         );
         lowerEnemyStrength(5);
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       case "classWeapon":
         fightPrompt(
@@ -255,7 +259,7 @@ export default function GameViewer({ className }) {
             stamina: currStats.stamina - 0.5,
           }));
         }
-        setTimeout(() => enemyAction(), 4000);
+        enemyAction();
         break;
       default:
     }
@@ -339,11 +343,51 @@ export default function GameViewer({ className }) {
     setScore(newScore);
   };
 
+  const giveStatBuff = (CLASS) => (className === CLASS) + 1;
+
+  const levelUp = (newXp) => {
+    const newLevel = stats.level + 1;
+    const newStrength = stats.strength + giveStatBuff("warrior");
+    const newDefense = stats.defense + giveStatBuff("warrior");
+    const newSpeed = stats.speed + giveStatBuff("rogue");
+    const newInt = stats.intelligence + giveStatBuff("mage");
+    const newRizz = stats.rizz + giveStatBuff("rogue");
+    const newStam = stats.stamina + giveStatBuff("mage");
+
+    return {
+      health: stats.health,
+      strength: newStrength,
+      defense: newDefense,
+      speed: newSpeed,
+      intelligence: newInt,
+      stamina: newStam,
+      rizz: newRizz,
+      level: newLevel,
+      xp: newXp,
+      maxHealth: stats.maxHealth + Math.round(Math.random() * 2 + 3),
+    };
+  };
+
+  const updateXp = (xpToGain) => {
+    const newXp = stats.xp + xpToGain;
+    let newStats;
+
+    const newLevelThreshold = stats.level * 10 + stats.level;
+    if (newXp >= newLevelThreshold)
+      newStats = levelUp(newXp - newLevelThreshold);
+    else {
+      newStats = { ...stats, xp: newXp };
+    }
+    setStats(newStats);
+  };
+
   useEffect(() => {
     if (enemyKilled) {
       const newMap = [...currentMap];
       newMap[position[2]][position[0]][position[1]] = "-";
       setCurrentMap(newMap);
+      updateXp(enemy.xp);
+
       ENEMIES.forEach((killedEnemy) => {
         updateScoreOnEnemyKill(killedEnemy);
       });
