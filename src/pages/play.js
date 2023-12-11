@@ -352,7 +352,7 @@ export default function GameViewer({ className }) {
     const newSpeed = stats.speed + giveStatBuff("rogue");
     const newInt = stats.intelligence + giveStatBuff("mage");
     const newRizz = stats.rizz + giveStatBuff("rogue");
-    const newMaxHealth = stats.maxHealth + giveStatBuff("mage");
+    const newStam = stats.stamina + giveStatBuff("mage");
 
     return {
       health: stats.health,
@@ -360,10 +360,11 @@ export default function GameViewer({ className }) {
       defense: newDefense,
       speed: newSpeed,
       intelligence: newInt,
+      stamina: newStam,
       rizz: newRizz,
       level: newLevel,
       xp: newXp,
-      maxHealth: newMaxHealth,
+      maxHealth: stats.maxHealth + Math.round(Math.random() * 2 + 3),
     };
   };
 
