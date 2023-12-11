@@ -39,7 +39,6 @@ Stats.propTypes = {
   stats: StatsShape.isRequired,
   isEnemy: PropTypes.bool.isRequired,
   score: PropTypes.number,
-  isCharacter: PropTypes.bool.isRequired,
 };
 
 Stats.defaultProps = {
