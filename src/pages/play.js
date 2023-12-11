@@ -92,6 +92,7 @@ export default function GameViewer({ className }) {
     health: character.health,
     strength: character.strength,
     defense: character.defense,
+    stamina: 10,
     speed: character.speed,
     intelligence: character.intelligence,
     rizz: character.rizz,
@@ -99,7 +100,6 @@ export default function GameViewer({ className }) {
   });
 
   const [enemy, setEnemy] = useState(null);
-  const [stamina, setStamina] = useState(10);
 
   const [position, setPosition] = useState([
     Math.floor(currentMap[0].length / 2),
@@ -123,7 +123,7 @@ export default function GameViewer({ className }) {
 
   const reduceItem = (newItem) => {
     const itemExists = inventoryList.find(
-      (inventoryItem) => inventoryItem.name === newItem
+      (inventoryItem) => inventoryItem.name === newItem,
     );
 
     if (itemExists) {
@@ -134,7 +134,7 @@ export default function GameViewer({ className }) {
               ...inventoryItem,
               quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
             }
-          : inventoryItem
+          : inventoryItem,
       );
       setInventoryList(updatedInventory);
     }
@@ -156,14 +156,17 @@ export default function GameViewer({ className }) {
   };
 
   const healPlayer = (toHeal) => {
-    setStats({
-      ...stats,
-      health: Math.min(character.health, stats.health + toHeal),
-    });
+    setStats((currStats) => ({
+      ...currStats,
+      health: Math.min(character.health, currStats.health + toHeal),
+    }));
   };
 
   const damagePlayer = (damage) => {
-    setStats({ ...stats, health: stats.health - damage });
+    setStats((currStats) => ({
+      ...currStats,
+      health: currStats.health - damage,
+    }));
   };
 
   const damageEnemy = (damage) => {
@@ -193,7 +196,7 @@ export default function GameViewer({ className }) {
     damagePlayer(enemy.strength);
     fightPrompt(
       `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`
+      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
     );
   };
 
@@ -203,7 +206,7 @@ export default function GameViewer({ className }) {
         playAudio("/audio/punch.mp3");
         fightPrompt(
           `You punched the ${enemy.name}`,
-          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`
+          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(Math.floor(stats.strength * 0.5));
         setTimeout(() => enemyAction(), 4000);
@@ -211,7 +214,7 @@ export default function GameViewer({ className }) {
       case "dance":
         fightPrompt(
           `You dance with the ${enemy.name}`,
-          `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`
+          `I'm a fantasy character, I danced with a ${enemy.name}, describe what happens.`,
         );
         lowerEnemyStrength(5);
         setTimeout(() => enemyAction(), 4000);
@@ -219,29 +222,38 @@ export default function GameViewer({ className }) {
       case "classWeapon":
         fightPrompt(
           `You use your ${classWeapon} on the ${enemy.name}`,
-          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`
+          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
         );
         if (classWeapon === "Sword") {
           playAudio("/audio/sword.mp3");
           if (stats.strength >= 1) {
             damageEnemy(stats.strength * 3);
-            setStamina(stamina - 1);
+            setStats((currStats) => ({
+              ...currStats,
+              stamina: currStats.stamina - 1,
+            }));
           } else {
             fightPrompt(
               `You don't have enough stamina!`,
-              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`
+              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
             );
           }
         } else if (classWeapon === "Staff") {
           damageEnemy(stats.intelligence * 3);
-          setStamina(stamina - 0.25);
+          setStats((currStats) => ({
+            ...currStats,
+            stamina: currStats.stamina - 0.25,
+          }));
         } else if (classWeapon === "Knife") {
           if (stats.speed > enemy.speed) {
             damageEnemy(stats.strength * 3);
           } else {
             damageEnemy(stats.strength * 2);
           }
-          setStamina(stamina - 0.5);
+          setStats((currStats) => ({
+            ...currStats,
+            stamina: currStats.stamina - 0.5,
+          }));
         }
         setTimeout(() => enemyAction(), 4000);
         break;
@@ -257,15 +269,18 @@ export default function GameViewer({ className }) {
           // 15 damage
           fightPrompt(
             `You threw an axe on the ${enemy.name}`,
-            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`
+            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
           );
           damageEnemy(15);
-          setStamina(stamina - 1);
+          setStats((currStats) => ({
+            ...currStats,
+            stamina: stats.stamina - 1,
+          }));
           reduceItem("A");
         } else {
           fightPrompt(
             `You don't have enough strength!`,
-            `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`
+            `I'm a fantasy character, I don't have enough strength to throw an axe at a ${enemy.name}, describe what happens.`,
           );
         }
         break;
@@ -274,7 +289,7 @@ export default function GameViewer({ className }) {
         // 10 damage twice, 50% chance to hit second shot
         fightPrompt(
           `You shot the ${enemy.name} with a bow`,
-          `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`
+          `I'm a fantasy character, I shot a ${enemy.name} with a bow and arrow, describe what happens.`,
         );
         damageEnemy(10);
         if (Math.random() >= 0.5) damageEnemy(10);
@@ -284,7 +299,7 @@ export default function GameViewer({ className }) {
         // 20 damage, 5 to self
         fightPrompt(
           `You throw a grenade at the ${enemy.name}`,
-          `I'm a fantasy character, I threw a grenade at a ${enemy.name}, describe what happens.`
+          `I'm a fantasy character, I threw a grenade at a ${enemy.name}, describe what happens.`,
         );
         damageEnemy(20);
         damagePlayer(5);
@@ -295,7 +310,7 @@ export default function GameViewer({ className }) {
         // Heal 10
         fightPrompt(
           `You used a healing potion`,
-          "I'm a fantasy character, I used a healing potion, describe what happens."
+          "I'm a fantasy character, I used a healing potion, describe what happens.",
         );
         healPlayer(10);
         reduceItem("H");
@@ -303,9 +318,9 @@ export default function GameViewer({ className }) {
       case "S":
         fightPrompt(
           `You used a Stamina potion`,
-          "I'm a fantasy character, I used a stamina potion, describe what happens."
+          "I'm a fantasy character, I used a stamina potion, describe what happens.",
         );
-        setStamina(10);
+        setStats((currStats) => ({ ...currStats, stamina: 10 }));
         reduceItem("S");
         break;
       default:
@@ -349,9 +364,9 @@ export default function GameViewer({ className }) {
       setTimeout(
         () =>
           setTextPrompt(
-            `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`
+            `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
           ),
-        2000
+        2000,
       );
       togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
@@ -362,9 +377,9 @@ export default function GameViewer({ className }) {
       setTimeout(
         () =>
           setTextPrompt(
-            `I am a fantasy character. I just found a ${pickup}, describe what I see.`
+            `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
           ),
-        2000
+        2000,
       );
       setCurrentMap(currentMap);
       currentMap[position[2]][position[0]][position[1]] = "-";
@@ -430,13 +445,13 @@ export default function GameViewer({ className }) {
         )}
       </div>
       <div className="statsContainer">
-        <Stats stats={stats} stamina={stamina} score={score} />
+        <Stats stats={stats} isEnemy={false} score={score} />
       </div>
       {/* Conditionally render in the enemy container if an enemy exists */}
       {enemy !== null && (
         <div className="enemyContainer">
           <p>{enemy.name}</p>
-          <Stats stats={enemy} />
+          <Stats stats={enemy} isEnemy />
         </div>
       )}
       <div className="textContainer">
