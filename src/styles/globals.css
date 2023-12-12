@@ -41,6 +41,7 @@ body {
   height: 13vh;
   margin-bottom: 1rem;
   overflow-y: auto;
+  white-space: pre-wrap;
 }
 
 .statsContainer {
@@ -60,10 +61,12 @@ body {
   grid-row: 2 / 2;
 }
 
-.quitButton {
-  margin-top: 1rem;
-  margin-left: 1rem;
-  width: 95.5%;
+.quitSaveDiv {
+  margin: auto;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 4;
 }
 
 a {
@@ -88,8 +91,21 @@ footer a {
 }
 
 .title {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  text-align: center;
+}
+
+.login {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  align-self: center;
+  justify-self: right;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 35% 30% 35%;
+  margin-left: 20px;
+  margin-right: 20px;
 }

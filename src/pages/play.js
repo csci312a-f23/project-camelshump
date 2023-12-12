@@ -5,6 +5,7 @@
 import PropTypes, { element } from "prop-types";
 import { HfInference } from "@huggingface/inference";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
@@ -37,12 +38,16 @@ export function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-export default function GameViewer({ className }) {
+export default function GameViewer({ className, currentId }) {
   const router = useRouter();
+  const { data: session } = useSession({ required: true });
+
+  // Create a new map with 9 sections and each map is 16x16 characters
   const sectionLength = 16;
   const numSections = 9;
-  // Create a new map with 9 sections and each map is 16x16 characters
+
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
+
   character = CHARACTERS.find((elem) => elem.name === className);
   if (!character) {
     // eslint-disable-next-line prefer-destructuring
@@ -62,6 +67,8 @@ export default function GameViewer({ className }) {
   const [score, setScore] = useState(0);
   const [mute, setMute] = useState(false);
   const [currentAudio, setCurrentAudio] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [showTextInput, setShowTextInput] = useState(false);
 
   // Function to play audio based on mute status
   // not using an API as we have specific sound effect from different sources
@@ -112,6 +119,26 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  useEffect(() => {
+    if (currentId) {
+      fetch(`/api/games/${currentId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          setTitle(response.title);
+          setPosition(response.position);
+          setCurrentMap(response.map);
+          setStats(response.stats);
+          setInventoryList(response.inventory);
+        })
+        .catch((err) => console.log(err)); // eslint-disable-line no-console
+    }
+  }, [currentId]);
+
   const genKwargs = {
     max_new_tokens: 128,
     top_k: 30,
@@ -156,20 +183,21 @@ export default function GameViewer({ className }) {
     // );
     setGeneratedText((currText) => `${currText}\n`);
   };
+  
+   // Disable arrow scrolling
+  const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
-  const stopScroll = (e) => {
-    if (
-      e.keyCode === 37 ||
-      e.keyCode === 38 ||
-      e.keyCode === 39 ||
-      e.keyCode === 40
-    ) {
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
       e.preventDefault();
+      return false;
     }
-  };
+    return true;
+  }
 
-  if (typeof window !== "undefined")
-    window.addEventListener("keydown", stopScroll);
+  if (typeof window !== "undefined") {
+    window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+  }
 
   const reduceItem = (newItem) => {
     const itemExists = inventoryList.find(
@@ -182,11 +210,15 @@ export default function GameViewer({ className }) {
         inventoryItem.name === newItem
           ? {
               ...inventoryItem,
-              quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
+              quantity: inventoryItem.quantity - 1,
             }
           : inventoryItem,
       );
-      setInventoryList(updatedInventory);
+      // Only return items with quant > 0
+      const finalInventory = updatedInventory.filter(
+        (updatedItem) => updatedItem.quantity > 0,
+      );
+      setInventoryList(finalInventory);
     }
   };
 
@@ -468,14 +500,55 @@ export default function GameViewer({ className }) {
       await getText(
         `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
       );
-      setCurrentMap(currentMap);
-      currentMap[position[2]][position[0]][position[1]] = "-";
+
+      const newMapItem = [...currentMap];
+      newMapItem[position[2]][position[0]][position[1]] = "-";
+      setCurrentMap(newMapItem);
     }
   };
 
   const handleItemUpdate = () => {
     // Reset the item to an empty array
     setItem("");
+  };
+
+  const handleSave = () => {
+    const userid = session.user.id;
+
+    if (!currentId && showTextInput === false) {
+      setShowTextInput(true);
+      return;
+    }
+
+    const newGame = {
+      userid,
+      title: currentId ? title : document.getElementById("title_box").value,
+      position,
+      map: currentMap,
+      stats,
+      inventory: inventoryList,
+    };
+
+    if (currentId) {
+      fetch(`/api/games/${currentId}`, {
+        method: "PUT",
+        body: JSON.stringify({ ...newGame, id: currentId }),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+    } else if (showTextInput === true) {
+      fetch(`/api/games`, {
+        method: "POST",
+        body: JSON.stringify(newGame),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+      setShowTextInput(false);
+    }
   };
 
   useEffect(() => {
@@ -581,17 +654,20 @@ export default function GameViewer({ className }) {
           />
         )}
       </div>
-      <button
-        className="quitButton"
-        type="button"
-        onClick={() => router.push("/")}
-      >
-        Quit
-      </button>
+      <div className="quitSaveDiv">
+        <button type="button" onClick={() => router.push("/")}>
+          Quit
+        </button>
+        <button type="button" onClick={() => handleSave()}>
+          Save
+        </button>
+        {showTextInput && <input type="text" id="title_box" />}
+      </div>
     </main>
   );
 }
 
 GameViewer.propTypes = {
   className: PropTypes.string.isRequired,
+  currentId: PropTypes.number.isRequired,
 };

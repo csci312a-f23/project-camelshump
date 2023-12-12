@@ -1,0 +1,29 @@
+.game-selection-container {
+  text-align: center;
+}
+
+.button_list {
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+}
+
+.button_list li {
+  margin-bottom: 5px;
+}
+
+.button_list li button {
+  width: 200px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.selector {
+  display: flex;
+}
+
+.selector button {
+  width: 98px !important;
+  flex: 1;
+  margin-right: 2px;
+}
