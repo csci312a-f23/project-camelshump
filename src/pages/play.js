@@ -471,8 +471,8 @@ export default function GameViewer({ className }) {
       await getText(
         `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
       );
-      setCurrentMap(currentMap);
       currentMap[position[2]][position[0]][position[1]] = "-";
+      setCurrentMap(currentMap);
     }
   };
 
