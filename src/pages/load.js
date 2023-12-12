@@ -34,7 +34,7 @@ export default function LoadGame({ setCurrentId }) {
   const handleDelete = (gameId) => {};
 
   return (
-    <main className="game-selection-container">
+    <main className={styles.game_selection_container}>
       <h1>Select a Game</h1>
       <ul className={styles.button_list}>
         {games.map((game) => (
@@ -42,6 +42,7 @@ export default function LoadGame({ setCurrentId }) {
             <button type="button" onClick={() => handleGameClick(game.id)}>
               {game.title}
             </button>
+            <div class={styles.break}> </div>
             <div className={styles.selector}>
               <button type="button">Rename</button>
               <button type="button" onClick={() => handleDelete(game.id)}>
