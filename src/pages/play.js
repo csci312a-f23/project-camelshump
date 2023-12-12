@@ -156,8 +156,6 @@ export default function GameViewer({ className, currentId }) {
   };
 
   const getText = async (question) => {
-    // setGeneratedText(`${generatedText}\n`);
-    const textStream = [];
     const stream = await hf.textGenerationStream({
       model: "tiiuae/falcon-7b-instruct",
       inputs: question,
@@ -173,17 +171,14 @@ export default function GameViewer({ className, currentId }) {
       if (genKwargs.stopSequences.includes(r.token.text)) {
         break;
       }
-      textStream.push(r.token.text); // could set this to a list
-      // setGeneratedText((currText) => `${currText + textStream}\n`);
+      setGeneratedText((currText) => `${currText + r.token.text}`);
       scrollToBottom();
     }
-    textStream.forEach((token) =>
-      setGeneratedText((currText) => `${currText + token}`),
-    );
     setGeneratedText((currText) => `${currText}\n`);
+    scrollToBottom();
   };
-  
-   // Disable arrow scrolling
+
+  // Disable arrow scrolling
   const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
 
   function preventDefaultForScrollKeys(e) {
@@ -279,18 +274,20 @@ export default function GameViewer({ className, currentId }) {
     damagePlayer(enemy.strength);
     await fightPrompt(
       `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
+      `I'm a ${className}, and an ${enemy.name} attacks dealing ${enemy.strength} damage to me, describe what happens.`,
     );
   };
 
   const fightAction = async (action) => {
+    let damage;
     switch (action) {
       case "punch":
+        damage = Math.floor(stats.strength * 0.5);
         await fightPrompt(
           `You punched the ${enemy.name}`,
-          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
+          `I'm a fantasy character, I punched a ${enemy.name} and dealt ${damage} damage, describe what happens.`,
         );
-        damageEnemy(Math.floor(stats.strength * 0.5));
+        damageEnemy(damage);
         await enemyAction();
         break;
       case "dance":
@@ -302,14 +299,15 @@ export default function GameViewer({ className, currentId }) {
         await enemyAction();
         break;
       case "classWeapon":
-        await fightPrompt(
-          `You use your ${classWeapon} on the ${enemy.name}`,
-          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
-        );
         if (classWeapon === "Sword") {
           playAudio("/audio/sword.mp3");
           if (stats.strength >= 1) {
-            damageEnemy(stats.strength * 3);
+            damage = stats.strength * 3;
+            await fightPrompt(
+              `You use your ${classWeapon} on the ${enemy.name}`,
+              `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+            );
+            damageEnemy(damage);
             setStats((currStats) => ({
               ...currStats,
               stamina: currStats.stamina - 1,
@@ -317,12 +315,17 @@ export default function GameViewer({ className, currentId }) {
           } else {
             await fightPrompt(
               `You don't have enough stamina!`,
-              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
+              `I'm a fantasy character, I don't have enough stamina to use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
             );
           }
         } else if (classWeapon === "Staff") {
           playAudio("/audio/staff.mp3");
-          damageEnemy(stats.intelligence * 3);
+          damage = stats.intelligence * 3;
+          await fightPrompt(
+            `You use your ${classWeapon} on the ${enemy.name}`,
+            `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+          );
+          damageEnemy(damage);
           setStats((currStats) => ({
             ...currStats,
             stamina: currStats.stamina - 0.25,
@@ -330,10 +333,15 @@ export default function GameViewer({ className, currentId }) {
         } else if (classWeapon === "Knife") {
           playAudio("/audio/knife.mp3");
           if (stats.speed > enemy.speed) {
-            damageEnemy(stats.strength * 3);
+            damage = stats.strength * 3;
           } else {
-            damageEnemy(stats.strength * 2);
+            damage = stats.strength * 2;
           }
+          await fightPrompt(
+            `You use your ${classWeapon} on the ${enemy.name}`,
+            `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+          );
+          damageEnemy(damage);
           setStats((currStats) => ({
             ...currStats,
             stamina: currStats.stamina - 0.5,
@@ -353,7 +361,7 @@ export default function GameViewer({ className, currentId }) {
           // 15 damage
           await fightPrompt(
             `You threw an axe on the ${enemy.name}`,
-            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
+            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name} and do 15 damage, describe what happens.`,
           );
           damageEnemy(15);
           setStats((currStats) => ({
@@ -483,6 +491,7 @@ export default function GameViewer({ className, currentId }) {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
       setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
+      togglePopup(); // Show the enemy pop-up
       setGeneratedText(
         (currText) => `${currText}\nYou encountered a ${statelessEnemy.name}`,
       );
@@ -490,7 +499,6 @@ export default function GameViewer({ className, currentId }) {
       await getText(
         `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
       );
-      togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       playAudio("/audio/collect.mp3");
       const pickup = itemDictionary[itemPressed];

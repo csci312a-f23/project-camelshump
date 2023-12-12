@@ -38,9 +38,8 @@ body {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
   width: 100%;
-  height: 13vh;
+  height: 15vh;
   margin-bottom: 1rem;
-  overflow-y: auto;
   white-space: pre-wrap;
 }
 

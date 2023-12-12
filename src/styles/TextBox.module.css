@@ -1,6 +1,11 @@
 /* styles for text box */
 .textBox p {
+  white-space: pre-line;
   display: inline-flex;
+  height: 10vh;
+  width: 100%;
+  border: 2px solid #000;
   font-size: 1.6vh;
   padding: 0 4rem;
+  overflow: scroll;
 }
