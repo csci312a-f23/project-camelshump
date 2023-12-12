@@ -185,9 +185,11 @@ export default function GameViewer({ className }) {
             }
           : inventoryItem,
       );
-      setInventoryList(
-        updatedInventory.map((inventoryObject) => inventoryObject.quantity > 0),
-      ); // removes inventoryObjects with quantity < 1
+      // Only return items with quant > 0
+      const finalInventory = updatedInventory.filter(
+        (updatedItem) => updatedItem.quantity > 0,
+      );
+      setInventoryList(finalInventory);
     }
   };
 
