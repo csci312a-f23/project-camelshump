@@ -6,12 +6,13 @@ import styles from "../styles/Load.module.css";
 
 export default function LoadGame({ setCurrentId }) {
   const router = useRouter();
-  const { data: session } = useSession({ required: true }); // eslint-disable-line no-unused-vars
+  const { data: session } = useSession({ required: true });
   const [games, setGames] = useState([]);
+  const userid = session?.user?.id;
 
   // Fetch the list of games when the component mounts
   useEffect(() => {
-    fetch(`/api/games?userid=${session.user.id}`)
+    fetch(`/api/games?userid=${userid}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(response.statusText);
@@ -22,7 +23,7 @@ export default function LoadGame({ setCurrentId }) {
         setGames(response);
       })
       .catch((err) => console.log(err)); // eslint-disable-line no-console
-  }, [session.user.id]);
+  }, []);
 
   const handleGameClick = (gameId) => {
     setCurrentId(gameId);
