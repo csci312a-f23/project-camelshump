@@ -32,5 +32,6 @@ export default function FightBox({ closeFightBox, fightAction, classWeapon }) {
 FightBox.propTypes = {
   closeFightBox: PropTypes.func.isRequired,
   fightAction: PropTypes.func.isRequired,
-  classWeapon: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  classWeapon: PropTypes.string,
 };

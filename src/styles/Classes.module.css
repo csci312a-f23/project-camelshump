@@ -37,9 +37,11 @@
 .art {
   line-height: 0.5;
   font-size: 1.2vh;
+  text-align: center;
 }
 
 .stats {
   line-height: 0.075;
   font-size: 1.2vh;
+  padding: 0 1rem;
 }

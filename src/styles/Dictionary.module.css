@@ -73,4 +73,14 @@
   background: none;
   transform: scale(1.4);
   z-index: 999;
+  padding-right: 0.5%;
+}
+
+.score {
+  position: absolute;
+  top: 0.08vh;
+  right: 12vh;
+  background: none;
+  font-weight: bold;
+  font-size: larger;
 }
