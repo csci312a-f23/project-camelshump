@@ -181,11 +181,13 @@ export default function GameViewer({ className }) {
         inventoryItem.name === newItem
           ? {
               ...inventoryItem,
-              quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
+              quantity: inventoryItem.quantity - 1,
             }
           : inventoryItem,
       );
-      setInventoryList(updatedInventory);
+      setInventoryList(
+        updatedInventory.map((inventoryObject) => inventoryObject.quantity > 0),
+      ); // removes inventoryObjects with quantity < 1
     }
   };
 
