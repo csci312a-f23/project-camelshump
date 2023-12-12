@@ -209,11 +209,15 @@ export default function GameViewer({ className, currentId }) {
         inventoryItem.name === newItem
           ? {
               ...inventoryItem,
-              quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
+              quantity: inventoryItem.quantity - 1,
             }
           : inventoryItem,
       );
-      setInventoryList(updatedInventory);
+      // Only return items with quant > 0
+      const finalInventory = updatedInventory.filter(
+        (updatedItem) => updatedItem.quantity > 0,
+      );
+      setInventoryList(finalInventory);
     }
   };
 
@@ -495,8 +499,10 @@ export default function GameViewer({ className, currentId }) {
       await getText(
         `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
       );
-      setCurrentMap(currentMap);
-      currentMap[position[2]][position[0]][position[1]] = "-";
+
+      const newMapItem = [...currentMap];
+      newMapItem[position[2]][position[0]][position[1]] = "-";
+      setCurrentMap(newMapItem);
     }
   };
 
