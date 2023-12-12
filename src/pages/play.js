@@ -130,7 +130,7 @@ export default function GameViewer({ className }) {
 
   const getText = async (question) => {
     // setGeneratedText(`${generatedText}\n`);
-    const textStream = [];
+    // let textStream = "";
     const stream = await hf.textGenerationStream({
       model: "tiiuae/falcon-7b-instruct",
       inputs: question,
@@ -146,13 +146,14 @@ export default function GameViewer({ className }) {
       if (genKwargs.stopSequences.includes(r.token.text)) {
         break;
       }
-      textStream.push(r.token.text); // could set this to a list
-      // setGeneratedText((currText) => `${currText + textStream}\n`);
+      // textStream += r.token.text; // could set this to a list
+      // eslint-disable-next-line no-loop-func
+      setGeneratedText((currText) => `${currText + r.token.text}\n`);
       scrollToBottom();
     }
-    textStream.forEach((token) =>
-      setGeneratedText((currText) => `${currText + token}`),
-    );
+    // textStream.forEach((token) =>
+    //   setGeneratedText((currText) => `${currText + token}`),
+    // );
     setGeneratedText((currText) => `${currText}\n`);
   };
 
@@ -451,6 +452,7 @@ export default function GameViewer({ className }) {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
       setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
+      togglePopup(); // Show the enemy pop-up
       setGeneratedText(
         (currText) => `${currText}\nYou encountered a ${statelessEnemy.name}`,
       );
@@ -458,7 +460,6 @@ export default function GameViewer({ className }) {
       await getText(
         `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
       );
-      togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       playAudio("/audio/collect.mp3");
       const pickup = itemDictionary[itemPressed];
