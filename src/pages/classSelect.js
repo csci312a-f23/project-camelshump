@@ -3,12 +3,14 @@
  */
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import styles from "../styles/Classes.module.css";
 import CHARACTERS from "../components/Character";
 import StatBar from "../components/Statbar";
 
 export default function ClassSelector({ setClassName }) {
   const router = useRouter();
+  useSession({ required: true });
 
   const handleClick = (selection) => {
     setClassName(selection);
