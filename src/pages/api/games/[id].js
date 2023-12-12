@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { createRouter } from "next-connect";
 import { onError } from "../../../lib/middleware";
 import Game from "../../../../models/Game";

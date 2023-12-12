@@ -12,7 +12,7 @@ import styles from "../styles/Menu.module.css";
 
 export default function CamelsHump({ setCurrentId }) {
   const router = useRouter();
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
   const handleClick = (condition) => {
     switch (condition) {
       case "new":

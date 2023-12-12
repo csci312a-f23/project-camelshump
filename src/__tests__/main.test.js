@@ -1,21 +1,45 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import mockRouter from "next-router-mock";
+import { useSession } from "next-auth/react";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
 import CamelsHump from "@/pages/index";
 import GameViewer from "@/pages/play";
-import { getServerSession } from "next-auth/next";
+
+jest.mock("next-auth/react");
 
 // eslint-disable-next-line global-require
 jest.mock("next/router", () => require("next-router-mock"));
-jest.mock("next-auth/next");
 
 mockRouter.useParser(
-  createDynamicRouteParser(["/", "/play", "/classSelect", "/load"]),
+  createDynamicRouteParser([
+    // These paths should match those found in the `/pages` folder:
+    "/",
+    "/play",
+    "/classSelect",
+    "/load",
+  ]),
 );
+
 describe("End-to-end testing", () => {
-  test("Render Main Menu component", () => {
-    render(<CamelsHump />);
+  beforeEach(() => {
+    useSession.mockReturnValue({
+      data: {
+        user: { id: 1 },
+        expires: new Date(Date.now() + 2 * 86400).toISOString(),
+      },
+      status: "authenticated",
+    });
   });
+
+  afterEach(() => {
+    // Clear all mocks between tests
+    jest.resetAllMocks();
+  });
+
+  test("Render Main Menu component", () => {
+    render(<CamelsHump pageProps={{ session: undefined }} />);
+  });
+
   test("Render GameViewer page", () => {
     render(<GameViewer className="warrior" />);
   });
@@ -24,15 +48,21 @@ describe("End-to-end testing", () => {
 describe("Menu: Button tests", () => {
   beforeEach(() => {
     mockRouter.setCurrentUrl("/");
-    getServerSession.mockResolvedValue({
-      user: {
-        id: 1,
+
+    useSession.mockReturnValue({
+      data: {
+        user: { id: 1 },
+        expires: new Date(Date.now() + 2 * 86400).toISOString(),
       },
+      status: "authenticated",
     });
   });
+
   afterEach(() => {
-    getServerSession.mockReset();
+    // Clear all mocks between tests
+    jest.resetAllMocks();
   });
+
   test("Menu: New and load game buttons are visible", () => {
     render(<CamelsHump />);
     expect(
@@ -43,31 +73,37 @@ describe("Menu: Button tests", () => {
     ).toBeInTheDocument();
   });
   test("Menu: New Game directs to class selection", () => {
-    render(<CamelsHump />);
+    render(<CamelsHump setCurrentId={() => {}} />);
     const newGame = screen.queryByRole("button", { name: "New Game" });
     fireEvent.click(newGame);
     expect(mockRouter.pathname).toBe("/classSelect");
   });
-  test("Menu: Load Game directs to play screen", () => {
+  test("Menu: Load Game directs to load screen", () => {
     render(<CamelsHump />);
     const loadGame = screen.queryByRole("button", { name: "Load Game" });
     fireEvent.click(loadGame);
-    expect(mockRouter.pathname).toBe("/play");
+    expect(mockRouter.pathname).toBe("/load");
   });
 });
 
 describe("Play: Button tests", () => {
   beforeEach(() => {
     mockRouter.setCurrentUrl("/play");
-    getServerSession.mockResolvedValue({
-      user: {
-        id: 1,
+
+    useSession.mockReturnValue({
+      data: {
+        user: { id: 1 },
+        expires: new Date(Date.now() + 2 * 86400).toISOString(),
       },
+      status: "authenticated",
     });
   });
+
   afterEach(() => {
-    getServerSession.mockReset();
+    // Clear all mocks between tests
+    jest.resetAllMocks();
   });
+
   test("Play: Quit button is visible", () => {
     render(<GameViewer className="mage" />);
     expect(screen.queryByRole("button", { name: "Quit" })).toBeInTheDocument();
