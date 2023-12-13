@@ -33,6 +33,8 @@ export default function LoadGame({ setCurrentId }) {
   // eslint-disable-next-line no-unused-vars
   const handleDelete = (gameId) => {};
 
+  const handleBack = () => router.push("/");
+
   return (
     <main className={styles.game_selection_container}>
       <h1>Select a Game</h1>
@@ -52,6 +54,9 @@ export default function LoadGame({ setCurrentId }) {
           </li>
         ))}
       </ul>
+      <button type="button" onClick={() => handleBack()}>
+        Back
+      </button>
     </main>
   );
 }
