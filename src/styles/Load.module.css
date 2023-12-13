@@ -20,6 +20,12 @@
   display: block;
 }
 
+.button_list li input {
+  width: 198px;
+  margin-bottom: 2px;
+  display: block;
+}
+
 .selector {
   display: flex;
   justify-content: center;

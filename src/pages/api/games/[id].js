@@ -14,6 +14,10 @@ router
       .updateAndFetchById(req.query.id, req.body)
       .throwIfNotFound();
     res.status(200).json(game);
+  })
+  .delete(async (req, res) => {
+    await Game.query().deleteById(req.query.id).throwIfNotFound();
+    res.status(204).end();
   });
 
 export default router.handler({ onError });
