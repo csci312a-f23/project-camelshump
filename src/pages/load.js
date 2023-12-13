@@ -23,6 +23,7 @@ export default function LoadGame({ setCurrentId }) {
         setGames(response);
       })
       .catch((err) => console.log(err)); // eslint-disable-line no-console
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGameClick = (gameId) => {
@@ -32,6 +33,8 @@ export default function LoadGame({ setCurrentId }) {
 
   // eslint-disable-next-line no-unused-vars
   const handleDelete = (gameId) => {};
+
+  const handleBack = () => router.push("/");
 
   return (
     <main className={styles.game_selection_container}>
@@ -52,6 +55,9 @@ export default function LoadGame({ setCurrentId }) {
           </li>
         ))}
       </ul>
+      <button type="button" onClick={() => handleBack()}>
+        Back
+      </button>
     </main>
   );
 }

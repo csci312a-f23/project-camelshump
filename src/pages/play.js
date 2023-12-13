@@ -661,11 +661,11 @@ export default function GameViewer({ className, currentId }) {
           />
         )}
       </div>
-      <div className="quitSaveDiv">
-        <button type="button" onClick={() => router.push("/")}>
+      <div>
+        <button type="button" className="quit" onClick={() => router.push("/")}>
           Quit
         </button>
-        <button type="button" onClick={() => handleSave()}>
+        <button type="button" className="save" onClick={() => handleSave()}>
           Save
         </button>
         {showTextInput && <input type="text" id="title_box" />}
@@ -676,5 +676,6 @@ export default function GameViewer({ className, currentId }) {
 
 GameViewer.propTypes = {
   className: PropTypes.string.isRequired,
-  currentId: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  currentId: PropTypes.number,
 };
