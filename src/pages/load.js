@@ -23,6 +23,7 @@ export default function LoadGame({ setCurrentId }) {
         setGames(response);
       })
       .catch((err) => console.log(err)); // eslint-disable-line no-console
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGameClick = (gameId) => {

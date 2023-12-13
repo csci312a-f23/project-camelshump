@@ -69,5 +69,6 @@ export default function CamelsHump({ setCurrentId }) {
 }
 
 CamelsHump.propTypes = {
-  setCurrentId: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  setCurrentId: PropTypes.func,
 };

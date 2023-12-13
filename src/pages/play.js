@@ -676,5 +676,6 @@ export default function GameViewer({ className, currentId }) {
 
 GameViewer.propTypes = {
   className: PropTypes.string.isRequired,
-  currentId: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  currentId: PropTypes.number,
 };
