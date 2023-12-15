@@ -16,3 +16,21 @@ describe("Inventory: handles initialization", () => {
     );
   });
 });
+
+describe("Inventory: adds item to list", () => {
+  test("Inventory: item adddition triggers callbacks", () => {
+    const onItemUpdate = jest.fn();
+    const setInventoryList = jest.fn();
+
+    render(
+      <Inventory
+        item={sampleItem}
+        onItemUpdate={onItemUpdate}
+        inventoryList={[]}
+        setInventoryList={setInventoryList}
+      />,
+    );
+    expect(onItemUpdate).toHaveBeenCalled();
+    expect(setInventoryList).toHaveBeenCalledWith([{ name: "I", quantity: 1 }]);
+  });
+});

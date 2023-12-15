@@ -12,10 +12,6 @@ export default function TextBox({
   setGeneratedText,
   invisiblePrompt,
   setInvisiblePrompt,
-  // setTextList,
-  // textList,
-  // textListIndex,
-  // setTextListIndex,
 }) {
   const textBox = useRef();
   const genKwargs = {
