@@ -1,9 +1,9 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import MapDisplay from "./MapDisplay";
 
 const currentMapMock = [
-  [Array.from("abc"), Array.from("def"), Array.from("ghi")],
-]; // change this to smth sensical later
+  [[["-", "-", "-"]], [["-", "-", "-"]], [["-", "-", "-"]]],
+];
 const positionMock = [0, 0, 0];
 
 describe("MapDisplay: handles initialization", () => {
@@ -16,5 +16,36 @@ describe("MapDisplay: handles initialization", () => {
         updateItem={handler}
       />,
     );
+  });
+});
+
+describe("MapDisplay: visibility tests", () => {
+  test("MapDisplay: character is visible", () => {
+    const handler = jest.fn();
+    render(
+      <MapDisplay
+        currentMap={currentMapMock}
+        position={positionMock}
+        updateItem={handler}
+      />,
+    );
+    expect(screen.queryByText("X")).toBeInTheDocument();
+  });
+});
+
+describe("MapDisplay: callback tests", () => {
+  test("MapDisplay: updateItem is called", () => {
+    const handler = jest.fn();
+    const itemMapMock = [
+      [[["A", "-", "-"]], [["-", "-", "-"]], [["-", "-", "-"]]],
+    ];
+    render(
+      <MapDisplay
+        currentMap={itemMapMock}
+        position={positionMock}
+        updateItem={handler}
+      />,
+    );
+    expect(handler).toHaveBeenCalled();
   });
 });
