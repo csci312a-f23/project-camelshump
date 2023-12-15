@@ -1,6 +1,6 @@
 # Project Skeleton
 
-camelshump is text-based role-playing/adventure game that will be deployed on the web using React. The game will utilize generative AI to create storylines and descriptions of game events. Players will be able to save progress in the game and return to where they left off without loss of progress. It will hopefully be fun to play (no guarantees). (like actually)
+camelshump is text-based role-playing/adventure game that will be deployed on the web using React. The game utilizes generative AI to create storylines and descriptions of game events. Players will be able to save progress in the game and return to where they left off without loss of progress. You will hopefully find it fun to play (no guarantees). (like actually)
 
 ASCII Art throughout the project was sourced from www.asciiart.eu.
 
@@ -39,6 +39,36 @@ Other dependencies installed with:
 ```
 💻 npm install -S prop-types
 ```
+
+The application requires an external postgresql database. We used neon.tech but other services would function the same.
+
+Starting the application successfully requires a .env.local file with
+
+NEXTAUTH_SECRET
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+
+secrets defined.
+
+The database must be migrated before use. Run
+npx knex seed:run
+npx knex migrate:latest
+
+The application also requires a HuggingFace Inference API key to support the AI text generation.
+
+### Deployment
+
+To deploy, the source code should be pushed to a deploy server.
+
+The deploy server requires several secrets to function. In addition to the secrets defined in .env.local, the following must be defined on the server:
+
+    DATABASE_URL
+    NEXTAUTH_URL
+
+The following commands need to be run to migrate and seed the production environment:
+
+    NODE_ENV=production npx knex migrate:latest
+    NODE_ENV=production npx knex seed:run
 
 ### Additional tools you might need
 

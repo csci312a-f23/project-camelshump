@@ -5,6 +5,7 @@
 import PropTypes, { element } from "prop-types";
 import { HfInference } from "@huggingface/inference";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import MapJSON from "@/components/MapJSON";
 import Inventory from "@/components/Inventory";
@@ -37,12 +38,16 @@ export function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-export default function GameViewer({ className }) {
+export default function GameViewer({ className, currentId }) {
   const router = useRouter();
+  const { data: session } = useSession({ required: true });
+
+  // Create a new map with 9 sections and each map is 16x16 characters
   const sectionLength = 16;
   const numSections = 9;
-  // Create a new map with 9 sections and each map is 16x16 characters
+
   const initialMap = JSON.parse(MapJSON({ sectionLength, numSections }));
+
   character = CHARACTERS.find((elem) => elem.name === className);
   if (!character) {
     // eslint-disable-next-line prefer-destructuring
@@ -62,6 +67,8 @@ export default function GameViewer({ className }) {
   const [score, setScore] = useState(0);
   const [mute, setMute] = useState(false);
   const [currentAudio, setCurrentAudio] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [showTextInput, setShowTextInput] = useState(false);
 
   // Function to play audio based on mute status
   // not using an API as we have specific sound effect from different sources
@@ -112,6 +119,26 @@ export default function GameViewer({ className }) {
     5,
   ]);
 
+  useEffect(() => {
+    if (currentId) {
+      fetch(`/api/games/${currentId}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((response) => {
+          setTitle(response.title);
+          setPosition(response.position);
+          setCurrentMap(response.map);
+          setStats(response.stats);
+          setInventoryList(response.inventory);
+        })
+        .catch((err) => console.log(err)); // eslint-disable-line no-console
+    }
+  }, [currentId]);
+
   const genKwargs = {
     max_new_tokens: 128,
     top_k: 30,
@@ -129,8 +156,6 @@ export default function GameViewer({ className }) {
   };
 
   const getText = async (question) => {
-    // setGeneratedText(`${generatedText}\n`);
-    const textStream = [];
     const stream = await hf.textGenerationStream({
       model: "tiiuae/falcon-7b-instruct",
       inputs: question,
@@ -146,29 +171,27 @@ export default function GameViewer({ className }) {
       if (genKwargs.stopSequences.includes(r.token.text)) {
         break;
       }
-      textStream.push(r.token.text); // could set this to a list
-      // setGeneratedText((currText) => `${currText + textStream}\n`);
+      setGeneratedText((currText) => `${currText + r.token.text}`);
       scrollToBottom();
     }
-    textStream.forEach((token) =>
-      setGeneratedText((currText) => `${currText + token}`),
-    );
     setGeneratedText((currText) => `${currText}\n`);
+    scrollToBottom();
   };
 
-  const stopScroll = (e) => {
-    if (
-      e.keyCode === 37 ||
-      e.keyCode === 38 ||
-      e.keyCode === 39 ||
-      e.keyCode === 40
-    ) {
+  // Disable arrow scrolling
+  const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+
+  function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
       e.preventDefault();
+      return false;
     }
-  };
+    return true;
+  }
 
-  if (typeof window !== "undefined")
-    window.addEventListener("keydown", stopScroll);
+  if (typeof window !== "undefined") {
+    window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+  }
 
   const reduceItem = (newItem) => {
     const itemExists = inventoryList.find(
@@ -181,11 +204,15 @@ export default function GameViewer({ className }) {
         inventoryItem.name === newItem
           ? {
               ...inventoryItem,
-              quantity: Math.max(0, inventoryItem.quantity - 1), // Ensure quantity does not go below 0
+              quantity: inventoryItem.quantity - 1,
             }
           : inventoryItem,
       );
-      setInventoryList(updatedInventory);
+      // Only return items with quant > 0
+      const finalInventory = updatedInventory.filter(
+        (updatedItem) => updatedItem.quantity > 0,
+      );
+      setInventoryList(finalInventory);
     }
   };
 
@@ -247,18 +274,20 @@ export default function GameViewer({ className }) {
     damagePlayer(enemy.strength);
     await fightPrompt(
       `${enemy.name} attacks and deals ${enemy.strength} damage.`,
-      `I'm a ${className}, and an ${enemy.name} attacks, describe what happens.`,
+      `I'm a ${className}, and an ${enemy.name} attacks dealing ${enemy.strength} damage to me, describe what happens.`,
     );
   };
 
   const fightAction = async (action) => {
+    let damage;
     switch (action) {
       case "punch":
+        damage = Math.floor(stats.strength * 0.5);
         await fightPrompt(
           `You punched the ${enemy.name}`,
-          `I'm a fantasy character, I punched a ${enemy.name}, describe what happens.`,
+          `I'm a fantasy character, I punched a ${enemy.name} and dealt ${damage} damage, describe what happens.`,
         );
-        damageEnemy(Math.floor(stats.strength * 0.5));
+        damageEnemy(damage);
         await enemyAction();
         break;
       case "dance":
@@ -270,14 +299,15 @@ export default function GameViewer({ className }) {
         await enemyAction();
         break;
       case "classWeapon":
-        await fightPrompt(
-          `You use your ${classWeapon} on the ${enemy.name}`,
-          `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
-        );
         if (classWeapon === "Sword") {
           playAudio("/audio/sword.mp3");
           if (stats.strength >= 1) {
-            damageEnemy(stats.strength * 3);
+            damage = stats.strength * 3;
+            await fightPrompt(
+              `You use your ${classWeapon} on the ${enemy.name}`,
+              `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+            );
+            damageEnemy(damage);
             setStats((currStats) => ({
               ...currStats,
               stamina: currStats.stamina - 1,
@@ -285,12 +315,17 @@ export default function GameViewer({ className }) {
           } else {
             await fightPrompt(
               `You don't have enough stamina!`,
-              `I'm a fantasy character, I don't have enough stamina to throw an axe at a ${enemy.name}, describe what happens.`,
+              `I'm a fantasy character, I don't have enough stamina to use my ${classWeapon} on a ${enemy.name}, describe what happens.`,
             );
           }
         } else if (classWeapon === "Staff") {
           playAudio("/audio/staff.mp3");
-          damageEnemy(stats.intelligence * 3);
+          damage = stats.intelligence * 3;
+          await fightPrompt(
+            `You use your ${classWeapon} on the ${enemy.name}`,
+            `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+          );
+          damageEnemy(damage);
           setStats((currStats) => ({
             ...currStats,
             stamina: currStats.stamina - 0.25,
@@ -298,10 +333,15 @@ export default function GameViewer({ className }) {
         } else if (classWeapon === "Knife") {
           playAudio("/audio/knife.mp3");
           if (stats.speed > enemy.speed) {
-            damageEnemy(stats.strength * 3);
+            damage = stats.strength * 3;
           } else {
-            damageEnemy(stats.strength * 2);
+            damage = stats.strength * 2;
           }
+          await fightPrompt(
+            `You use your ${classWeapon} on the ${enemy.name}`,
+            `I'm a fantasy character, I use my ${classWeapon} on a ${enemy.name} and deal ${damage}, describe what happens.`,
+          );
+          damageEnemy(damage);
           setStats((currStats) => ({
             ...currStats,
             stamina: currStats.stamina - 0.5,
@@ -321,7 +361,7 @@ export default function GameViewer({ className }) {
           // 15 damage
           await fightPrompt(
             `You threw an axe on the ${enemy.name}`,
-            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name}, describe what happens.`,
+            `I'm a fantasy character, I threw a throwing axe at a ${enemy.name} and do 15 damage, describe what happens.`,
           );
           damageEnemy(15);
           setStats((currStats) => ({
@@ -451,6 +491,7 @@ export default function GameViewer({ className }) {
     if (itemPressed === "E") {
       statelessEnemy = ENEMIES[getRandom(ENEMIES.length)];
       setEnemy({ ...statelessEnemy, maxHealth: statelessEnemy.health });
+      togglePopup(); // Show the enemy pop-up
       setGeneratedText(
         (currText) => `${currText}\nYou encountered a ${statelessEnemy.name}`,
       );
@@ -458,7 +499,6 @@ export default function GameViewer({ className }) {
       await getText(
         `I am a fantasy ${className}. I just encountered a ${statelessEnemy.name}, describe what I see.`,
       );
-      togglePopup(); // Show the enemy pop-up
     } else if (itemPressed !== "-") {
       playAudio("/audio/collect.mp3");
       const pickup = itemDictionary[itemPressed];
@@ -467,14 +507,55 @@ export default function GameViewer({ className }) {
       await getText(
         `I am a fantasy character. I just found a ${pickup}, describe what I see.`,
       );
-      setCurrentMap(currentMap);
-      currentMap[position[2]][position[0]][position[1]] = "-";
+
+      const newMapItem = [...currentMap];
+      newMapItem[position[2]][position[0]][position[1]] = "-";
+      setCurrentMap(newMapItem);
     }
   };
 
   const handleItemUpdate = () => {
     // Reset the item to an empty array
     setItem("");
+  };
+
+  const handleSave = () => {
+    const userid = session.user.id;
+
+    if (!currentId && showTextInput === false) {
+      setShowTextInput(true);
+      return;
+    }
+
+    const newGame = {
+      userid,
+      title: currentId ? title : document.getElementById("title_box").value,
+      position,
+      map: currentMap,
+      stats,
+      inventory: inventoryList,
+    };
+
+    if (currentId) {
+      fetch(`/api/games/${currentId}`, {
+        method: "PUT",
+        body: JSON.stringify({ ...newGame, id: currentId }),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+    } else if (showTextInput === true) {
+      fetch(`/api/games`, {
+        method: "POST",
+        body: JSON.stringify(newGame),
+        headers: new Headers({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }),
+      });
+      setShowTextInput(false);
+    }
   };
 
   useEffect(() => {
@@ -580,17 +661,21 @@ export default function GameViewer({ className }) {
           />
         )}
       </div>
-      <button
-        className="quitButton"
-        type="button"
-        onClick={() => router.push("/")}
-      >
-        Quit
-      </button>
+      <div>
+        <button type="button" className="quit" onClick={() => router.push("/")}>
+          Quit
+        </button>
+        <button type="button" className="save" onClick={() => handleSave()}>
+          Save
+        </button>
+        {showTextInput && <input type="text" id="title_box" />}
+      </div>
     </main>
   );
 }
 
 GameViewer.propTypes = {
   className: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/require-default-props
+  currentId: PropTypes.number,
 };
